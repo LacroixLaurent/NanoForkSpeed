@@ -8,3 +8,4 @@ This repository contains the scripts used for all the analysis in the *NanoForkS
 *basecalling_sample.sh* contains a example of the base calling procedure going from RawData to binned signal in a .rds format (to open with R).  
 *megaparsing_function.r* contains the function used in the basecalling process going from the modified bam file created by megalodon to the binned data.  
 
+*session_info()* : see *session_info.txt*

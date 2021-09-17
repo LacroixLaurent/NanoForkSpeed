@@ -132,12 +132,12 @@ NFS.detect <- function(tibble.test,RM=T,RDP.eps=0.1,RDP.spar=NA,slope.thr=0.25,b
 	## Main  detection function
 	test2 <- tibble.test %>%
 		# precise RDP simplification
-		mutate(RDP=map(signal,myRDP)) %>%
+		mutate(RDP=map(signalb,myRDP)) %>%
 		# selection of reads with 3 or more segment to look for forks
 		mutate(RDP.length=map_int(RDP,function(x) nrow(x))) %>%
 		filter(RDP.length>3) %>%
 		# compute mean B signal for the RDP segments
-		mutate(meanB= map2(signal,RDP,function(tibble1,tibble2) {
+		mutate(meanB= map2(signalb,RDP,function(tibble1,tibble2) {
 			tibble2 %>%
 				mutate(x_end = lead(x)) %>%   # shifted copy of the x
 				filter(!is.na(x_end)) %>%     # remove last segment with only a start
@@ -223,7 +223,7 @@ NFSmaster <- function(EXP,RM0=T,RDP.eps0=0.05,RDP.spar0=0, slope.thr0=0.25,pulse
 	EXP_NFSall <- EXP %>%
 		# remove the prefix "read_" if present
 		mutate(read_id=map_chr(read_id, function(x) str_remove(x,"read_"))) %>%
-		select(read_id,chrom,start,end,strand,signal) %>%
+		select(read_id,chrom,start,end,strand,signalb) %>%
 		mutate(length=end-start) %>%
 		# filtering according to a minimal length
 		filter(length>minlen) %>%

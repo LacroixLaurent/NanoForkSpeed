@@ -1,6 +1,5 @@
 # NanoForkSpeed
-Fork speed analysis
 ## Laurent Lacroix (laurent.lacroix@inserm.fr)
+### Scripts used for figures and analyses in Theulot et al 2021
 
-
-### Scripts used for figures and analyses in Blin et al 2020
+This repository contains the the scripts use for all the analysis in the NanoForkSpeed (NFS) manuscript 

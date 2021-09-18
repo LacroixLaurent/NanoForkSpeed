@@ -66,9 +66,9 @@ plotforks <- function(toto,b2a.thr=0.02,fileout,plot.smooth=T)
 			geom_line(aes(x=positions,y=signal,col="data.raw"),linetype="dashed",alpha=0.8)+
 			geom_line(data=test$RDP[[1]],aes(x=x,y=y,col="RDP_segment"))+
 			geom_hline(yintercept=b2a.thr,linetype="dashed") +
-			geom_segment(data=test$forks[[1]],aes(x=X1,xend=X2,y=(0.5+sign(as.sl)/40),yend=(0.5+sign(as.sl)/40),col="PLS_fork_chase"),arrow=arrow(length = unit(0.2,"cm")), show.legend = F)+
-			geom_segment(data=test$forks[[1]],aes(x=X0,xend=X1,y=(0.5+sign(as.sl)/40),yend=(0.5+sign(as.sl)/40),col="PLS_fork_pulse"),arrow=arrow(length = unit(0.1,"cm")), show.legend = F)+
-			geom_text(data=test$forks[[1]],aes(x=(X0+X1)/2,y=(0.8+sign(as.sl)/20),fontface="bold",col="PLS_speed",label=speed.rdp),size=2, show.legend = F)+
+			geom_segment(data=test$forks[[1]],aes(x=X1,xend=X2,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_chase"),arrow=arrow(length = unit(0.2,"cm")), show.legend = F)+
+			geom_segment(data=test$forks[[1]],aes(x=X0,xend=X1,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_pulse"),arrow=arrow(length = unit(0.1,"cm")), show.legend = F)+
+			geom_text(data=test$forks[[1]],aes(x=(X0+X1)/2,y=(0.8+sign(d.Y)/20),fontface="bold",col="PLS_speed",label=speed.rdp),size=2, show.legend = F)+
 			xlab(paste(test$chrom,test$start,test$end,test$strand,test$read_id,sep="_"))+
 			guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
 			theme(legend.position = "right")+

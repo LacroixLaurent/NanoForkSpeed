@@ -1,6 +1,6 @@
 ### Megalodon data import
-### LL 20210124
-mega_parsing_v2 <- function(bam.in,out.file,ncores=1L,bs0=100,save.full=F)
+### LL 20210919
+mega_parsing <- function(bam.in,out.file,ncores=1L,bs0=100,save.full=F)
 {
 require(parallel)
 require(dplyr)
@@ -11,7 +11,7 @@ data0 <- try(system(paste0("samtools view ",bam.in," | cut -f 1,2,3,4,9,10,13,14
 # split lines
 data1 <- mclapply(data0,function(x) strsplit(x,"\t")[[1]],mc.cores=ncores)
 # reshape data lines
-data2 <- mclapply(data1, function(x) 
+data2 <- mclapply(data1, function(x)
 {
 id <- x[1]
 if (x[2]=="0") {strand="+"} else {strand="-"}
@@ -28,6 +28,7 @@ names(res) <- c("read_id","chrom","start","end","strand","seq","pos","prob")
 return(res)
 },mc.cores=ncores)
 
+# translate T position to sequence position and affect B probability
 data3 <- mclapply(data2, function(x)
 {
 Tpos <- str_locate_all(x$seq,"T")[[1]][,1]
@@ -49,20 +50,25 @@ data5 <- do.call(bind_rows,data4)
 
 plan(multicore, workers = ncores)
 
-data6 <- data5 %>% 
+data6 <- data5 %>%
 	mutate(newsignal = future_pmap(
 		., function(start,end,strand,signal_raw,...) {
+      # translate read coordinates to genomic coordinates
 			if(strand=="+") {
 				positions= start - 1 + signal_raw %>% pull(pos_out);
 				Bprob=signal_raw %>% pull(prob_out)
 			}
+			# translate read coordinates to genomic coordinates and reverse the signal if strand==-
 			if(strand=="-") {
 				positions= end + 1 - signal_raw %>% pull(pos_out);
 				Bprob=signal_raw %>% pull(prob_out)
 			}
 			out=tibble(positions,Bprob) %>% arrange(positions)
-		}))
+		})) %>%
+	# remove the raw signal
+	select(-c("signal_raw"))
 
+# bin the signal into bins of bs0 size and take the mean
 data7 <- data6 %>%
 	mutate(signalb=future_map(newsignal,
 		function(y) {
@@ -72,9 +78,10 @@ data7 <- data6 %>%
 		group_by(positions) %>%
 		summarise(signal = mean(Bprob,na.rm=T), .groups = "drop")
 		}))
+# save the full data is necessary
 if (save.full)
 {saveRDS(data7, file=paste0(out.file,"_fulldata.rds"))}
-
-data8 <- data7 %>% select(-c("signal_raw","newsignal")) %>% arrange(chrom,start)
+# save the binned data
+data8 <- data7 %>% select(-c("newsignal")) %>% arrange(chrom,start)
 saveRDS(data8, file=paste0(out.file,"_bin",bs0,"_mindata.rds"))
 }

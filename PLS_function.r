@@ -203,7 +203,7 @@ PLS.detect <- function(tibble.test,RM=T,RDP.eps=0.1,RDP.spar=NA,slope.thr=0.25,b
 ###
 
 
-PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.05,RDP.spar0=0, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPname="EXP",minlen=5000,b2a=0.02)
+PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.1,RDP.spar0=0, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPname="EXP",minlen=5000,b2a=0.02)
 	# in the output forks, L=left, R=right (in OKseq data, left=+ and right=-)
 	# force renaming of the second parameter of signalb to signal
 	# EXP is the tibble of the reads coming from the basecalling procedure with
@@ -236,13 +236,13 @@ PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.05,RDP.spar0=0, slope.thr0=0.25,pulse
 
 	# compute the sum of length of all the reads with length>minlen
 	EXPlen <- EXP_PLSall %>% pull(length) %>% sum
-	names(EXPlen) <- "sumlength(>" %+% (minlen/1000) %+% "kb)"
+	names(EXPlen) <- paste0("sumlength(>",(minlen/1000),"kb)")
 
 	# filter for reads with 3 or more RDP segments
 	EXP_PLS3 <- EXP_PLSall %>% filter(RDP.length>3)
 	# compute some stats
 	EXP_stat <- c(EXPname,nrow(EXP),nrow(EXP_PLSall),nrow(EXP_PLS3))
-	names(EXP_stat)=c("EXPname","n_reads",paste0("n_reads(len>",minlen/1000,"k)"),"n_reads(RDP0>3)")
+	names(EXP_stat)=c("EXPname","n_reads",paste0("n_reads(len>",minlen/1000,"kb)"),"n_reads(RDP0>3)")
 
 	# threshold analysis
 	### obsolete for megalodon 3+ version but still useful to detect exp with high background
@@ -358,7 +358,7 @@ PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.05,RDP.spar0=0, slope.thr0=0.25,pulse
 		median(EXP_PLSall$length),
 		median(EXP_PLS_det[[1]]$length),
 		median(EXP_PLS_det[[2]]$length))
-	names(EXP_med_read_len) <- c("read_med_len_all>" %+% minlen %+% "kb","read_med_len_RDP3","read_med_len_with_forks")
+	names(EXP_med_read_len) <- c(paste0("read_med_len_all(>",minlen/1000,"kb)"),"read_med_len_RDP3","read_med_len_with_forks")
 
 	### Detection of Initiation and Termination
 	# extrapolated center(Ext.center) ExC=X0L+spL/(spL+spR)*X0L_X0R
@@ -437,10 +437,10 @@ PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.05,RDP.spar0=0, slope.thr0=0.25,pulse
 	initer_stat <- c(nrow(iniforks),median(iniforks$sp.ratio,na.rm=T),median(iniforks$dY.ratio,na.rm=T),nrow(terforks),median(terforks$sp.ratio,na.rm=T),median(terforks$dY.ratio,na.rm=T))
 	names(initer_stat) <- c("nb_init","med(init_sp_ratio)","med(init_dY_ratio)","nb_ter","med(ter_sp_ratio)","med(ter_dY_ratio)")
 
-	AllEXPstats <- as.data.frame(t(c(EXP_stat,EXPlen,EXP_med_read_len,EXP_b2a,EXP_RDPstat,EXP_med_speed,EXP_med_dY,EXP_maxlenfork,initer_stat)))
+	AllEXPstats <- as.data.frame(t(c(EXP_stat,EXPlen,EXP_med_read_len,EXP_b2a,EXP_PLSstat,EXP_med_speed,EXP_med_dY,EXP_maxlenfork,initer_stat)))
 
 	# compute forks, initiations and termination densities per Mb sequenced reads
-	forkdens <- EXP_RDPstat[4]/EXPlen*1e6
+	forkdens <- EXP_PLSstat[4]/EXPlen*1e6
 	names(forkdens) <- "forks_per_Mb"
 	initdens <- initer_stat[1]/EXPlen*1e6
 	terdens <- initer_stat[4]/EXPlen*1e6

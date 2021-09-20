@@ -43,7 +43,7 @@ system("rm header")
 # this part of the script used our parsing function
 # the ncores parameter should be used to set the number of core available
 # keeping in mind that R use a lot of memory.
-# on our computer, more than 40Go of RAM were required.
+# on our computer, more than 62Go of RAM were required.
 # the parsing script can also output the non binned data,
 # but the size of the output file will be in the order of Go instead of tens of Mo.
 # the binned file generated is the one we used to look to forks

@@ -47,3 +47,7 @@ system("rm header")
 # the parsing script can also output the non binned data,
 # but the size of the output file will be in the order of Go instead of tens of Mo.
 # the binned file generated is the one we used to look to forks
+
+library("devtools")
+library(magrittr)
+session_info() %>% capture.output(file="base_calling_session_info.txt")

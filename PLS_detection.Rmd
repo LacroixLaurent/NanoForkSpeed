@@ -1,0 +1,57 @@
+---
+title: "PLS data generation"
+output: html_notebook
+---
+
+This is a typical example how we proceed to detect forks, initiaitons and terminations from the reads basecalled with megalodon and our model then parsed with our Parsing_function4Megalodon.r script.  
+
+### Background threshold determination
+The first step of the analysis requires to check the distribution of the signal in order to set the b2a threshold, used to identify the background of the signal.  
+```{r}
+suppressMessages(library(tidyverse))
+`%+%`<- paste0
+source("helper_function.r")
+source("PLS_function.r")
+expmeg <- "JP3A_v3_S288CrDNA_Megalodon_bin100.rds"
+ex.name <- expmeg %>% str_remove("_bin100.rds")
+EXP <- readRDS(pathdata %+% expmeg) %>% rename(signalb=6) %>% filter(chrom!="chrM")
+plot_signal(EXP,EXPname=ex.name,EXP_b2a.thr0=0.02,alldata=F,nreads=50000)
+```
+This script outputs a PDF file corresponding to the distribution of the BrdU signal in 1kb bins for the reads filtered the presence of 3 and more linearized segments.  
+It is also possible to output the distribution for all the reads (of at least 5kb) but usually this distribution is less informative due to the overwhelming presence of reads with very low signal. 
+From the second plot of the PDF file (a zoom of the first plot of th e PDF), it is possible to draw a line between the 0 level signal (background) and the informative signal which usually come in two wide distribution. One of medium level mode corresponding to the DNA replicated during the chase and one with higher level mode corresponding to the DNA replicated during the pulse.  
+The position of this line was the threshold we fixed for our further analysis. It should be noted that for all the experiments we performed, a fixed threshold of 0.02 was chosen to simplify the pipeline.  
+We also limit to 50000 the number of reads used for this evaluation to speed up the computation but all the reads can be sued by setting nreads=NA.  
+
+### PLS analysis
+Once the user has checked that the distribution of the signal and the position of the background threshold (ex.b2a in the following script) are satisfactory, the proper forks detection can be performed.  
+
+```{r}
+library(GenomicRanges)
+library(rtracklayer)
+suppressMessages(library(kmlShape))
+suppressMessages(library(tidyverse))
+`%+%`<- paste0
+source("PLS_function.r")
+
+pathdata <- "parsedMeg3/"
+
+seqinf <- Seqinfo(seqnames=c("chrI","chrII","chrIII","chrIV","chrV","chrVI","chrVII","chrVIII","chrIX","chrX","chrXI","chrXII","chrXIII","chrXIV","chrXV","chrXVI","chrM","rDNA-10R"),seqlengths=c(230218,813184,316620,1531933,576874,270161,1090940,562643,439888,745751,666816,1078177,924431,784333,1091291,948066,85779,113097), isCircular=c(rep(F,16),T,F),genome="S288CrDNA")
+
+expmeg <- "JP3A_v3_S288CrDNA_Megalodon_bin100.rds"
+ex.name <- expmeg %>% str_remove("_bin100.rds")
+ex.pulse <- 2
+ex.b2a <- 0.02
+EXP <- readRDS(pathdata %+% expmeg) %>% rename(signalb=6) %>% filter(chrom!="chrM")
+EXP_PLS <- PLSmaster(EXP,pulse0=ex.pulse,PLS.save=T,EXPname=ex.name %+% "_git",b2a=ex.b2a)
+```
+
+This procedure create an output file saved in the .rds format. The data are organised as a list or 4 elements:  
+1- a list of tibble containing:  
+1.1- the reads filtered for their size and the presence of 3 and more linearized segments.  
+1.2- the reads with detected forks.  
+2- a tibble of all the detected forks.  
+3- a table summary of different metrics of the experiment.  
+4- a tibble containing the initiations (Init) and the terminations (Ter) detected.
+
+Parameters such as the slope threshold (slope.thr0), the RDP tolerance (RDP.eps0) could be adjusted if analysis failed but we were able to keep the at their default value for all the analysis we performed.  

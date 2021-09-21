@@ -105,7 +105,7 @@ plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr
 	theme_set(theme_bw())
 
 
-	if (!is.na(nreads))
+	if (!is.na(nreads) & nrow(EXP)>nreads)
 	{
 		EXP2 <- sample_n(EXP,nreads)
 	}else{

@@ -282,9 +282,9 @@ padandtrace <- function(EXPforks,pad.max=500)
 
 	position <- (-10:(pad.max-1))*100
 	EXPtrace0f <- EXPforks %>%
-		select(trac,exp) %>%
+		select(trac,exp,len) %>%
 		mutate(sig=map(trac, function(x) x%>% pull(signal))) %>%
-		mutate(sig2=map(sig, function(x) {c(x,rep(NA,(pad.max+10-length(x))))}))
+		mutate(sig2=map(sig, function(x) {if(length(x)<pad.max){res=c(x,rep(NA,(pad.max+10-length(x))))}else{res=x[1:(pad.max+10)]};return(res)}))
 	EXPtrace1mean <- colMeans(do.call(rbind,EXPtrace0f$sig2),na.rm=T)
 	out <- suppressMessages(bind_cols(position,EXPtrace1mean))
 	names(out) <- c("position","mean_trace")
@@ -294,10 +294,10 @@ padandtrace <- function(EXPforks,pad.max=500)
 compute_meantrace <- function(PLStib,trac.xmax=50000)
 {
 	toplot <- PLStib
-	pad.max <- trac.xmax/100
+	pad.max0 <- trac.xmax/100
 
 	totrace <- split(toplot, toplot$exp)
-	totrace2 <- lapply(totrace, padandtrace,pad.max)
+	totrace2 <- lapply(totrace, function(x) padandtrace(x,pad.max0))
 	totrace3 <- lapply(totrace2, function(x) do.call(bind_cols,x))
 	totrace4 <- tibble(exp=factor(names(totrace3),levels=levels(toplot$exp)),trace=totrace3)
 	return(totrace4)

@@ -326,7 +326,7 @@ plot_meantrace <- function(totrace4,explist,ymax0=0.8,xmax=50000,normalise=F,roo
 		ggtitle(paste0(root_title,"_",nameout))
 	if(expor)
 	{
-		ggsave(paste0(pathout,root_title,"_",nameout,".pdf"), h=4,w=6)
+		ggsave(paste0(pathout,root_title,"_",nameout,".pdf"), h=6,w=8)
 	}else{p1}
 }
 

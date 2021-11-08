@@ -1,8 +1,9 @@
-# Sample of the basecalling procedure used with our BrdU trainde model
+# Sample of the basecalling procedure used with our BrdU trained model
 # This requires the ONT megalodon and guppy software
 # We used guppy v4.4.1 GPU and megalogon v2.2.9
-# a symbolic link for guppy should be present in the working directory
-# ont-guppy -> /users/rce/hyrien/src/ont-guppy_4.4.1
+# either the ont_guppy folder is present in the working directory
+# or a symbolic link for guppy should be present in the working directory
+# ont-guppy -> ~/src/ont-guppy_4.4.1
 ln -s ~/src/ont-guppy_4.4.1 ./ont-guppy
 # the configuration file should point to the modified base model
 # see BrdU_Configutation4megalodon.cfg

@@ -1,6 +1,6 @@
 ### Helper Function used in Theulot et al 2021
 
-#### LL 20210917
+#### LL 20211108
 
 ###
 simpleRFD <- function(gr,lr=1,na2zero=F,expor=F,outname='myRFDdata')
@@ -48,7 +48,7 @@ cor.rfd <- function(a,b,met='s')
 ##
 
 ### a function to plot forks with RDP informations
-plotforks <- function(toto,b2a.thr=0.02,fileout,plot.smooth=T)
+plotforks2 <- function(toto,b2a.thr=0.02,fileout,plot.raw=F)
 {
 
 	suppressMessages(require(tidyverse))
@@ -61,24 +61,40 @@ plotforks <- function(toto,b2a.thr=0.02,fileout,plot.smooth=T)
 	for (i in 1:nrow(toto))
 	{
 		test <- toto %>% dplyr::slice(i)
-		pl[[i]] <- ggplot(test$signalb[[1]]) +
-			geom_text(data=test$sl2[[1]],aes(x=sl.x,y=0,col="RDP_seg_type",label=sl.pat2,fontface="bold"), show.legend = F)+
-			geom_line(aes(x=positions,y=signal,col="data.raw"),linetype="dashed",alpha=0.8)+
-			geom_line(data=test$RDP[[1]],aes(x=x,y=y,col="RDP_segment"))+
-			geom_hline(yintercept=b2a.thr,linetype="dashed") +
-			geom_segment(data=test$forks[[1]],aes(x=X1,xend=X2,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_chase"),arrow=arrow(length = unit(0.2,"cm")), show.legend = F)+
-			geom_segment(data=test$forks[[1]],aes(x=X0,xend=X1,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_pulse"),arrow=arrow(length = unit(0.1,"cm")), show.legend = F)+
-			geom_text(data=test$forks[[1]],aes(x=(X0+X1)/2,y=(0.8+sign(d.Y)/20),fontface="bold",col="PLS_speed",label=speed.rdp),size=2, show.legend = F)+
-			xlab(paste(test$chrom,test$start,test$end,test$strand,test$read_id,sep="_"))+
-			guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
-			theme(legend.position = "right")+
-			scale_color_manual(breaks = c("data.raw","data.smoothed","RDP_segment","RDP_seg_type","PLS_fork_pulse","PLS_fork_chase","PLS_speed"),values = mypal[c(1,2,4,3,6,5,8)])+
-			coord_cartesian(ylim=c(0,1))
-
-		if (plot.smooth) {
-			w <- w_pg25
+		if (plot.raw) {
+			pl[[i]] <- ggplot(test$signalr[[1]]) +
+				geom_point(aes(x=positions,y=Bprob,col="data.raw"),size=0.2,alpha=0.5)+
+				geom_text(data=test$sl2[[1]],aes(x=sl.x,y=0,col="RDP_seg_type",label=sl.pat2,fontface="bold"), show.legend = F)+
+				geom_line(aes(x=positions,y=signal,col="data.smoothed"))+
+				geom_line(data=test$RDP[[1]],aes(x=x,y=y,col="RDP_segment"))+
+				geom_hline(yintercept=b2a.thr,linetype="dashed") +
+				geom_segment(data=test$forks[[1]],aes(x=X1,xend=X2,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_chase"),arrow=arrow(length = unit(0.2,"cm")), show.legend = F)+
+				geom_segment(data=test$forks[[1]],aes(x=X0,xend=X1,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_pulse"),arrow=arrow(length = unit(0.1,"cm")), show.legend = F)+
+				geom_text(data=test$forks[[1]],aes(x=(X0+X1)/2,y=(0.8+sign(d.Y)/20),fontface="bold",col="PLS_speed",label=speed),size=2, show.legend = F)+
+				xlab(paste(test$chrom,test$start,test$end,test$strand,test$read_id,sep="_"))+
+				guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
+				theme(legend.position = "right")+
+				scale_color_manual(breaks = c("data.smoothed","data.raw","RDP_segment","RDP_seg_type","PLS_fork_pulse","PLS_fork_chase","PLS_speed","data.gap"),values = mypal[c(2,1,4,3,6,5,8,10)])+
+				coord_cartesian(ylim=c(0,1))
+		}else{
+			pl[[i]] <- ggplot(test$signalr[[1]]) +
+				geom_text(data=test$sl2[[1]],aes(x=sl.x,y=0,col="RDP_seg_type",label=sl.pat2,fontface="bold"), show.legend = F)+
+				geom_line(aes(x=positions,y=signal,col="data.smoothed"))+
+				geom_line(data=test$RDP[[1]],aes(x=x,y=y,col="RDP_segment"))+
+				geom_hline(yintercept=b2a.thr,linetype="dashed") +
+				geom_segment(data=test$forks[[1]],aes(x=X1,xend=X2,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_chase"),arrow=arrow(length = unit(0.2,"cm")), show.legend = F)+
+				geom_segment(data=test$forks[[1]],aes(x=X0,xend=X1,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_pulse"),arrow=arrow(length = unit(0.1,"cm")), show.legend = F)+
+				geom_text(data=test$forks[[1]],aes(x=(X0+X1)/2,y=(0.8+sign(d.Y)/20),fontface="bold",col="PLS_speed",label=speed),size=2, show.legend = F)+
+				xlab(paste(test$chrom,test$start,test$end,test$strand,test$read_id,sep="_"))+
+				guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
+				theme(legend.position = "right")+
+				scale_color_manual(breaks = c("data.smoothed","data.raw","RDP_segment","RDP_seg_type","PLS_fork_pulse","PLS_fork_chase","PLS_speed","data.gap"),values = mypal[c(2,1,4,3,6,5,8,10)])+
+				coord_cartesian(ylim=c(0,1))
+		}
+		if (test$gap_pos[[1]]$gap_start[1]>0)
+		{
 			pl[[i]] <- pl[[i]]+
-				geom_line(aes(x=positions,y=roll_mean(signal,weights=w,normalize=T,na.rm=T,fill=NA),col="data.smoothed"))
+				geom_segment(data=test$gap_pos[[1]],aes(x=gap_start,xend=gap_end,y=1,yend=1,col="data.gap"),size=4)
 		}
 	}
 	pdf(fileout,height=12)
@@ -100,13 +116,20 @@ plotforks <- function(toto,b2a.thr=0.02,fileout,plot.smooth=T)
 
 plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr0=0.02,alldata=F,nreads=NA)
 {
+	suppressMessages(require(kmlShape))
 	suppressMessages(require(tidyverse))
 	require(ggpubr)
 	theme_set(theme_bw())
 
+	myRDP <- function(x,...)
+	{
+		DouglasPeuckerEpsilon(x$positions,x$signal,epsilon=0.01,spar=NA)
+	}
+
 
 	if (!is.na(nreads) & nrow(EXP)>nreads)
 	{
+		set.seed(123)
 		EXP2 <- sample_n(EXP,nreads)
 	}else{
 		EXP2 <- EXP
@@ -114,18 +137,17 @@ plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr
 
 	EXP_PLSall <- EXP2 %>%
 		mutate(read_id=map_chr(read_id, function(x) str_remove(x,"read_"))) %>%
-		select(read_id,chrom,start,end,strand,signalb) %>%
+		select(read_id,chrom,start,end,strand,signalr) %>%
 		mutate(length=end-start) %>%
 		filter(length>minlen) %>%
-		mutate(signalb=map(signalb, function(x) {x %>% dplyr::rename(signal=2)})) %>%
-		mutate(RDP=map(signalb,myRDP0,RDP.eps=0.15)) %>%
+		mutate(RDP=map(signalr,myRDP,RDP.eps=0.1)) %>%
 		mutate(RDP.length=map_int(RDP,function(x) nrow(x))) %>%
-		mutate(Bmedy=map_dbl(signalb,function(z) median(z$signal)))
+		mutate(Bmedy=map_dbl(signalr,function(z) median(z$signal)))
 	EXP_PLS3 <- EXP_PLSall %>% filter(RDP.length>3)
 	# all data
 	if (alldata==T) {
 		test0 <- EXP_PLSall %>%
-			mutate(noise= map(signalb, function(y) {
+			mutate(noise= map(signalr, function(y) {
 				y %>%
 					mutate(positions = round(positions/bs)*bs) %>%
 					group_by(positions) %>%
@@ -149,9 +171,9 @@ plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr
 		ggarrange(signal_plot0,signal_plot1,nrow=2)
 		ggsave(paste0(EXPname,"_all_1kbmeansignal.pdf"),h=8,w=6)
 	}
-	# RDP0>3 data
+	# RDP>3 data
 	test1 <- EXP_PLS3 %>%
-		mutate(noise= map(signalb, function(y) {
+		mutate(noise= map(signalr, function(y) {
 			y %>%
 				mutate(positions = round(positions/bs)*bs) %>%
 				group_by(positions) %>%
@@ -267,7 +289,7 @@ function.cluster2 <- function(input,clust.dist0=clust.dist)
 		mutate(cl.mad=map_dbl(data,function(x) mad(x$center)))%>%
 		unnest(cols=c(data)) %>%
 		select(-c(strand,spL,yL,spR,yR,sp.ratio,dY.ratio,type,sp.ratio.LeadLag,dY.ratio.LeadLag,exp))
-	test3 <- test2 %>% select(chrom,cl.med,cl.start,cl.end,eff,cl.mad,cluster_id) %>% group_by(cluster_id) %>% slice(1)
+	test3 <- test2 %>% select(chrom,cl.med,cl.start,cl.end,eff,cl.mad,cluster_id) %>% group_by(cluster_id) %>% dplyr::slice(1)
 	res <- list(test2,test3)
 	return(res)
 }
@@ -282,7 +304,7 @@ padandtrace <- function(EXPforks,pad.max=500)
 
 	position <- (-10:(pad.max-1))*100
 	EXPtrace0f <- EXPforks %>%
-		select(trac,exp,len) %>%
+		select(trac,exp) %>%
 		mutate(sig=map(trac, function(x) x%>% pull(signal))) %>%
 		mutate(sig2=map(sig, function(x) {if(length(x)<pad.max){res=c(x,rep(NA,(pad.max+10-length(x))))}else{res=x[1:(pad.max+10)]};return(res)}))
 	EXPtrace1mean <- colMeans(do.call(rbind,EXPtrace0f$sig2),na.rm=T)
@@ -330,6 +352,34 @@ plot_meantrace <- function(totrace4,explist,ymax0=0.8,xmax=50000,normalise=F,roo
 	}else{p1}
 }
 
+plot_meantrace2 <- function(totrace4,explist,ymax0=0.8,xmax=50000,normalise=F,root.title="",pathout="",nameout="EXP_meantrace",expor=T)
+{
+	totrace1 <- totrace4 %>% filter(exp %in% explist)
+	if (normalise) {
+		totrace1 <- totrace1 %>%
+			mutate(trace=map(trace, function(x) {x %>% mutate(mean_trace=mean_trace/max(mean_trace,na.rm=T))}))
+		ymax=1
+		lab.y="%BrdU (norm)"
+	}else{
+		ymax=ymax0
+		lab.y="%BrdU"
+	}
+
+	totrace5 <- totrace1 %>% unnest(cols=c(trace))
+	p1 <- ggplot(totrace5) +
+		geom_line(aes(x=position, y=mean_trace,col=exp))+
+		coord_cartesian(xlim=c(-1000,xmax),ylim=c(0,ymax))+
+		scale_color_discrete(type=c(paletteer::paletteer_d("ggthemes::Classic_20"),"black"))+
+		ylab(lab.y)+
+		xlab("Position (relative to X0)")+
+		ggtitle(paste0(root_title,"_",nameout))
+	if(expor)
+	{
+		ggsave(paste0(pathout,root_title,"_",nameout,".pdf"), h=6,w=8)
+	}else{p1}
+}
+
+
 ### plot read length
 plot_readlength <- function(EXP,EXP_PLS,fileout=NA,ymax=150000) {
 	if (is.na(fileout))
@@ -355,3 +405,12 @@ plot_readlength <- function(EXP,EXP_PLS,fileout=NA,ymax=150000) {
 	ggsave(paste0(fileout,"_readlength.pdf"),h=4,w=6)
 }
 
+### like sapply with mclapply
+smclapply <- function(X, FUN, ...,
+											mc.preschedule = TRUE, mc.set.seed = TRUE,
+											mc.silent = FALSE, mc.cores = getOption("mc.cores", 2L),
+											mc.cleanup = TRUE, mc.allow.recursive = TRUE)
+{simplify2array(mclapply(X, FUN, ...,
+												 mc.preschedule = mc.preschedule, mc.set.seed = mc.set.seed,
+												 mc.silent = mc.silent, mc.cores = mc.cores,
+												 mc.cleanup = mc.cleanup, mc.allow.recursive = mc.allow.recursive))}

@@ -1,47 +1,27 @@
 ### Function used in Theulot et al 2021
 ### Forks detection, orientation and speed measurement
 ### as well as Initiation and Termination detection
+### work with splitted files from the parsing procedure done by 50000 reads chunks
+### smoothing is performed at the parsing level
+#### LL 20211108
 
-#### LL 20210917
-
-
-### weighting constants (pseudo gaussian)
-w_pg25 <- dnorm(1:25,13,3)
-### used for the smoothing procedure
-
-### (coarse) RDP transformation used to filtered reads with tracks
-myRDP0 <- function(x,RDP.eps=0.15,RDP.spar=0.3)
-{
-	suppressMessages(require(kmlShape))
-	suppressMessages(require(tidyverse))
-	DouglasPeuckerEpsilon(x$positions,x$signal,RDP.eps,spar=RDP.spar)
-}
-###
 
 ### the main function
-PLS.detect <- function(tibble.test,RM=T,RDP.eps=0.1,RDP.spar=NA,slope.thr=0.25,b2a.thr=0.02,pulse=2)
-	# smoothing is roll_mean with a pseudo gaussian weight function ("w_pg25")
+PLS.detect <- function(tibble.test,RDP.eps=0.1,slope.thr=0.25,b2a.thr=0.02,pulse=2)
+	# signal already smoothed during the parsing
 {
-	suppressMessages(require(GenomicRanges))
 	suppressMessages(require(kmlShape))
 	suppressMessages(require(tidyverse))
-	suppressMessages(require(RcppRoll))
-
 	## internal helper functions
+	# General use parameters
+	RDP.spar=NA
+	gap_ext <- 1000L
+	min_gap <- 100L
 
 	# Ramer-Douglas-Peucker simplification using a homemade smoothing function)
 	myRDP <- function(x,...)
 	{
-		if (RM)
-		{
-			w <- w_pg25
-			x$RM <- roll_mean(x$signal,by=1,align="center",weights=w,normalize=T,na.rm=T,fill=c(NA,NA,NA))
-			DouglasPeuckerEpsilon(x$positions,x$RM,RDP.eps,spar=RDP.spar)
-		}
-		else
-		{
-			DouglasPeuckerEpsilon(x$positions,x$signal,RDP.eps,spar=RDP.spar)
-		}
+		DouglasPeuckerEpsilon(x$positions,x$signal,RDP.eps,spar=RDP.spar)
 	}
 
 	# Evaluation of the slopes of the simplified segments
@@ -129,13 +109,13 @@ PLS.detect <- function(tibble.test,RM=T,RDP.eps=0.1,RDP.spar=NA,slope.thr=0.25,b
 
 	## Main  detection function
 	test2 <- tibble.test %>%
-		# precise RDP simplification
-		mutate(RDP=map(signalb,myRDP)) %>%
+		# RDP simplification
+		mutate(RDP=map(signalr,myRDP)) %>%
 		# selection of reads with 3 or more segment to look for forks
 		mutate(RDP.length=map_int(RDP,function(x) nrow(x))) %>%
 		filter(RDP.length>3) %>%
 		# compute mean B signal for the RDP segments
-		mutate(meanB= map2(signalb,RDP,function(tibble1,tibble2) {
+		mutate(meanB= map2(signalr,RDP,function(tibble1,tibble2) {
 			tibble2 %>%
 				mutate(x_end = lead(x)) %>%   # shifted copy of the x
 				filter(!is.na(x_end)) %>%     # remove last segment with only a start
@@ -143,7 +123,7 @@ PLS.detect <- function(tibble.test,RM=T,RDP.eps=0.1,RDP.spar=NA,slope.thr=0.25,b
 					tibble1 %>%
 						filter(positions>=x & positions<=x_end) %>%
 						pull(signal) %>%
-						mean()
+						mean(na.rm=T)
 				}))})) %>%
 		# computing slopes for the RDP segments
 		mutate(slopes=map(RDP,myslope1)) %>%
@@ -180,7 +160,7 @@ PLS.detect <- function(tibble.test,RM=T,RDP.eps=0.1,RDP.spar=NA,slope.thr=0.25,b
 	)
 
 	test3 <- test2 %>%
-		# add pulse duration in the forks (L &R) tibbles
+		# add pulse duration in the forks (L&R) tibbles
 		mutate(fork.R=map2(sl2,patR, function(x,y) map.fR(x,y,t.pulse=pulse))) %>%
 		mutate(fork.L=map2(sl2,patL, function(x,y) map.fL(x,y,t.pulse=pulse))) %>%
 		# merging R and L forks tibbles
@@ -192,98 +172,19 @@ PLS.detect <- function(tibble.test,RM=T,RDP.eps=0.1,RDP.spar=NA,slope.thr=0.25,b
 																											arrange(X0)))) %>%
 		# compute number of forks per read
 		mutate(n.forks=map_int(forks,nrow))
-	# remove reads without forks
 	test4 <- test3 %>%
-		filter(n.forks!=0)
-
-	res <- list(test3,test4)
-	names(res) <- c("all","with_forks")
-	return(res)
-}
-###
-
-
-PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.1,RDP.spar0=0, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPname="EXP",minlen=5000,b2a=0.02)
-	# in the output forks, L=left, R=right (in OKseq data, left=+ and right=-)
-	# force renaming of the second parameter of signalb to signal
-	# EXP is the tibble of the reads coming from the basecalling procedure with
-	# the mega_parsing_v2.r function
-	# RM0 is used to switch on the smoothing for the RDP simplification
-	# RDP.eps0 set the tolerance for the RDP simplification
-  # RDP.spar0 set the default smoothing used in the kmlShape version of RDP
-	# slope.thr0 is the threshold to call flat RDP segments
-	# pulse0 is the duration of the BrdU pulse (in minute)
-	# PLS.save is used to switch on the automatic saving of the results
-  # EXPname is used to name the saved file
-  # minlen has to be adjusted to avoid error with the smoothing
-  # b2a is the threshold used to call if a flat segment corresponds to B or A
-{
-	EXP_PLSall <- EXP %>%
-		# remove the prefix "read_" if present
-		mutate(read_id=map_chr(read_id, function(x) str_remove(x,"read_"))) %>%
-		select(read_id,chrom,start,end,strand,signalb) %>%
-		mutate(length=end-start) %>%
-		# filtering according to a minimal length
-		filter(length>minlen) %>%
-		# forced renaming of the y column of the signalb tibble to signal
-		mutate(signalb=map(signalb, function(x) {x %>% dplyr::rename(signal=2)})) %>%
-		# coarse RDP simplification with RDP.eps=0.15 and RDP.spar=0.3
-		mutate(RDP=map(signalb,myRDP0,RDP.eps=0.15)) %>%
-		# compute number of coarse RDP segment for each read
-		mutate(RDP.length=map_int(RDP,function(x) nrow(x))) %>%
-		# comput the median of the raw signal for each read
-		mutate(Bmedy=map_dbl(signalb,function(z) median(z$signal,na.rm=T)))
-
-	# compute the sum of length of all the reads with length>minlen
-	EXPlen <- EXP_PLSall %>% pull(length) %>% sum
-	names(EXPlen) <- paste0("sumlength(>",(minlen/1000),"kb)")
-
-	# filter for reads with 3 or more RDP segments
-	EXP_PLS3 <- EXP_PLSall %>% filter(RDP.length>3)
-	# compute some stats
-	EXP_stat <- c(EXPname,nrow(EXP),nrow(EXP_PLSall),nrow(EXP_PLS3))
-	names(EXP_stat)=c("EXPname","n_reads",paste0("n_reads(len>",minlen/1000,"kb)"),"n_reads(RDP0>3)")
-
-	# threshold analysis
-	### obsolete for megalodon 3+ version but still useful to detect exp with high background
-	EXP_Bmed <- median(EXP_PLSall$Bmedy)
-	EXP_Bmad <- mad(EXP_PLSall$Bmedy)
-	if (b2a=="auto") {EXP_b2a.thr0 <- EXP_Bmed+3*EXP_Bmad} else {EXP_b2a.thr0 <- b2a}
-	EXP_b2a <- c(EXP_b2a.thr0,EXP_Bmed,EXP_Bmad)
-	names(EXP_b2a) <- c("b2a.thr","B_median","B_mad")
-
-  # forks detection
-	EXP_PLS_det <- PLS.detect(EXP_PLS3,RM=RM0,RDP.eps=RDP.eps0,RDP.spar=RDP.spar0,slope.thr=slope.thr0,b2a.thr=EXP_b2a.thr0,pulse=pulse0)
-
-
-	### The mapping procedure with megalodon generates gap
-	### that could interfere with the forks detection procedure
-	# extension of the gap to broaden the fitering
-	gap_ext <- 1000L
-	min_gap <- 100L
-	EXP_PLS_det[[2]] <- EXP_PLS_det[[2]] %>%
-		mutate(gap_pos=map(signalb, function(x) {
-			y<-x
-			# measure of the discontinuities in binned positions
-			y$dif <- c(diff(x$positions),100)
-			# mapping of the gap that are longer than the min_gap threshold
-			# (here min_gap=100, thus all gaps are mapped)
-			gap_start <- y[which(y$dif>min_gap),]$positions
-			gap_end <- y[which(y$dif>min_gap)+1,]$positions
-			if (length(gap_start)>0) {
-				res=tibble(gap_start,gap_end)
-			}else{
-				res=tibble(gap_start=0,gap_end=0)
-			}
-			res$gap_width <- res$gap_end-res$gap_start+1
-			# extension of the gap to account for close neighbouring
-			res <- res %>%
+		# remove reads without forks (after ter filtering)
+		filter(n.forks>0) %>%
+		# extend gap + and - gap_ext=1000nt to catch artefactual forks
+		mutate(gap_pos=map(gap_pos, function(x) {
+			res <- x %>%
 				mutate(start2=case_when((gap_width>min_gap)~(gap_start-gap_ext),T~0)) %>%
 				mutate(end2=case_when((gap_width>min_gap)~(gap_end+gap_ext),T~0))
 			return(res)
 		})) %>%
+		# tag forks overlapping with gaps
 		mutate(forks=pmap(., function(forks,gap_pos,...) {
-      # look for every fork if it overlaps the extended gap
+			# look for every fork if it overlaps the extended gap
 			gapovl <- sapply(1:nrow(forks), function(i)
 			{
 				if (gap_pos$gap_width[1]>100) {
@@ -293,17 +194,71 @@ PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.1,RDP.spar0=0, slope.thr0=0.25,pulse0
 					res <- F
 				}
 			})
-			forks2 <- forks %>% add_column(gapovl)
+			# remove forks overlapping with extended gaps
+			forks2 <- forks %>% add_column(gapovl) %>% filter(!gapovl)
 			return(forks2)
 		})) %>%
 		# count of forks without gap per read
-		mutate(n.forks2=map_int(forks, function(x) x %>% filter(!gapovl) %>% nrow))
+		mutate(n.forks2=map_int(forks, nrow)) %>%
+		# remove reads with no forks after this filtering
+		filter(n.forks2>0)
+	res <- list(test3,test4)
+	names(res) <- c("allRDP3","with_forks")
+	return(res)
+}
 
-  # more stats computed
-	EXP_PLSstat <- c(sapply(EXP_PLS_det,function(x) nrow(x)),sum(EXP_PLS_det[[2]]$n.forks),sum(EXP_PLS_det[[2]]$n.forks2))
+###
+
+
+PLSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPname="EXP",minlen=5000,b2a=0.02)
+	# in the output forks, L=left, R=right (in OKseq data, left=+ and right=-)
+	# EXP is the tibble of the reads coming from the basecalling procedure with
+	# the Parsing_function4megalodon.r function
+	# RDP.eps0 set the tolerance for the RDP simplification
+	# slope.thr0 is the threshold to call flat RDP segments
+	# pulse0 is the duration of the BrdU pulse (in minute)
+	# PLS.save is used to switch on the automatic saving of the results
+	# EXPname is used to name the saved file
+	# minlen can be adjusted select only reads longer than a threshold
+	# b2a is the threshold used to call if a flat segment corresponds to B or A
+{
+	EXP_PLSall <- EXP %>%
+		# remove the prefix "read_" if present
+		mutate(read_id=map_chr(read_id, function(x) str_remove(x,"read_"))) %>%
+		mutate(length=end-start) %>%
+		# filtering according to a minimal length
+		filter(length>minlen) %>%
+		# compute median if the smoothed signal for eahc read
+		mutate(smBmedy=map_dbl(signalr,function(z) median(z$signal,na.rm=T))) %>%
+		# compute median if the raw signal for eahc read
+		mutate(Bmedy=map_dbl(signalr,function(z) median(z$Bprob,na.rm=T)))
+
+	# compute the sum of length of all the reads with length>minlen
+	EXPlen <- EXP_PLSall %>% pull(length) %>% sum
+	names(EXPlen) <- paste0("sumlength(>",(minlen/1000),"kb)")
+
+	# filter for reads with 3 or more RDP segments
+	# compute some stats
+	EXP_stat <- c(EXPname,nrow(EXP),nrow(EXP_PLSall))
+	names(EXP_stat)=c("EXPname","n_reads",paste0("n_reads(len>",minlen/1000,"kb)"))
+
+	# threshold analysis
+	### obsolete for megalodon 3+ version but still useful to detect Exp with high background
+	### done with the Raw signal
+	EXP_Bmed <- median(EXP_PLSall$Bmedy)
+	EXP_Bmad <- mad(EXP_PLSall$Bmedy)
+	if (b2a=="auto") {EXP_b2a.thr0 <- EXP_Bmed+3*EXP_Bmad} else {EXP_b2a.thr0 <- b2a}
+	EXP_b2a <- c(EXP_b2a.thr0,EXP_Bmed,EXP_Bmad)
+	names(EXP_b2a) <- c("b2a.thr","B_median","B_mad")
+
+	# forks detection
+	EXP_PLS_det <- PLS.detect(EXP_PLSall,RDP.eps=RDP.eps0,slope.thr=slope.thr0,b2a.thr=EXP_b2a.thr0,pulse=pulse0)
+
+	# more stats computed
+	EXP_PLSstat <- c(sapply(EXP_PLS_det,function(x) nrow(x)),sum(EXP_PLS_det[[1]]$n.forks),sum(EXP_PLS_det[[2]]$n.forks2))
 	names(EXP_PLSstat) <- c("n_reads(RDP>3)","n_reads_w_forks","n_forks","n_forks(no_gap)")
 
-  # outputting forks
+	# outputting forks
 	### for those forks, start and end correspond to the X0 and X2 limits to improve the RFD coverage
 	# leading and lagging strand mapping
 	### leading= strand+ forkR or strand- forkL
@@ -313,10 +268,8 @@ PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.1,RDP.spar0=0, slope.thr0=0.25,pulse0
 	if (nrow(EXP_PLS_det[[2]])>0)
 	{
 		EXPforks <- EXP_PLS_det[[2]] %>%
-			select(chrom,strand,forks,signalb,read_id) %>%
+			select(chrom,strand,forks,signalr,read_id) %>%
 			unnest(cols = c(forks)) %>%
-			# remove forks on or near a gap
-			filter(!gapovl) %>%
 			# selection of start and end for RFD
 			mutate(st=pmin(X0,X2)) %>%
 			mutate(en=pmax(X0,X2)) %>%
@@ -324,34 +277,44 @@ PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.1,RDP.spar0=0, slope.thr0=0.25,pulse0
 			mutate(type=case_when((strand=="+" & d.Y>0) | (strand=="-" & d.Y<0) ~ "leading", T ~ "lagging"))%>%
 			# fork direction mapping
 			mutate(direc=case_when(sign(d.Y)==1 ~ "R", T ~ "L")) %>%
-			# signal extraction for mean_trace plotting
-			mutate(trac=pmap(list(signalb,X0,d.Y), function(y,x0,d) {
+			# signal extraction for mean_trace plotting and binning by 100
+			### This is done with the smoothed signal. could be done with the raw one
+			mutate(trac=pmap(list(signalr,X0,d.Y), function(y,x0,d) {
 				if (d>0)
-				{out <- y %>% filter(positions>=x0-1000 & positions<x0+trac.xmax)}
-				else
-				{out <- y %>% filter(positions<=x0+1000 & positions>x0-trac.xmax) %>% arrange(desc(positions))}
+				{
+					out <- y %>%
+						filter(positions>=x0-1000 & positions<x0+trac.xmax) %>%
+						mutate(positions = round(positions/100)*100) %>%
+						group_by(positions) %>%
+						summarise(signal = mean(signal,na.rm=T), .groups = "drop")
+				}else{
+					out <- y %>%
+						filter(positions<=x0+1000 & positions>x0-trac.xmax) %>%
+						mutate(positions = round(positions/100)*100) %>%
+						group_by(positions) %>%
+						summarise(signal = mean(Bprob,na.rm=T), .groups = "drop") %>% arrange(desc(positions))}
 				return(out)
 			})) %>%
 			select(chrom,strand,st,en,direc,speed,d.Y,type,X0,X1,X2,read_id,trac) %>%
 			# compute length of the extracted trace (in 100nt bin units)
-			mutate(len=map_int(trac,nrow)) %>%
+			#			mutate(len=map_int(trac,nrow)) %>%
 			# associated EXPname to fork
 			mutate(exp=EXPname)
 	}else{
 		EXPforks <- tibble(chrom=character(),strand=character(),st=integer(),en=integer(),direc=character(),speed=integer(),d.Y=double(),type=character(),X0=integer(),X1=integer(),X2=integer(),read_id=character(),trac=list(),len=integer(),exp=character())
 	}
-	# computing the length (in 100nt bin) of the longest trace for padding
-	EXP_maxlenfork <- max(EXPforks$len)
-	names(EXP_maxlenfork) <- "fork_maxlen"
+	#	 computing the length (in 100nt bin) of the longest trace for padding
+	#	EXP_maxlenfork <- max(EXPforks$len)
+	#	names(EXP_maxlenfork) <- "fork_maxlen"
 
 	# median speed
-	EXP_med_speed <- EXPforks %>% pull(speed) %>% median
+	EXP_med_speed <- EXPforks %>% pull(speed) %>% median(na.rm=T)
 	names(EXP_med_speed) <- "speed_med"
 	# median amplitude (of the RDP jump)
-	EXP_med_dY <- EXPforks %>% pull(d.Y) %>% abs %>% median
+	EXP_med_dY <- EXPforks %>% pull(d.Y) %>% abs %>% median(na.rm=T)
 	names(EXP_med_dY) <- "dY_median"
 
-  # computing median length of reads above the minlen,
+	# computing median length of reads above the minlen,
 	# reads with 3 or more RDP segments
 	# and reads with detected forks
 	EXP_med_read_len <- c(
@@ -369,7 +332,7 @@ PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.1,RDP.spar0=0, slope.thr0=0.25,pulse0
 	initer2$patI <- lapply(initer2$patIT, function(x) (do.call(rbind,str_locate_all(x,"LR"))[,1]))
 	# mapping termination with the pattern RL
 	initer2$patT <- lapply(initer2$patIT, function(x) (do.call(rbind,str_locate_all(x,"RL"))[,1]))
-  # positions extraction for initiation
+	# positions extraction for initiation
 	initer3 <- initer2 %>%
 		mutate(ini=map2(forks,patI, function(x,y) {
 			if (length(y)!=0)
@@ -403,7 +366,7 @@ PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.1,RDP.spar0=0, slope.thr0=0.25,pulse0
 				tibble()
 			}})) %>%
 		select(chrom,strand,read_id,ini,ter)
-  # computing speed and dY ratio for initiations
+	# computing speed and dY ratio for initiations
 	if (sum(lengths(initer3$ini))>0) {
 		iniforks <- initer3 %>%
 			select(chrom,strand,read_id,ini) %>%
@@ -437,7 +400,7 @@ PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.1,RDP.spar0=0, slope.thr0=0.25,pulse0
 	initer_stat <- c(nrow(iniforks),median(iniforks$sp.ratio,na.rm=T),median(iniforks$dY.ratio,na.rm=T),nrow(terforks),median(terforks$sp.ratio,na.rm=T),median(terforks$dY.ratio,na.rm=T))
 	names(initer_stat) <- c("nb_init","med(init_sp_ratio)","med(init_dY_ratio)","nb_ter","med(ter_sp_ratio)","med(ter_dY_ratio)")
 
-	AllEXPstats <- as.data.frame(t(c(EXP_stat,EXPlen,EXP_med_read_len,EXP_b2a,EXP_PLSstat,EXP_med_speed,EXP_med_dY,EXP_maxlenfork,initer_stat)))
+	AllEXPstats <- as.data.frame(t(c(EXP_stat,EXPlen,EXP_med_read_len,EXP_b2a,EXP_PLSstat,EXP_med_speed,EXP_med_dY,initer_stat)))
 
 	# compute forks, initiations and termination densities per Mb sequenced reads
 	forkdens <- EXP_PLSstat[4]/EXPlen*1e6
@@ -451,19 +414,50 @@ PLSmaster <- function(EXP,RM0=T,RDP.eps0=0.1,RDP.spar0=0, slope.thr0=0.25,pulse0
 	AllEXPstats2 <- cbind(AllEXPstats,dens)
 
 	# exporting results as a list containing 4 places:
-	# 1- reads with 3 or more coarse PLS segments and reand with forks
+	# 1- reads with 3 or more PLS segments and read with forks after ter and gap filtering
 	# 2- forks
-	# 3- stats
-	# 4- Initiations and Terminations
-	res <- list(EXP_PLS_det,EXPforks,AllEXPstats2,initer_res)
-	names(res) <- c("PLS_data","forks","stats","initer")
+	# 3- Initiations and Terminations
+	# 4- stats
+	res <- list(EXP_PLS_det,EXPforks,initer_res,AllEXPstats2)
+	names(res) <- c("PLS_data","forks","initer","stats")
 
-  # saving the data if required
+	# saving the data if required
 	if (PLS.save==T) {saveRDS(res,file=paste0(EXPname,"_PLS_data.rds"))}
 
 	return(res)
 }
 
-###
+## A function to merge PLS results and extract stats
+
+PLS_merging <- function(dir_in,dir_out,ExpName,suff="",file_list0=NA)
+{
+	require(tidyverse)
+	if (is.na(file_list0)) {file_list <- dir(dir_in,pattern=paste0(ExpName,"_"))}else{file_list=file_list0}
+	### BEWARE pattern can be misleading
+	PLS_reads <- do.call(bind_rows,lapply(file_list, function(x) {
+		readRDS(paste0(dir_in,x))[[1]][[2]]})) %>%
+		# keeping only the essentiel
+		select(-c(RDP.length,sl,patR,patL,fork.R,fork.L,n.forks)) %>%
+		arrange(chrom,start)
+
+	PLS_forks <- do.call(bind_rows,lapply(file_list, function(x) {
+		readRDS(paste0(dir_in,x))[[2]]})) %>%
+		arrange(chrom,st) %>%
+		mutate(exp=ExpName)
+
+	PLS_initer <- do.call(bind_rows,lapply(file_list, function(x) {
+		readRDS(paste0(dir_in,x))[[3]]}))  %>%
+		arrange(chrom,x0,type)
+	# redo stats
+	Stats_in <- do.call(bind_rows,lapply(file_list, function(x) {
+		readRDS(paste0(dir_in,x))[[4]]}))
+	PLS_stats <- tibble(Expname=ExpName,n_reads=sum(as.numeric(Stats_in[,2])),n_reads2=sum(as.numeric(Stats_in[,3])),sumlength=sum(as.numeric(Stats_in[,4])),b2a.thr=as.numeric(Stats_in[1,8]),n_reads_RDP3=sum(as.numeric(Stats_in[,11])),n_reads_forks=sum(as.numeric(Stats_in[,12])),n_forks=sum(as.numeric(Stats_in[,14])),speed_med=median(PLS_forks$speed,na.rm=T),dY_med=median(abs(PLS_forks$d.Y),na.rm=T),nb_init=sum(as.numeric(Stats_in[,17])),nb_ter=sum(as.numeric(Stats_in[,20])),fork_dens=sum(as.numeric(Stats_in[,14]))/sum(as.numeric(Stats_in[,4]))*1e6,init_dens=sum(as.numeric(Stats_in[,17]))/sum(as.numeric(Stats_in[,4]))*1e6,ter_dens=sum(as.numeric(Stats_in[,20]))/sum(as.numeric(Stats_in[,4]))*1e6)
+
+	res <- list(PLS_reads,PLS_forks,PLS_initer,PLS_stats)
+	names(res) <- c("reads","forks","initer","stats")
+	saveRDS(res,file=paste0(dir_out,ExpName,suff,"_PLS_data.rds"))
+
+}
+
 
 

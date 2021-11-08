@@ -3,7 +3,7 @@ title: "PLS data generation"
 output: html_notebook
 ---
 
-This is a typical example how we proceed to detect forks, initiaitons and terminations from the reads basecalled with megalodon and our model then parsed with our Parsing_function4Megalodon.r script.  
+This is a typical example how we proceed to detect forks, initiations and terminations from the reads basecalled with megalodon and our model then parsed with our Parsing_function4Megalodon.r script.  
 
 ### Background threshold determination
 The first step of the analysis requires to check the distribution of the signal in order to set the b2a threshold, used to identify the background of the signal.  

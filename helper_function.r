@@ -114,7 +114,7 @@ plotforks2 <- function(toto,b2a.thr=0.02,fileout,plot.raw=F)
 
 ### plot the distribution of the signal to set the b2a.thr
 
-plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr0=0.02,alldata=F,nreads=NA)
+plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr0=0.02,alldata=F,nreads=NA,saved=T,plotit=F)
 {
 	suppressMessages(require(kmlShape))
 	suppressMessages(require(tidyverse))
@@ -123,7 +123,7 @@ plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr
 
 	myRDP <- function(x,...)
 	{
-		DouglasPeuckerEpsilon(x$positions,x$signal,epsilon=0.01,spar=NA)
+		DouglasPeuckerEpsilon(x$positions,x$signal,epsilon=0.1,spar=NA)
 	}
 
 
@@ -169,7 +169,8 @@ plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr
 			scale_x_continuous(paste0("mean B signal by ",bs/1000,"kb"), breaks=seq(0,xmax/4,0.01))+
 			theme(axis.text.x = element_text(angle = 45,hjust=1))
 		ggarrange(signal_plot0,signal_plot1,nrow=2)
-		ggsave(paste0(EXPname,"_all_1kbmeansignal.pdf"),h=8,w=6)
+		if (saved==T)
+		{ggsave(paste0(EXPname,"_all_1kbmeansignal.pdf"),h=8,w=6)}
 	}
 	# RDP>3 data
 	test1 <- EXP_PLS3 %>%
@@ -196,9 +197,9 @@ plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr
 		theme(axis.text.x = element_text(angle = 45,hjust=1))
 
 	ggarrange(signal_plot2,signal_plot3,nrow=2)
-
-	ggsave(paste0(EXPname,"_RDP3_1kbmeansignal.pdf"),h=8,w=6)
-
+if (saved==T)
+	{ggsave(paste0(EXPname,"_RDP3_1kbmeansignal.pdf"),h=8,w=6)}
+if (plotit==T) {ggarrange(signal_plot2,signal_plot3,nrow=2)}
 }
 
 ### my GR shuffling

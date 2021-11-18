@@ -286,7 +286,7 @@ PLSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPn
 						filter(positions>=x0-1000 & positions<x0+trac.xmax) %>%
 						mutate(positions = round(positions/100)*100) %>%
 						group_by(positions) %>%
-						summarise(signal = mean(signal,na.rm=T), .groups = "drop")
+						summarise(signal = mean(Bprob,na.rm=T), .groups = "drop")
 				}else{
 					out <- y %>%
 						filter(positions<=x0+1000 & positions>x0-trac.xmax) %>%

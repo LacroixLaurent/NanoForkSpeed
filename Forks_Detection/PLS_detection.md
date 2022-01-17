@@ -3,8 +3,8 @@ PLS data generation
 
 This is a typical example how we proceed to detect forks, initiations
 and terminations from the reads base\_called with megalodon and our
-model (script=basecalling\_sample.sh) then parsed with the
-Parsing\_function4Megalodon.r (script=basecalling\_sample.r).
+model (script=*basecalling\_sample.sh*) then parsed with the
+*Parsing\_function4Megalodon.r* (script=*basecalling\_sample.r*).
 
 ### Background threshold determination
 
@@ -22,7 +22,7 @@ source("./helper_function.r")
 source("./PLS_function.r")
 expmeg <- "JP3A_Megalodon_00_smdata.rds"
 pathdata <- "~/work/Ori/newRaw_nt/"
-ex.name <- expmeg %>% str_remove("_Megalodon_00_smdata.rds")
+ex.name <- "Exp_Test"
 EXP <- readRDS(pathdata %+% expmeg)  %>% filter(chrom!="chrM")
 plot_signal(EXP,EXPname=ex.name,EXP_b2a.thr0=0.02,alldata=F,nreads=5000,saved=T,plotit=T)
 ```
@@ -50,10 +50,10 @@ Once the user has checked that the distribution of the signal and the
 position of the background threshold (ex.b2a in the following script)
 are satisfactory, the proper forks detection can be performed.  
 This procedure create an output file saved in the .rds format. The data
-are organised as a list or 4 elements:  
+are organized as a list or 4 elements:  
 1- a list of tibble containing:  
 1.1- the reads filtered for their size and the presence of 3 and more
-linearized segments.  
+linear segments.  
 1.2- the reads with detected forks.  
 2- a tibble of all the detected forks.  
 3- a tibble containing the initiations (Init) and the terminations (Ter)
@@ -73,7 +73,7 @@ seqinf <- Seqinfo(seqnames=c("chrI","chrII","chrIII","chrIV","chrV","chrVI","chr
 
 pathdata <- "~/work/Ori/newRaw_nt/"
 expmeg <- "JP3A_Megalodon_00_smdata.rds"
-ex.name <- expmeg %>% str_remove("_Megalodon_00_smdata.rds")
+ex.name <- "Exp_Test"
 ex.pulse <- 2
 ex.b2a <- 0.02
 EXP <- readRDS(pathdata %+% expmeg)  %>% filter(chrom!="chrM")
@@ -86,14 +86,69 @@ EXP_PLS <- PLSmaster(EXP,pulse0=ex.pulse,PLS.save=T,EXPname=ex.name %+% "_nt",b2
 
 As parsed data file were big, fork detection is performed on the split
 data and then these results are merged using the PLS\_merging function
-from the PLS\_function.r file.  
+from the *PLS\_function.r* file.  
 The merged data file keep the same organization with a slightly
-simplified summary table. Those merged file are then used to produced
-the figures and data discussed in the manuscript.
+simplified summary table. Those merged file are then used to produce the
+figures and data discussed in the manuscript [Theulot et al.,
+2022](https://doi.org/XX.XXXXX/JOURNAL/REF).
 
 ``` r
-PLS_merging ("./","./","JP3A",suff="merged",file_list0="JP3A_nt_PLS_data.rds")
-res <- readRDS("JP3Amerged_PLS_data.rds")
+PLS_merging ("./","./","Exp_Test",suff="_merged",file_list0="Exp_Test_nt_PLS_data.rds")
+res <- readRDS("Exp_Test_merged_PLS_data.rds")
 toprint4 <- bind_cols(res[[4]][,1],res[[4]] %>% select(-1) %>% round(.,2) %>% mutate_all(format, digit=4))
-formattable(toprint4,align = c("l", rep("c", NCOL(toprint3) - 1)))
+formattable(toprint4,align = c("l", rep("c", NCOL(toprint4) - 1)))
 ```
+
+### Outpout data format explanation
+
+#### PLSmaster output
+
+1 PLS\_data  
+1.1: PLS\_data$allRDP3
+
+This tibble contains all the reads analyzed containing at least 3 linear
+segments after “Piecewise Linear Simplification”.  
+- read\_id= read identifier  
+- chrom= mapped chromosome  
+- start= start of the mapped read (1-based)  
+- end= end of the mapped read  
+- strand= strand of the mapped read  
+- gap\_pos= position of gaps introduced during the alignment  
+- signalr= BrdU signal along the mapped read (positions=chromosomal
+coordinate, Bprob= raw BrdU probability from megodon witu our model),
+signal=smoothed BrdU signal using first a 100nt rolling mean then a
+2500nt rolling weighted mean with a gaussian weight function)  
+- length= length of the read  
+- smBmedy= median of the smoothed BrdU signal  
+- Bmedy= median of the raw BrdU signal  
+- RDP= Piecewise Linear Simplification of the smoothed signal using the
+Ramer Douglas Peucker algorithm (x,y = positions of extremities of the
+linear segments)  
+- RDP.length= number segment+1  
+- sl= slope results (myslope1 function)  
+- sl2= slope results after letter affectation (myslope2 function)  
+- pat= read slope pattern after concatenation of sl2$sl.pat2  
+- patR= position of rightward forks in the read slope pattern  
+- patL= position of leftward forks in the read slope pattern  
+- fork.R= position of rightward forks indicating if the forks can be
+also a termination (not\_ter), positions of the identifed start of the
+pulse (X0,Y0), end of the pulse (X1,Y1) and end of the lastunamibiguous
+chase segment (X2, which might not coincide with the end of the chase),
+average speed during the pulse (speed), average signal slope during the
+pulse (sl\_pulse) and the begining of the chase (sl\_chase) and BrdU
+signal amplitude (d.Y, &gt;0 for for rightward forks)  
+- fork.L= position of leftward forks indicating if the forks can be also
+a termination (not\_ter), positions of the identifed start of the pulse
+(X0,Y0), end of the pulse (X1,Y1) and end of the lastunamibiguous chase
+segment (X2, which might not coincide with the end of the chase),
+average speed during the pulse (speed), average signal slope during the
+pulse (sl\_pulse) and the begining of the chase (sl\_chase) and BrdU
+signal amplitude (d.Y, &lt;0 for for leftward forks)  
+- forks= concatenation of fork.R and forkL  
+- n.forks= number of forks detected in the read
+
+1.2: PLS\_data$with\_forks
+
+same structure as PLS\_data$allRDP3
+
+#### PLS\_merging output

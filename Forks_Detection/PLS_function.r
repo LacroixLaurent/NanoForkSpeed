@@ -1,4 +1,4 @@
-### Function used in Theulot et al 2021
+### Function used in Theulot et al 2022
 ### Forks detection, orientation and speed measurement
 ### as well as Initiation and Termination detection
 ### work with splitted files from the parsing procedure done by 50000 reads chunks

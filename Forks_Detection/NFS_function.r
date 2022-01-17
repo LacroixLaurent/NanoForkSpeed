@@ -3,11 +3,11 @@
 ### as well as Initiation and Termination detection
 ### work with splitted files from the parsing procedure done by 50000 reads chunks
 ### smoothing is performed at the parsing level
-#### LL 20211108
+#### LL 20220117
 
 
 ### the main function
-PLS.detect <- function(tibble.test,RDP.eps=0.1,slope.thr=0.25,b2a.thr=0.02,pulse=2)
+NFS.detect <- function(tibble.test,RDP.eps=0.1,slope.thr=0.25,b2a.thr=0.02,pulse=2)
 	# signal already smoothed during the parsing
 {
 	suppressMessages(require(kmlShape))
@@ -165,13 +165,16 @@ PLS.detect <- function(tibble.test,RDP.eps=0.1,slope.thr=0.25,b2a.thr=0.02,pulse
 		mutate(fork.L=map2(sl2,patL, function(x,y) map.fL(x,y,t.pulse=pulse))) %>%
 		# merging R and L forks tibbles
 		mutate(forks=map2(fork.R,fork.L, function(w,z) (bind_rows(w,z) %>%
-																											# remove empty lines
-																											filter(!is.na(X0)) %>%
-																											# remove termination type forks
-																											filter(not_ter) %>%
-																											arrange(X0)))) %>%
+				# remove empty lines
+				filter(!is.na(X0)) %>%
+				# remove termination type forks
+				filter(not_ter) %>%
+				select(-not_ter) %>%
+				arrange(X0)))) %>%
 		# compute number of forks per read
-		mutate(n.forks=map_int(forks,nrow))
+		mutate(n.forks=map_int(forks,nrow)) %>%
+		# cleaning
+		select(-c(sl,patR,patL,pat,fork.R,fork.R)
 	test4 <- test3 %>%
 		# remove reads without forks (after ter filtering)
 		filter(n.forks>0) %>%
@@ -199,9 +202,9 @@ PLS.detect <- function(tibble.test,RDP.eps=0.1,slope.thr=0.25,b2a.thr=0.02,pulse
 			return(forks2)
 		})) %>%
 		# count of forks without gap per read
-		mutate(n.forks2=map_int(forks, nrow)) %>%
+		mutate(n.forks=map_int(forks, nrow)) %>%
 		# remove reads with no forks after this filtering
-		filter(n.forks2>0)
+		filter(n.forks>0)
 	res <- list(test3,test4)
 	names(res) <- c("allRDP3","with_forks")
 	return(res)
@@ -210,19 +213,19 @@ PLS.detect <- function(tibble.test,RDP.eps=0.1,slope.thr=0.25,b2a.thr=0.02,pulse
 ###
 
 
-PLSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPname="EXP",minlen=5000,b2a=0.02)
+NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPname="EXP",minlen=5000,b2a=0.02)
 	# in the output forks, L=left, R=right (in OKseq data, left=+ and right=-)
 	# EXP is the tibble of the reads coming from the basecalling procedure with
 	# the Parsing_function4megalodon.r function
 	# RDP.eps0 set the tolerance for the RDP simplification
 	# slope.thr0 is the threshold to call flat RDP segments
 	# pulse0 is the duration of the BrdU pulse (in minute)
-	# PLS.save is used to switch on the automatic saving of the results
+	# NFS.save is used to switch on the automatic saving of the results
 	# EXPname is used to name the saved file
 	# minlen can be adjusted select only reads longer than a threshold
 	# b2a is the threshold used to call if a flat segment corresponds to B or A
 {
-	EXP_PLSall <- EXP %>%
+	EXP_NFSall <- EXP %>%
 		# remove the prefix "read_" if present
 		mutate(read_id=map_chr(read_id, function(x) str_remove(x,"read_"))) %>%
 		mutate(length=end-start) %>%
@@ -234,29 +237,29 @@ PLSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPn
 		mutate(Bmedy=map_dbl(signalr,function(z) median(z$Bprob,na.rm=T)))
 
 	# compute the sum of length of all the reads with length>minlen
-	EXPlen <- EXP_PLSall %>% pull(length) %>% sum
+	EXPlen <- EXP_NFSall %>% pull(length) %>% sum
 	names(EXPlen) <- paste0("sumlength(>",(minlen/1000),"kb)")
 
 	# filter for reads with 3 or more RDP segments
 	# compute some stats
-	EXP_stat <- c(EXPname,nrow(EXP),nrow(EXP_PLSall))
+	EXP_stat <- c(EXPname,nrow(EXP),nrow(EXP_NFSall))
 	names(EXP_stat)=c("EXPname","n_reads",paste0("n_reads(len>",minlen/1000,"kb)"))
 
 	# threshold analysis
 	### obsolete for megalodon 3+ version but still useful to detect Exp with high background
 	### done with the Raw signal
-	EXP_Bmed <- median(EXP_PLSall$Bmedy)
-	EXP_Bmad <- mad(EXP_PLSall$Bmedy)
+	EXP_Bmed <- median(EXP_NFSall$Bmedy)
+	EXP_Bmad <- mad(EXP_NFSall$Bmedy)
 	if (b2a=="auto") {EXP_b2a.thr0 <- EXP_Bmed+3*EXP_Bmad} else {EXP_b2a.thr0 <- b2a}
 	EXP_b2a <- c(EXP_b2a.thr0,EXP_Bmed,EXP_Bmad)
 	names(EXP_b2a) <- c("b2a.thr","B_median","B_mad")
 
 	# forks detection
-	EXP_PLS_det <- PLS.detect(EXP_PLSall,RDP.eps=RDP.eps0,slope.thr=slope.thr0,b2a.thr=EXP_b2a.thr0,pulse=pulse0)
+	EXP_NFS_det <- NFS.detect(EXP_NFSall,RDP.eps=RDP.eps0,slope.thr=slope.thr0,b2a.thr=EXP_b2a.thr0,pulse=pulse0)
 
 	# more stats computed
-	EXP_PLSstat <- c(sapply(EXP_PLS_det,function(x) nrow(x)),sum(EXP_PLS_det[[1]]$n.forks),sum(EXP_PLS_det[[2]]$n.forks2))
-	names(EXP_PLSstat) <- c("n_reads(RDP>3)","n_reads_w_forks","n_forks","n_forks(no_gap)")
+	EXP_NFSstat <- c(sapply(EXP_NFS_det,function(x) nrow(x)),sum(EXP_NFS_det[[1]]$n.forks),sum(EXP_NFS_det[[2]]$n.forks))
+	names(EXP_NFSstat) <- c("n_reads(RDP>3)","n_reads_w_forks","n_forks","n_forks(no_gap)")
 
 	# outputting forks
 	### for those forks, start and end correspond to the X0 and X2 limits to improve the RFD coverage
@@ -265,9 +268,9 @@ PLSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPn
 	### lagging= strand+ forkL or strand- forkR
 	# maximum extension to extract the raw signal
 	trac.xmax <- 50000
-	if (nrow(EXP_PLS_det[[2]])>0)
+	if (nrow(EXP_NFS_det[[2]])>0)
 	{
-		EXPforks <- EXP_PLS_det[[2]] %>%
+		EXPforks <- EXP_NSS_det[[2]] %>%
 			select(chrom,strand,forks,signalr,read_id) %>%
 			unnest(cols = c(forks)) %>%
 			# selection of start and end for RFD
@@ -303,9 +306,6 @@ PLSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPn
 	}else{
 		EXPforks <- tibble(chrom=character(),strand=character(),st=integer(),en=integer(),direc=character(),speed=integer(),d.Y=double(),type=character(),X0=integer(),X1=integer(),X2=integer(),read_id=character(),trac=list(),len=integer(),exp=character())
 	}
-	#	 computing the length (in 100nt bin) of the longest trace for padding
-	#	EXP_maxlenfork <- max(EXPforks$len)
-	#	names(EXP_maxlenfork) <- "fork_maxlen"
 
 	# median speed
 	EXP_med_speed <- EXPforks %>% pull(speed) %>% median(na.rm=T)
@@ -318,16 +318,16 @@ PLSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPn
 	# reads with 3 or more RDP segments
 	# and reads with detected forks
 	EXP_med_read_len <- c(
-		median(EXP_PLSall$length),
-		median(EXP_PLS_det[[1]]$length),
-		median(EXP_PLS_det[[2]]$length))
+		median(EXP_NFSall$length),
+		median(EXP_NFS_det[[1]]$length),
+		median(EXP_NFS_det[[2]]$length))
 	names(EXP_med_read_len) <- c(paste0("read_med_len_all(>",minlen/1000,"kb)"),"read_med_len_RDP3","read_med_len_with_forks")
 
 	### Detection of Initiation and Termination
 	# extrapolated center(Ext.center) ExC=X0L+spL/(spL+spR)*X0L_X0R
 	# for ini, x0=X0L and x1=X0R, for ter, x0=X1R and x1=X1L
 	# mapping R and L forks, and concatenating of the R and L letter for pattern search
-	initer2 <- EXP_PLS_det[[2]] %>% mutate(forks=map(forks, function(x) {y <- x %>% filter(!gapovl) %>% mutate(forkdir=case_when(d.Y>0 ~"R",T~"L"));return(y)})) %>% mutate(patIT=map(forks, function(x) paste0(x$forkdir,collapse="")))
+	initer2 <- EXP_NFS_det[[2]] %>% mutate(forks=map(forks, function(x) {y <- x %>% filter(!gapovl) %>% mutate(forkdir=case_when(d.Y>0 ~"R",T~"L"));return(y)})) %>% mutate(patIT=map(forks, function(x) paste0(x$forkdir,collapse="")))
 	# mapping initiations with the pattern LR
 	initer2$patI <- lapply(initer2$patIT, function(x) (do.call(rbind,str_locate_all(x,"LR"))[,1]))
 	# mapping termination with the pattern RL
@@ -400,10 +400,10 @@ PLSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPn
 	initer_stat <- c(nrow(iniforks),median(iniforks$sp.ratio,na.rm=T),median(iniforks$dY.ratio,na.rm=T),nrow(terforks),median(terforks$sp.ratio,na.rm=T),median(terforks$dY.ratio,na.rm=T))
 	names(initer_stat) <- c("nb_init","med(init_sp_ratio)","med(init_dY_ratio)","nb_ter","med(ter_sp_ratio)","med(ter_dY_ratio)")
 
-	AllEXPstats <- as.data.frame(t(c(EXP_stat,EXPlen,EXP_med_read_len,EXP_b2a,EXP_PLSstat,EXP_med_speed,EXP_med_dY,initer_stat)))
+	AllEXPstats <- as.data.frame(t(c(EXP_stat,EXPlen,EXP_med_read_len,EXP_b2a,EXP_NFSstat,EXP_med_speed,EXP_med_dY,initer_stat)))
 
 	# compute forks, initiations and termination densities per Mb sequenced reads
-	forkdens <- EXP_PLSstat[4]/EXPlen*1e6
+	forkdens <- EXP_NFSstat[4]/EXPlen*1e6
 	names(forkdens) <- "forks_per_Mb"
 	initdens <- initer_stat[1]/EXPlen*1e6
 	terdens <- initer_stat[4]/EXPlen*1e6
@@ -414,48 +414,48 @@ PLSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,PLS.save=T,EXPn
 	AllEXPstats2 <- cbind(AllEXPstats,dens)
 
 	# exporting results as a list containing 4 places:
-	# 1- reads with 3 or more PLS segments and read with forks after ter and gap filtering
+	# 1- reads with 3 or more RDP segments and read with forks after ter and gap filtering
 	# 2- forks
 	# 3- Initiations and Terminations
 	# 4- stats
-	res <- list(EXP_PLS_det,EXPforks,initer_res,AllEXPstats2)
-	names(res) <- c("PLS_data","forks","initer","stats")
+	res <- list(EXP_NFS_det,EXPforks,initer_res,AllEXPstats2)
+	names(res) <- c("NFS_data","forks","initer","stats")
 
 	# saving the data if required
-	if (PLS.save==T) {saveRDS(res,file=paste0(EXPname,"_PLS_data.rds"))}
+	if (NFS.save==T) {saveRDS(res,file=paste0(EXPname,"_NFS_data.rds"))}
 
 	return(res)
 }
 
-## A function to merge PLS results and extract stats
+## A function to merge NFS results and extract stats
 
-PLS_merging <- function(dir_in,dir_out,ExpName,suff="",file_list0=NA)
+NSS_merging <- function(dir_in,dir_out,ExpName,suff="",file_list0=NA)
 {
 	require(tidyverse)
 	if (is.na(file_list0)) {file_list <- dir(dir_in,pattern=paste0(ExpName,"_"))}else{file_list=file_list0}
 	### BEWARE pattern can be misleading
-	PLS_reads <- do.call(bind_rows,lapply(file_list, function(x) {
+	NSS_reads <- do.call(bind_rows,lapply(file_list, function(x) {
 		readRDS(paste0(dir_in,x))[[1]][[2]]})) %>%
 		# keeping only the essentiel
 		select(-c(RDP.length,sl,patR,patL,fork.R,fork.L,n.forks)) %>%
 		arrange(chrom,start)
 
-	PLS_forks <- do.call(bind_rows,lapply(file_list, function(x) {
+	NFS_forks <- do.call(bind_rows,lapply(file_list, function(x) {
 		readRDS(paste0(dir_in,x))[[2]]})) %>%
 		arrange(chrom,st) %>%
 		mutate(exp=ExpName)
 
-	PLS_initer <- do.call(bind_rows,lapply(file_list, function(x) {
+	NFS_initer <- do.call(bind_rows,lapply(file_list, function(x) {
 		readRDS(paste0(dir_in,x))[[3]]}))  %>%
 		arrange(chrom,x0,type)
 	# redo stats
 	Stats_in <- do.call(bind_rows,lapply(file_list, function(x) {
 		readRDS(paste0(dir_in,x))[[4]]}))
-	PLS_stats <- tibble(Expname=ExpName,n_reads=sum(as.numeric(Stats_in[,2])),n_reads2=sum(as.numeric(Stats_in[,3])),sumlength=sum(as.numeric(Stats_in[,4])),b2a.thr=as.numeric(Stats_in[1,8]),n_reads_RDP3=sum(as.numeric(Stats_in[,11])),n_reads_forks=sum(as.numeric(Stats_in[,12])),n_forks=sum(as.numeric(Stats_in[,14])),speed_med=median(PLS_forks$speed,na.rm=T),dY_med=median(abs(PLS_forks$d.Y),na.rm=T),nb_init=sum(as.numeric(Stats_in[,17])),nb_ter=sum(as.numeric(Stats_in[,20])),fork_dens=sum(as.numeric(Stats_in[,14]))/sum(as.numeric(Stats_in[,4]))*1e6,init_dens=sum(as.numeric(Stats_in[,17]))/sum(as.numeric(Stats_in[,4]))*1e6,ter_dens=sum(as.numeric(Stats_in[,20]))/sum(as.numeric(Stats_in[,4]))*1e6)
+	NFS_stats <- tibble(Expname=ExpName,n_reads=sum(as.numeric(Stats_in[,2])),n_reads2=sum(as.numeric(Stats_in[,3])),sumlength=sum(as.numeric(Stats_in[,4])),b2a.thr=as.numeric(Stats_in[1,8]),n_reads_RDP3=sum(as.numeric(Stats_in[,11])),n_reads_forks=sum(as.numeric(Stats_in[,12])),n_forks=sum(as.numeric(Stats_in[,14])),speed_med=median(NFS_forks$speed,na.rm=T),dY_med=median(abs(NFS_forks$d.Y),na.rm=T),nb_init=sum(as.numeric(Stats_in[,17])),nb_ter=sum(as.numeric(Stats_in[,20])),fork_dens=sum(as.numeric(Stats_in[,14]))/sum(as.numeric(Stats_in[,4]))*1e6,init_dens=sum(as.numeric(Stats_in[,17]))/sum(as.numeric(Stats_in[,4]))*1e6,ter_dens=sum(as.numeric(Stats_in[,20]))/sum(as.numeric(Stats_in[,4]))*1e6)
 
-	res <- list(PLS_reads,PLS_forks,PLS_initer,PLS_stats)
+	res <- list(NFS_reads,NFS_forks,NFS_initer,NFS_stats)
 	names(res) <- c("reads","forks","initer","stats")
-	saveRDS(res,file=paste0(dir_out,ExpName,suff,"_PLS_data.rds"))
+	saveRDS(res,file=paste0(dir_out,ExpName,suff,"_NFS_data.rds"))
 
 }
 

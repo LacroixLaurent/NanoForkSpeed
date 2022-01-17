@@ -1,4 +1,4 @@
-PLS data generation
+NFS data generation
 ================
 
 This is a typical example how we proceed to detect forks, initiations
@@ -19,7 +19,7 @@ more linearized segments.
 suppressMessages(library(tidyverse))
 `%+%`<- paste0
 source("./helper_function.r")
-source("./PLS_function.r")
+source("./NFS_function.r")
 expmeg <- "JP3A_Megalodon_00_smdata.rds"
 pathdata <- "~/work/Ori/newRaw_nt/"
 ex.name <- "Exp_Test"
@@ -44,7 +44,7 @@ We also limit to 5000 the number of reads used for this evaluation to
 speed up the computation but all the reads can be used by setting
 nreads=NA.
 
-### PLS analysis
+### NFS analysis
 
 Once the user has checked that the distribution of the signal and the
 position of the background threshold (ex.b2a in the following script)
@@ -67,7 +67,7 @@ suppressMessages(library(kmlShape))
 suppressMessages(library(tidyverse))
 library(formattable)
 `%+%`<- paste0
-source("./PLS_function.r")
+source("./NFS_function.r")
 
 seqinf <- Seqinfo(seqnames=c("chrI","chrII","chrIII","chrIV","chrV","chrVI","chrVII","chrVIII","chrIX","chrX","chrXI","chrXII","chrXIII","chrXIV","chrXV","chrXVI","chrM","rDNA-10R"),seqlengths=c(230218,813184,316620,1531933,576874,270161,1090940,562643,439888,745751,666816,1078177,924431,784333,1091291,948066,85779,113097), isCircular=c(rep(F,16),T,F),genome="S288CrDNA")
 
@@ -77,35 +77,34 @@ ex.name <- "Exp_Test"
 ex.pulse <- 2
 ex.b2a <- 0.02
 EXP <- readRDS(pathdata %+% expmeg)  %>% filter(chrom!="chrM")
-EXP_PLS <- PLSmaster(EXP,pulse0=ex.pulse,PLS.save=T,EXPname=ex.name %+% "_nt",b2a=ex.b2a)
-# toprint <- as_tibble(EXP_PLS[[4]])
+EXP_NFS <- NFSmaster(EXP,pulse0=ex.pulse,NFS.save=T,EXPname=ex.name %+% "_nt",b2a=ex.b2a)
+# toprint <- as_tibble(EXP_NFS[[4]])
 # toprint2 <- toprint %>% select(-1) %>% mutate_all(.,as.numeric)
 # toprint3 <- bind_cols(toprint[,1],toprint2%>% round(.,2) %>% mutate_all(formatC, digit=4))
 # formattable(toprint3,align = c("l", rep("c", NCOL(toprint3) - 1)))
 ```
 
 As parsed data file were big, fork detection is performed on the split
-data and then these results are merged using the PLS\_merging function
-from the *PLS\_function.r* file.  
+data and then these results are merged using the NFS\_merging function
+from the *NFS\_function.r* file.  
 The merged data file keep the same organization with a slightly
 simplified summary table. Those merged file are then used to produce the
 figures and data discussed in the manuscript [Theulot et al.,
 2022](https://doi.org/XX.XXXXX/JOURNAL/REF).
 
 ``` r
-PLS_merging ("./","./","Exp_Test",suff="_merged",file_list0="Exp_Test_nt_PLS_data.rds")
-res <- readRDS("Exp_Test_merged_PLS_data.rds")
+NFS_merging ("./","./","Exp_Test",suff="_merged",file_list0="Exp_Test_nt_NFS_data.rds")
+res <- readRDS("Exp_Test_merged_NFS_data.rds")
 toprint4 <- bind_cols(res[[4]][,1],res[[4]] %>% select(-1) %>% round(.,2) %>% mutate_all(format, digit=4))
 formattable(toprint4,align = c("l", rep("c", NCOL(toprint4) - 1)))
 ```
 
 ### Outpout data format explanation
 
-<<<<<<< HEAD
-##### PLSmaster output
+##### NFSmaster output
 
-1 PLS\_data  
-1.1: PLS\_data$allRDP3
+1 NFS\_data  
+1.1: NFS\_data$allRDP3
 
 This tibble contains all the reads analyzed containing at least 3 linear
 segments after “Piecewise Linear Simplification”.  
@@ -148,24 +147,8 @@ signal amplitude (d.Y, &lt;0 for for leftward forks)
 - forks= concatenation of fork.R and forkL  
 - n.forks= number of forks detected in the read
 
-1.2: PLS\_data$with\_forks
+1.2: NFS\_data$with\_forks
 
-same structure as PLS\_data$allRDP3
-=======
-#### PLSmaster output
+same structure as NFS\_data$allRDP3
 
-1: PLS\_data 1.1: PLS\_data$allRDP3 This tibble contains all the reads
-analyzed containing at least 3 linear segments after “Piecewise Linear
-Simplification”. - read\_id= read identifier - chrom= mapped chromosome
-- start= start of the mapped read (1-based) - end= end of the mapped
-read - strand= strand of the mapped read - gap\_pos= position of gaps
-introduced during the alignment - signalr= BrdU signal along the mapped
-read (positions=chromosomal coordinate, Bprob= raw BrdU probability from
-megodon witu our model), signal=smoothed BrdU signal using first a 100nt
-rolling mean then a 2500nt rolling weighted mean with a gaussian weight
-function) - length= length of the read - smBmedy= - Bmedy= - RDP= -
-RDP\_length= - sl= - sl2= - pat= - patR - patL - fork.R - fork.L -
-forks= - n.forks=
->>>>>>> b75e6609e7d70a3ade7a8c9033776f127c0ace24
-
-#### PLS\_merging output
+#### NFS\_merging output

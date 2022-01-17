@@ -1,6 +1,6 @@
-### Helper Function used in Theulot et al 2021
+### Helper Function used in Theulot et al 2022
 
-#### LL 20211108
+#### LL 20220117
 
 ###
 simpleRFD <- function(gr,lr=1,na2zero=F,expor=F,outname='myRFDdata')
@@ -68,13 +68,13 @@ plotforks2 <- function(toto,b2a.thr=0.02,fileout,plot.raw=F)
 				geom_line(aes(x=positions,y=signal,col="data.smoothed"))+
 				geom_line(data=test$RDP[[1]],aes(x=x,y=y,col="RDP_segment"))+
 				geom_hline(yintercept=b2a.thr,linetype="dashed") +
-				geom_segment(data=test$forks[[1]],aes(x=X1,xend=X2,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_chase"),arrow=arrow(length = unit(0.2,"cm")), show.legend = F)+
-				geom_segment(data=test$forks[[1]],aes(x=X0,xend=X1,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_pulse"),arrow=arrow(length = unit(0.1,"cm")), show.legend = F)+
-				geom_text(data=test$forks[[1]],aes(x=(X0+X1)/2,y=(0.8+sign(d.Y)/20),fontface="bold",col="PLS_speed",label=speed),size=2, show.legend = F)+
+				geom_segment(data=test$forks[[1]],aes(x=X1,xend=X2,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="NFS_fork_chase"),arrow=arrow(length = unit(0.2,"cm")), show.legend = F)+
+				geom_segment(data=test$forks[[1]],aes(x=X0,xend=X1,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="NFS_fork_pulse"),arrow=arrow(length = unit(0.1,"cm")), show.legend = F)+
+				geom_text(data=test$forks[[1]],aes(x=(X0+X1)/2,y=(0.8+sign(d.Y)/20),fontface="bold",col="NFS_speed",label=speed),size=2, show.legend = F)+
 				xlab(paste(test$chrom,test$start,test$end,test$strand,test$read_id,sep="_"))+
 				guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
 				theme(legend.position = "right")+
-				scale_color_manual(breaks = c("data.smoothed","data.raw","RDP_segment","RDP_seg_type","PLS_fork_pulse","PLS_fork_chase","PLS_speed","data.gap"),values = mypal[c(2,1,4,3,6,5,8,10)])+
+				scale_color_manual(breaks = c("data.smoothed","data.raw","RDP_segment","RDP_seg_type","NFS_fork_pulse","NFS_fork_chase","NFS_speed","data.gap"),values = mypal[c(2,1,4,3,6,5,8,10)])+
 				coord_cartesian(ylim=c(0,1))
 		}else{
 			pl[[i]] <- ggplot(test$signalr[[1]]) +
@@ -82,13 +82,13 @@ plotforks2 <- function(toto,b2a.thr=0.02,fileout,plot.raw=F)
 				geom_line(aes(x=positions,y=signal,col="data.smoothed"))+
 				geom_line(data=test$RDP[[1]],aes(x=x,y=y,col="RDP_segment"))+
 				geom_hline(yintercept=b2a.thr,linetype="dashed") +
-				geom_segment(data=test$forks[[1]],aes(x=X1,xend=X2,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_chase"),arrow=arrow(length = unit(0.2,"cm")), show.legend = F)+
-				geom_segment(data=test$forks[[1]],aes(x=X0,xend=X1,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="PLS_fork_pulse"),arrow=arrow(length = unit(0.1,"cm")), show.legend = F)+
-				geom_text(data=test$forks[[1]],aes(x=(X0+X1)/2,y=(0.8+sign(d.Y)/20),fontface="bold",col="PLS_speed",label=speed),size=2, show.legend = F)+
+				geom_segment(data=test$forks[[1]],aes(x=X1,xend=X2,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="NFS_fork_chase"),arrow=arrow(length = unit(0.2,"cm")), show.legend = F)+
+				geom_segment(data=test$forks[[1]],aes(x=X0,xend=X1,y=(0.5+sign(d.Y)/40),yend=(0.5+sign(d.Y)/40),col="NFS_fork_pulse"),arrow=arrow(length = unit(0.1,"cm")), show.legend = F)+
+				geom_text(data=test$forks[[1]],aes(x=(X0+X1)/2,y=(0.8+sign(d.Y)/20),fontface="bold",col="NFS_speed",label=speed),size=2, show.legend = F)+
 				xlab(paste(test$chrom,test$start,test$end,test$strand,test$read_id,sep="_"))+
 				guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
 				theme(legend.position = "right")+
-				scale_color_manual(breaks = c("data.smoothed","data.raw","RDP_segment","RDP_seg_type","PLS_fork_pulse","PLS_fork_chase","PLS_speed","data.gap"),values = mypal[c(2,1,4,3,6,5,8,10)])+
+				scale_color_manual(breaks = c("data.smoothed","data.raw","RDP_segment","RDP_seg_type","NFS_fork_pulse","NFS_fork_chase","NFS_speed","data.gap"),values = mypal[c(2,1,4,3,6,5,8,10)])+
 				coord_cartesian(ylim=c(0,1))
 		}
 		if (test$gap_pos[[1]]$gap_start[1]>0)
@@ -135,7 +135,7 @@ plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr
 		EXP2 <- EXP
 	}
 
-	EXP_PLSall <- EXP2 %>%
+	EXP_NFSall <- EXP2 %>%
 		mutate(read_id=map_chr(read_id, function(x) str_remove(x,"read_"))) %>%
 		select(read_id,chrom,start,end,strand,signalr) %>%
 		mutate(length=end-start) %>%
@@ -143,10 +143,10 @@ plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr
 		mutate(RDP=map(signalr,myRDP,RDP.eps=0.1)) %>%
 		mutate(RDP.length=map_int(RDP,function(x) nrow(x))) %>%
 		mutate(Bmedy=map_dbl(signalr,function(z) median(z$signal)))
-	EXP_PLS3 <- EXP_PLSall %>% filter(RDP.length>3)
+	EXP_NFS3 <- EXP_NFSall %>% filter(RDP.length>3)
 	# all data
 	if (alldata==T) {
-		test0 <- EXP_PLSall %>%
+		test0 <- EXP_NFSall %>%
 			mutate(noise= map(signalr, function(y) {
 				y %>%
 					mutate(positions = round(positions/bs)*bs) %>%
@@ -173,7 +173,7 @@ plot_signal <- function(EXP,xmax=1,EXPname="EXP",bs=1000,minlen=5000,EXP_b2a.thr
 		{ggsave(paste0(EXPname,"_all_1kbmeansignal.pdf"),h=8,w=6)}
 	}
 	# RDP>3 data
-	test1 <- EXP_PLS3 %>%
+	test1 <- EXP_NFS3 %>%
 		mutate(noise= map(signalr, function(y) {
 			y %>%
 				mutate(positions = round(positions/bs)*bs) %>%
@@ -314,9 +314,9 @@ padandtrace <- function(EXPforks,pad.max=500)
 	return(out)
 }
 
-compute_meantrace <- function(PLStib,trac.xmax=50000)
+compute_meantrace <- function(NFStib,trac.xmax=50000)
 {
-	toplot <- PLStib
+	toplot <- NFStib
 	pad.max0 <- trac.xmax/100
 
 	totrace <- split(toplot, toplot$exp)
@@ -382,15 +382,15 @@ plot_meantrace2 <- function(totrace4,explist,ymax0=0.8,xmax=50000,normalise=F,ro
 
 
 ### plot read length
-plot_readlength <- function(EXP,EXP_PLS,fileout=NA,ymax=150000) {
+plot_readlength <- function(EXP,EXP_NFS,fileout=NA,ymax=150000) {
 	if (is.na(fileout))
 	{
-		fileout <- EXP.PLS[[2]]$exp[1]
+		fileout <- EXP.NFS[[2]]$exp[1]
 	}
 	toplot <- bind_rows(
 		tibble(len=EXP %>% mutate(length=end-start) %>% filter(length>5000) %>% pull(length),leg="All reads >5kb"),
-		tibble(len=EXP_PLS[[1]][[1]] %>% pull(length),leg="All reads RDP3"),
-		tibble(len=EXP_PLS[[1]][[2]] %>% pull(length),leg="Reads with forks"))
+		tibble(len=EXP_NFS[[1]][[1]] %>% pull(length),leg="All reads RDP3"),
+		tibble(len=EXP_NFS[[1]][[2]] %>% pull(length),leg="Reads with forks"))
 	totext <- toplot %>% group_by(leg) %>% summarise(n=n()) %>% ungroup
 	tomed <- toplot %>% group_by(leg) %>% summarise(med=round(median(len),0)) %>% ungroup
 	ggplot(toplot)+

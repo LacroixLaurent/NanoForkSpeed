@@ -7,7 +7,7 @@ This is a typical example how we proceed to detect forks, initiations and termin
 
 ### Background threshold determination
 The first step of the analysis requires to check the distribution of the signal in order to set the b2a threshold, used to identify the background of the signal.  
-This script outputs a PDF file corresponding to the distribution of the BrdU signal in 1kb bins for the reads filtered the presence of 3 and more linearized segments. 
+This script outputs a PDF file corresponding to the distribution of the BrdU signal in 1kb bins for the reads filtered the presence of 3 and more linear segments. 
 
 ```{r eval = FALSE}
 suppressMessages(library(tidyverse))

@@ -13,7 +13,7 @@ signal in order to set the b2a threshold, used to identify the
 background of the signal.  
 This script outputs a PDF file corresponding to the distribution of the
 BrdU signal in 1kb bins for the reads filtered the presence of 3 and
-more linearized segments.
+more linear segments.
 
 ``` r
 suppressMessages(library(tidyverse))

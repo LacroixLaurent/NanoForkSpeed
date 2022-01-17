@@ -1,6 +1,6 @@
 ---
 title: "PLS data generation"
-output: html_notebook
+output: github_document
 ---
 
 This is a typical example how we proceed to detect forks, initiations and terminations from the reads base_called with megalodon and our model (script=basecalling_sample.sh) then parsed with the Parsing_function4Megalodon.r  (script=basecalling_sample.r).  
@@ -9,11 +9,11 @@ This is a typical example how we proceed to detect forks, initiations and termin
 The first step of the analysis requires to check the distribution of the signal in order to set the b2a threshold, used to identify the background of the signal.  
 This script outputs a PDF file corresponding to the distribution of the BrdU signal in 1kb bins for the reads filtered the presence of 3 and more linearized segments. 
 
-```{r}
+```{r eval = FALSE}
 suppressMessages(library(tidyverse))
 `%+%`<- paste0
-source("helper_function.r")
-source("PLS_function.r")
+source("./helper_function.r")
+source("./PLS_function.r")
 expmeg <- "JP3A_Megalodon_00_smdata.rds"
 pathdata <- "~/work/Ori/newRaw_nt/"
 ex.name <- expmeg %>% str_remove("_Megalodon_00_smdata.rds")
@@ -35,7 +35,7 @@ This procedure create an output file saved in the .rds format. The data are orga
 2- a tibble of all the detected forks.  
 3- a tibble containing the initiations (Init) and the terminations (Ter) detected.  
 4- a table summary of different metrics of the experiment.   
-```{r}
+```{r eval = FALSE}
 library(GenomicRanges)
 library(rtracklayer)
 suppressMessages(library(kmlShape))
@@ -61,7 +61,7 @@ EXP_PLS <- PLSmaster(EXP,pulse0=ex.pulse,PLS.save=T,EXPname=ex.name %+% "_nt",b2
 
 As parsed data file were big, fork detection is performed on the split data and then these results are merged using the PLS_merging function from the PLS_function.r file.  
 The merged data file keep the same organization with a slightly simplified summary table. Those merged file are then used to produced the figures and data discussed in the manuscript.  
-```{r}
+```{r eval = FALSE}
 PLS_merging ("./","./","JP3A",suff="merged",file_list0="JP3A_nt_PLS_data.rds")
 res <- readRDS("JP3Amerged_PLS_data.rds")
 toprint4 <- bind_cols(res[[4]][,1],res[[4]] %>% select(-1) %>% round(.,2) %>% mutate_all(format, digit=4))

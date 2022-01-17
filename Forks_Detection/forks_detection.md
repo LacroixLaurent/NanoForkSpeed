@@ -128,11 +128,11 @@ linear segments)
 - sl2= slope results after letter affectation  
 - forks= position of the forks indicating the positions of the identifed
 start of the pulse (X0,Y0), end of the pulse (X1,Y1) and end of the last
-unamibiguous chase segment (X2, which might not coincide with the end of
-the chase), average speed during the pulse (speed), average signal slope
-during the pulse (sl\_pulse) and the begining of the chase (sl\_chase)
-and BrdU signal amplitude (d.Y, &gt;0 for for rightward forks,&lt;0 for
-for leftward forks )  
+un amibiguous chase segment (X2, which might not coincide with the end
+of the chase), average speed during the pulse (speed), average signal
+slope during the pulse (sl\_pulse) and the begining of the chase
+(sl\_chase) and BrdU signal amplitude (d.Y, &gt;0 for for rightward
+forks,&lt;0 for for leftward forks )  
 - n.forks= number of forks detected in the read
 
 1.2: NFS\_data$with\_forks

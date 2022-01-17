@@ -88,7 +88,7 @@ This tibble contains all the reads analyzed containing at least 3 linear segment
 - RDP= Piecewise Linear Simplification of the smoothed signal using the Ramer Douglas Peucker algorithm (x,y = positions of extremities of the linear segments)  
 - RDP.length= number segment+1  
 - sl2= slope results after letter affectation  
-- forks= position of the forks indicating the positions of the identifed start of the pulse (X0,Y0), end of the pulse (X1,Y1) and end of the last unamibiguous chase segment (X2, which might not coincide with the end of the chase), average speed during the pulse (speed), average signal slope during the pulse (sl_pulse) and the begining of the chase (sl_chase) and BrdU signal amplitude (d.Y, >0 for for rightward forks,<0 for for leftward forks )  
+- forks= position of the forks indicating the positions of the identifed start of the pulse (X0,Y0), end of the pulse (X1,Y1) and end of the last un amibiguous chase segment (X2, which might not coincide with the end of the chase), average speed during the pulse (speed), average signal slope during the pulse (sl_pulse) and the begining of the chase (sl_chase) and BrdU signal amplitude (d.Y, >0 for for rightward forks,<0 for for leftward forks )  
 - n.forks= number of forks detected in the read  
 
 1.2: NFS_data$with_forks  

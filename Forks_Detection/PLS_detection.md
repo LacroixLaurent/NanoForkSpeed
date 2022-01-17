@@ -101,7 +101,7 @@ formattable(toprint4,align = c("l", rep("c", NCOL(toprint4) - 1)))
 
 ### Outpout data format explanation
 
-#### PLSmaster output
+##### PLSmaster output
 
 1 PLS\_data  
 1.1: PLS\_data$allRDP3

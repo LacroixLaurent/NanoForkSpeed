@@ -101,6 +101,7 @@ formattable(toprint4,align = c("l", rep("c", NCOL(toprint4) - 1)))
 
 ### Outpout data format explanation
 
+<<<<<<< HEAD
 ##### PLSmaster output
 
 1 PLS\_data  
@@ -150,5 +151,21 @@ signal amplitude (d.Y, &lt;0 for for leftward forks)
 1.2: PLS\_data$with\_forks
 
 same structure as PLS\_data$allRDP3
+=======
+#### PLSmaster output
+
+1: PLS\_data 1.1: PLS\_data$allRDP3 This tibble contains all the reads
+analyzed containing at least 3 linear segments after “Piecewise Linear
+Simplification”. - read\_id= read identifier - chrom= mapped chromosome
+- start= start of the mapped read (1-based) - end= end of the mapped
+read - strand= strand of the mapped read - gap\_pos= position of gaps
+introduced during the alignment - signalr= BrdU signal along the mapped
+read (positions=chromosomal coordinate, Bprob= raw BrdU probability from
+megodon witu our model), signal=smoothed BrdU signal using first a 100nt
+rolling mean then a 2500nt rolling weighted mean with a gaussian weight
+function) - length= length of the read - smBmedy= - Bmedy= - RDP= -
+RDP\_length= - sl= - sl2= - pat= - patR - patL - fork.R - fork.L -
+forks= - n.forks=
+>>>>>>> b75e6609e7d70a3ade7a8c9033776f127c0ace24
 
 #### PLS\_merging output

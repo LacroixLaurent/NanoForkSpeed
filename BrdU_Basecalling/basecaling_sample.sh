@@ -15,7 +15,8 @@ conda env create -f megalodon.yml
 conda activate mega
 REF=./data/S288CwExtrarDNA_ROMAN.fa
 # we used a modified version of the S288C reference genome (R64.2.1)
-# to which we add an extra chromosome (rDNA-10R) containing 10 rDNA tandem repats
+# to which we add an extra chromosome (rDNA-10R) containing 10 rDNA tandem repats.
+# the fasta file for this reference is provided (S288CwExtrarDNA_ROMAN.fa.zip)
 CFG=BrdU_Configuration4megalodon.cfg
 INPUT=./data/EXP_fast5
 OUTPUT=./data/EXP_mega

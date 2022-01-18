@@ -436,7 +436,7 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 NFS_merging <- function(dir_in,dir_out,ExpName,suff="",file_list0=NA)
 {
 	require(tidyverse)
-	if (is.na(file_list0)) {file_list <- dir(dir_in,pattern=paste0(ExpName,"_"))}else{file_list=file_list0}
+	if (is.na(file_list0[1])) {file_list <- dir(dir_in,pattern=paste0(ExpName,"_"))}else{file_list=file_list0}
 	### BEWARE pattern can be misleading
 	NFS_reads <- do.call(bind_rows,lapply(file_list, function(x) {
 		readRDS(paste0(dir_in,x))[[1]][[2]]})) %>%

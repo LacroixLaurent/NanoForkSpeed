@@ -62,10 +62,10 @@ detected.
 
 ``` r
 library(GenomicRanges)
-library(rtracklayer)
+#library(rtracklayer)
 suppressMessages(library(kmlShape))
 suppressMessages(library(tidyverse))
-library(formattable)
+#library(formattable)
 `%+%`<- paste0
 source("./NFS_function.r")
 
@@ -93,6 +93,7 @@ figures and data discussed in the manuscript [Theulot et al.,
 2022](https://doi.org/XX.XXXXX/JOURNAL/REF).
 
 ``` r
+source("./NFS_function.r")
 NFS_merging ("./","./","Exp_Test",suff="_merged",file_list0="Exp_Test_nt_NFS_data.rds")
 res <- readRDS("Exp_Test_merged_NFS_data.rds")
 toprint4 <- bind_cols(res[[4]][,1],res[[4]] %>% select(-1) %>% round(.,2) %>% mutate_all(format, digit=4))

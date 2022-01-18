@@ -174,7 +174,7 @@ NFS.detect <- function(tibble.test,RDP.eps=0.1,slope.thr=0.25,b2a.thr=0.02,pulse
 		# compute number of forks per read
 		mutate(n.forks=map_int(forks,nrow)) %>%
 		# cleaning
-		select(-c(sl,patR,patL,pat,fork.R,fork.R)
+		select(-c(sl,patR,patL,pat,fork.R,fork.R))
 	test4 <- test3 %>%
 		# remove reads without forks (after ter filtering)
 		filter(n.forks>0) %>%
@@ -270,7 +270,7 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 	trac.xmax <- 50000
 	if (nrow(EXP_NFS_det[[2]])>0)
 	{
-		EXPforks <- EXP_NSS_det[[2]] %>%
+		EXPforks <- EXP_NFS_det[[2]] %>%
 			select(chrom,strand,forks,signalr,read_id) %>%
 			unnest(cols = c(forks)) %>%
 			# selection of start and end for RFD
@@ -429,15 +429,15 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 
 ## A function to merge NFS results and extract stats
 
-NSS_merging <- function(dir_in,dir_out,ExpName,suff="",file_list0=NA)
+NFS_merging <- function(dir_in,dir_out,ExpName,suff="",file_list0=NA)
 {
 	require(tidyverse)
 	if (is.na(file_list0)) {file_list <- dir(dir_in,pattern=paste0(ExpName,"_"))}else{file_list=file_list0}
 	### BEWARE pattern can be misleading
-	NSS_reads <- do.call(bind_rows,lapply(file_list, function(x) {
+	NFS_reads <- do.call(bind_rows,lapply(file_list, function(x) {
 		readRDS(paste0(dir_in,x))[[1]][[2]]})) %>%
 		# keeping only the essentiel
-		select(-c(RDP.length,sl,patR,patL,fork.R,fork.L,n.forks)) %>%
+		select(-c(RDP.length)) %>%
 		arrange(chrom,start)
 
 	NFS_forks <- do.call(bind_rows,lapply(file_list, function(x) {

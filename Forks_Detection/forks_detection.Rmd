@@ -37,10 +37,10 @@ This procedure create an output file saved in the .rds format. The data are orga
 4- a table summary of different metrics of the experiment.   
 ```{r eval = FALSE}
 library(GenomicRanges)
-library(rtracklayer)
+#library(rtracklayer)
 suppressMessages(library(kmlShape))
 suppressMessages(library(tidyverse))
-library(formattable)
+#library(formattable)
 `%+%`<- paste0
 source("./NFS_function.r")
 
@@ -62,6 +62,7 @@ EXP_NFS <- NFSmaster(EXP,pulse0=ex.pulse,NFS.save=T,EXPname=ex.name %+% "_nt",b2
 As parsed data file were big, fork detection is performed on the split data and then these results are merged using the NFS_merging function from the *NFS_function.r* file.  
 The merged data file keep the same organization with a slightly simplified summary table. Those merged file are then used to produce the figures and data discussed in the manuscript [Theulot et al., 2022](https://doi.org/XX.XXXXX/JOURNAL/REF).  
 ```{r eval = FALSE}
+source("./NFS_function.r")
 NFS_merging ("./","./","Exp_Test",suff="_merged",file_list0="Exp_Test_nt_NFS_data.rds")
 res <- readRDS("Exp_Test_merged_NFS_data.rds")
 toprint4 <- bind_cols(res[[4]][,1],res[[4]] %>% select(-1) %>% round(.,2) %>% mutate_all(format, digit=4))

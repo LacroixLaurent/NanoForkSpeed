@@ -109,6 +109,10 @@ NFS.detect <- function(tibble.test,RDP.eps=0.1,slope.thr=0.25,b2a.thr=0.02,pulse
 
 	## Main  detection function
 	test2 <- tibble.test %>%
+		# remove reads with no signal
+		mutate(siglen=map_dbl(signalr,nrow)) %>%
+		filter(siglen!=0) %>%
+		select(-siglen) %>%
 		# RDP simplification
 		mutate(RDP=map(signalr,myRDP)) %>%
 		# selection of reads with 3 or more segment to look for forks
@@ -174,7 +178,7 @@ NFS.detect <- function(tibble.test,RDP.eps=0.1,slope.thr=0.25,b2a.thr=0.02,pulse
 		# compute number of forks per read
 		mutate(n.forks=map_int(forks,nrow)) %>%
 		# cleaning
-		select(-c(sl,patR,patL,pat,fork.R,fork.R))
+		select(-c(sl,patR,patL,pat,fork.R,fork.L))
 	test4 <- test3 %>%
 		# remove reads without forks (after ter filtering)
 		filter(n.forks>0) %>%

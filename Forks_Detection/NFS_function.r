@@ -303,12 +303,10 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 				return(out)
 			})) %>%
 			select(chrom,strand,st,en,direc,speed,d.Y,type,X0,X1,X2,read_id,trac) %>%
-			# compute length of the extracted trace (in 100nt bin units)
-			#			mutate(len=map_int(trac,nrow)) %>%
 			# associated EXPname to fork
 			mutate(exp=EXPname)
 	}else{
-		EXPforks <- tibble(chrom=character(),strand=character(),st=integer(),en=integer(),direc=character(),speed=integer(),d.Y=double(),type=character(),X0=integer(),X1=integer(),X2=integer(),read_id=character(),trac=list(),len=integer(),exp=character())
+		EXPforks <- tibble(chrom=character(),strand=character(),st=integer(),en=integer(),direc=character(),speed=integer(),d.Y=double(),type=character(),X0=integer(),X1=integer(),X2=integer(),read_id=character(),trac=list(),exp=character())
 	}
 
 	# median speed

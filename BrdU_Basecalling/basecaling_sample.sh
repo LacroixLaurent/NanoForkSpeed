@@ -27,6 +27,6 @@ nohup megalodon $INPUT --outputs mod_mappings --reference $REF  --output-dir $OU
 
 # this generate a megalodon's style mod-mappings.bam file in the EXP_mega folder
 # this bam file can be big and we had to split it to be able to process it with our parsing script
-# the following step are done within R (v4.0.5) on the same computer used for the basecalling
+# the following step are done within R (v4.0.3) on the same computer used for the basecalling
 # with the script basecalling_sample.r
 

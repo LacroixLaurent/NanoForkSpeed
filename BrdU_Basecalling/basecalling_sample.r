@@ -1,5 +1,5 @@
 ## Rscript to parse megalodon data
-# LL20210917
+
 nc=4L
 
 Exp <- "EXP"
@@ -41,6 +41,10 @@ system("rm header")
 # This part of the script used our parsing function
 # the nc parameter should be used to set the number of core available
 # keeping in mind that R uses a lot of memory.
+#Our computer is a Dell Precision 7920 Tower equipped with:
+# Processor: 2x Intel Xeon Silver 4214
+# RAM: 192Gb
+# GPU: GeForce RTX 2080 Ti, 11Gb DDR5 (CUDA v11.2)
 # On our computer, more than 62Go of RAM were required.
 # the parsing script output both smoothed and raw BrdU probability data.
 # The size of the output is big.

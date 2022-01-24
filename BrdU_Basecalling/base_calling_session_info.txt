@@ -59,5 +59,3 @@
  utf8          1.2.1   2021-03-12 [1] CRAN (R 4.0.3)
  vctrs         0.3.8   2021-04-29 [1] CRAN (R 4.0.3)
  withr         2.4.2   2021-04-18 [1] CRAN (R 4.0.3)
-
-[1] /export/home1/users/rce/hyrien/anaconda3/envs/ll_env/lib/R/library

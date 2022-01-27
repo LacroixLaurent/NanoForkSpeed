@@ -1,7 +1,7 @@
 ### Function used in Theulot et al 2022
 ### Forks detection, orientation and speed measurement
 ### as well as Initiation and Termination detection
-### work with splitted files from the parsing procedure done by 50000 reads chunks
+### work with split files from the parsing procedure done by 50000 reads chunks
 ### smoothing is performed at the parsing level
 #### LL 20220117
 
@@ -277,9 +277,6 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 		EXPforks <- EXP_NFS_det[[2]] %>%
 			select(chrom,strand,forks,signalr,read_id) %>%
 			unnest(cols = c(forks)) %>%
-			# selection of start and end for RFD
-			mutate(st=pmin(X0,X2)) %>%
-			mutate(en=pmax(X0,X2)) %>%
 			# leading/lagging strand mapping
 			mutate(type=case_when((strand=="+" & d.Y>0) | (strand=="-" & d.Y<0) ~ "leading", T ~ "lagging"))%>%
 			# fork direction mapping
@@ -346,8 +343,7 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 				yL <- sapply(y, function(z) -x$d.Y[z])
 				spR <- sapply(y, function(z) x$speed[z+1])
 				yR <- sapply(y, function(z) x$d.Y[z+1])
-				Ext.center <- x0+spL/(spL+spR)*abs(x1-x0)
-				tibble(x0,x1,center,Ext.center,spL,yL,spR,yR)
+				tibble(x0,x1,center,spL,yL,spR,yR)
 			}else{
 				tibble()
 			}})) %>%
@@ -362,8 +358,7 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 				yR <- sapply(y, function(z) x$d.Y[z])
 				spL <- sapply(y, function(z) x$speed[z+1])
 				yL <- sapply(y, function(z) -x$d.Y[z+1])
-				Ext.center <- x0+spL/(spL+spR)*abs(x1-x0)
-				tibble(x0,x1,center,Ext.center,spL,yL,spR,yR)
+				tibble(x0,x1,center,spL,yL,spR,yR)
 			}else{
 				tibble()
 			}})) %>%
@@ -373,34 +368,26 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 		iniforks <- initer3 %>%
 			select(chrom,strand,read_id,ini) %>%
 			unnest(cols=c(ini)) %>%
-			mutate(sp.ratio=exp(abs(log(spL/spR)))) %>%
-			mutate(dY.ratio=exp(abs(log(yL/yR)))) %>%
 			mutate(type="Init")
 	}else{
-		iniforks <- tibble(chrom=character(),strand=character(),read_id=character(),x0=integer(),x1=integer(),center=double(),spL=double(),yL=double(),spR=double(),yR=double(),sp.ratio=double(),dY.ratio=double(),type=character())
+		iniforks <- tibble(chrom=character(),strand=character(),read_id=character(),x0=integer(),x1=integer(),center=double(),spL=double(),yL=double(),spR=double(),yR=double(),type=character())
 	}
 	# computing speed and dY ratio for terminations
 	if (sum(lengths(initer3$ter))>0) {
 		terforks <- initer3 %>%
 			select(chrom,strand,read_id,ter) %>%
 			unnest(cols=c(ter)) %>%
-			mutate(sp.ratio=exp(abs(log(spL/spR)))) %>%
-			mutate(dY.ratio=exp(abs(log(yL/yR))))%>%
 			mutate(type="Ter")
 	}else{
-		terforks <- tibble(chrom=character(),strand=character(),read_id=character(),x0=integer(),x1=integer(),center=double(),spL=double(),yL=double(),spR=double(),yR=double(),sp.ratio=double(),dY.ratio=double(),type=character())
+		terforks <- tibble(chrom=character(),strand=character(),read_id=character(),x0=integer(),x1=integer(),center=double(),spL=double(),yL=double(),spR=double(),yR=double(),type=character())
 	}
 
 	# merging initiation and termination tibbles
 	initer_res <- bind_rows(iniforks,terforks)
-	### add leading/lagging ration for speed and dY
-	initer_res <- initer_res %>%
-		mutate(sp.ratio.LeadLag=pmap_dbl(.,function(strand,spR,spL,...) case_when(strand=="+"~(spR/spL),T~(spL/spR)))) %>%
-		mutate(dY.ratio.LeadLag=pmap_dbl(.,function(strand,yR,yL,...) case_when(strand=="+"~(yR/yL),T~(yL/yR))))
 
 	# compute stats for initiations and terminations
-	initer_stat <- c(nrow(iniforks),median(iniforks$sp.ratio,na.rm=T),median(iniforks$dY.ratio,na.rm=T),nrow(terforks),median(terforks$sp.ratio,na.rm=T),median(terforks$dY.ratio,na.rm=T))
-	names(initer_stat) <- c("nb_init","med(init_sp_ratio)","med(init_dY_ratio)","nb_ter","med(ter_sp_ratio)","med(ter_dY_ratio)")
+	initer_stat <- c(nrow(iniforks),nrow(terforks))
+	names(initer_stat) <- c("nb_init","nb_ter")
 
 	AllEXPstats <- as.data.frame(t(c(EXP_stat,EXPlen,EXP_med_read_len,EXP_b2a,EXP_NFSstat,EXP_med_speed,EXP_med_dY,initer_stat)))
 

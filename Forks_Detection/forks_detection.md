@@ -20,11 +20,12 @@ suppressMessages(library(tidyverse))
 `%+%`<- paste0
 source("./helper_function.r")
 source("./NFS_function.r")
-expmeg <- "JP3A_Megalodon_00_smdata.rds"
-pathdata <- "~/work/Ori/newRaw_nt/"
-ex.name <- "Exp_Test"
+pathdata <- "~/work/Ori/NFS_paper/Zenodo_upload/"
+ex.name <- "BT1_run4"
+expmeg <- ex.name %+% "_Megalodon_00_smdata.rds"
+
 EXP <- readRDS(pathdata %+% expmeg)  %>% filter(chrom!="chrM")
-plot_signal(EXP,EXPname=ex.name,EXP_b2a.thr0=0.02,alldata=F,nreads=5000,saved=T,plotit=T)
+plot_signal(EXP,EXPname=ex.name,EXP_b2a.thr0=0.02,alldata=F,nreads=500,saved=T,plotit=F)
 ```
 
 It is also possible to output the distribution for all the reads (of at
@@ -69,13 +70,14 @@ source("./NFS_function.r")
 
 seqinf <- Seqinfo(seqnames=c("chrI","chrII","chrIII","chrIV","chrV","chrVI","chrVII","chrVIII","chrIX","chrX","chrXI","chrXII","chrXIII","chrXIV","chrXV","chrXVI","chrM","rDNA-10R"),seqlengths=c(230218,813184,316620,1531933,576874,270161,1090940,562643,439888,745751,666816,1078177,924431,784333,1091291,948066,85779,113097), isCircular=c(rep(F,16),T,F),genome="S288CrDNA")
 
-pathdata <- "~/work/Ori/newRaw_nt/"
-expmeg <- "JP3A_Megalodon_00_smdata.rds"
-ex.name <- "Exp_Test"
+pathdata <- "~/work/Ori/NFS_paper/Zenodo_upload/"
+ex.name <- "BT1_run4"
+expmeg <- ex.name %+% "_Megalodon_00_smdata.rds"
+ex.save <- str_remove(expmeg,"_smdata.rds")
 ex.pulse <- 2
 ex.b2a <- 0.02
 EXP <- readRDS(pathdata %+% expmeg)  %>% filter(chrom!="chrM")
-EXP_NFS <- NFSmaster(EXP,pulse0=ex.pulse,NFS.save=T,EXPname=ex.name %+% "_nt",b2a=ex.b2a)
+EXP_NFS <- NFSmaster(EXP,pulse0=ex.pulse,NFS.save=T,EXPname=ex.save,b2a=ex.b2a)
 ```
 
 As parsed data file were big, fork detection is performed on the split
@@ -88,15 +90,15 @@ figures and data discussed in the manuscript [Theulot et al.,
 
 ``` r
 source("./NFS_function.r")
-NFS_merging ("./","./","Exp_Test",suff="_merged",file_list0="Exp_Test_nt_NFS_data.rds")
+NFS_merging ("./","./","BT1_run4",suff="_merged",file_list0="BT1_run4_Megalodon_00_NFS_data.rds")
 ```
 
 ### Outpout data format explanation
 
 ##### NFSmaster output
 
-1 NFS\_data  
-1.1: NFS\_data$allRDP3
+1- NFS\_data  
+1.1- NFS\_data$allRDP3
 
 This tibble contains all the reads analyzed containing at least 3 linear
 segments after “Piecewise Linear Simplification”.  
@@ -127,9 +129,89 @@ slope during the pulse (sl\_pulse) and the begining of the chase
 forks,&lt;0 for for leftward forks )  
 - n.forks= number of forks detected in the read
 
-1.2: NFS\_data$with\_forks
+1.2- NFS\_data$with\_forks
 
 same structure as NFS\_data$allRDP3 after filtering out of the forks
 overlapping an alignment gap.
 
-#### NFS\_merging output
+2- forks  
+- chrom= mapped chromosome  
+- strand= strand of the mapped read  
+- direc= direction of the forks (L=left, R=right)  
+- speed= estimated average speed for the pulse duration  
+- d.Y= amplitude of the forks (&gt;0 for R, &lt;0 for L)  
+- type= leading or lagging  
+- X0= start of BrdU incorporation (position of the B/P and N/B
+transitions for rightward and leftward forks)  
+- X1= start of the thymidine chase (position of the (P\|A)/N and
+P/(A\|N) transitions for rightward and leftward forks, respectively)  
+- X2= end of the last non ambiguous chase segment  
+- read\_id= read identifier  
+- trac= raw BrdU signal from 1kb before X0 to 50kb after X0 by 100nt
+bin  
+- exp= name of the experiment or of subfile
+
+3- initer  
+- chrom= mapped chromosome  
+- strand= strand of the mapped read  
+- read\_id= read identifier  
+- x0= start of the left (respectivaley right) fork for initiation
+(respectively termination)  
+- x1= start of the right (respectivaley left) fork for initiation
+(respectively termination)  
+- center= center of the x0-x1 segment (center=(x0+x1)/2)  
+- spL= speed of the left fork  
+- spR= speed of the right fork  
+- yR= amplitude of the left fork  
+- yL= amplitude of the right fork  
+- type = Initiation or Termination
+
+4- stats  
+- EXPname - n\_reads - n\_reads(len&gt;minlen) - sumlength(&gt;minlen) -
+read\_med\_len\_with\_forks - b2a.thr - B\_median - B\_mad -
+n\_reads(RDP&gt;3) - n\_reads\_w\_forks - n\_forks - n\_forks(no\_gap) -
+speed.med - dY.median - nb\_init - nb\_ter - forkdens - initdens -
+terdens
+
+#### NFS\_merged output
+
+1- reads This tibble contains all the reads analyzed containing at least
+one fork.  
+- read\_id= read identifier  
+- chrom= mapped chromosome  
+- start= start of the mapped read (1-based)  
+- end= end of the mapped read  
+- strand= strand of the mapped read  
+- gap\_pos= position of gaps introduced during the alignment  
+- signalr= BrdU signal along the mapped read (positions=chromosomal
+coordinate, Bprob= raw BrdU probability from megodon witu our model),
+signal=smoothed BrdU signal using first a 100nt rolling mean then a
+2500nt rolling weighted mean with a gaussian weight function)  
+- length= length of the read  
+- smBmedy= median of the smoothed BrdU signal  
+- Bmedy= median of the raw BrdU signal  
+- RDP= Piecewise Linear Simplification of the smoothed signal using the
+Ramer Douglas Peucker algorithm (x,y = positions of extremities of the
+linear segments)  
+- sl2= slope results after letter affectation  
+- forks= position of the forks indicating the positions of the identifed
+start of the pulse (X0,Y0), end of the pulse (X1,Y1) and end of the last
+un amibiguous chase segment (X2, which might not coincide with the end
+of the chase), average speed during the pulse (speed), average signal
+slope during the pulse (sl\_pulse) and the begining of the chase
+(sl\_chase) and BrdU signal amplitude (d.Y, &gt;0 for for rightward
+forks,&lt;0 for for leftward forks )  
+- n.forks= number of forks detected in the read
+
+2- forks  
+- chrom - strand - st - en \_ direc - speed - d.Y - type - X0 - X1 - X2
+- read\_id - trac - exp
+
+3- initer  
+- chrom - strand - read\_id - x0 - x1 - center - spL - spR - yR - yL -
+type
+
+4- stats  
+- Expname - n\_reads - n\_reads2 - sumlength - b2a.thr - n\_reads\_RDP3
+- n\_reads\_w\_forks - n\_forks - speed\_med - dY\_med - nb\_init -
+nb\_ter - fork\_dens - init\_dens - ter\_dens

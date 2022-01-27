@@ -1,7 +1,5 @@
 ### Helper Function used in Theulot et al 2022
 
-#### LL 20220117
-
 ###
 simpleRFD <- function(gr,lr=1,na2zero=F,expor=F,outname='myRFDdata')
 {
@@ -47,7 +45,7 @@ cor.rfd <- function(a,b,met='s')
 {cor(as.numeric(unlist(a)[!is.na(unlist(a)) & !is.na(unlist(b))]),as.numeric(unlist(b)[!is.na(unlist(a)) & !is.na(unlist(b))]),method=met)}
 ##
 
-### a function to plot forks with RDP informations
+### a function to plot forks with NFS informations
 plotforks2 <- function(toto,b2a.thr=0.02,fileout,plot.raw=F)
 {
 

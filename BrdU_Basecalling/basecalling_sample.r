@@ -2,7 +2,7 @@
 
 nc=4L
 
-Exp <- "EXP"
+Exp <- "BT1_run4"
 setwd(paste0("./data/",Exp,"_mega"))
 system("samtools view -H mod_mappings.bam > header")
 system("samtools view mod_mappings.bam | split - mod_splitted_ -l 50000 -a 2 -d --filter='cat header - | samtools view -b - > $FILE.bam'")

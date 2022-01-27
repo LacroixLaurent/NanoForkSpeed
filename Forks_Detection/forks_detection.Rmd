@@ -14,11 +14,12 @@ suppressMessages(library(tidyverse))
 `%+%`<- paste0
 source("./helper_function.r")
 source("./NFS_function.r")
-expmeg <- "JP3A_Megalodon_00_smdata.rds"
-pathdata <- "~/work/Ori/newRaw_nt/"
-ex.name <- "Exp_Test"
+pathdata <- "~/work/Ori/NFS_paper/Zenodo_upload/"
+ex.name <- "BT1_run4"
+expmeg <- ex.name %+% "_Megalodon_00_smdata.rds"
+
 EXP <- readRDS(pathdata %+% expmeg)  %>% filter(chrom!="chrM")
-plot_signal(EXP,EXPname=ex.name,EXP_b2a.thr0=0.02,alldata=F,nreads=5000,saved=T,plotit=T)
+plot_signal(EXP,EXPname=ex.name,EXP_b2a.thr0=0.02,alldata=F,nreads=500,saved=T,plotit=F)
 ```
  
 It is also possible to output the distribution for all the reads (of at least 5kb) but usually this distribution is less informative due to the overwhelming presence of reads with very low signal. 
@@ -44,20 +45,21 @@ source("./NFS_function.r")
 
 seqinf <- Seqinfo(seqnames=c("chrI","chrII","chrIII","chrIV","chrV","chrVI","chrVII","chrVIII","chrIX","chrX","chrXI","chrXII","chrXIII","chrXIV","chrXV","chrXVI","chrM","rDNA-10R"),seqlengths=c(230218,813184,316620,1531933,576874,270161,1090940,562643,439888,745751,666816,1078177,924431,784333,1091291,948066,85779,113097), isCircular=c(rep(F,16),T,F),genome="S288CrDNA")
 
-pathdata <- "~/work/Ori/newRaw_nt/"
-expmeg <- "JP3A_Megalodon_00_smdata.rds"
-ex.name <- "Exp_Test"
+pathdata <- "~/work/Ori/NFS_paper/Zenodo_upload/"
+ex.name <- "BT1_run4"
+expmeg <- ex.name %+% "_Megalodon_00_smdata.rds"
+ex.save <- str_remove(expmeg,"_smdata.rds")
 ex.pulse <- 2
 ex.b2a <- 0.02
 EXP <- readRDS(pathdata %+% expmeg)  %>% filter(chrom!="chrM")
-EXP_NFS <- NFSmaster(EXP,pulse0=ex.pulse,NFS.save=T,EXPname=ex.name %+% "_nt",b2a=ex.b2a)
+EXP_NFS <- NFSmaster(EXP,pulse0=ex.pulse,NFS.save=T,EXPname=ex.save,b2a=ex.b2a)
 ```
 
 As parsed data file were big, fork detection is performed on the split data and then these results are merged using the NFS_merging function from the *NFS_function.r* file.  
 The merged data file keep the same organization with a slightly simplified summary table. Those merged file are then used to produce the figures and data discussed in the manuscript [Theulot et al., 2022](https://doi.org/XX.XXXXX/JOURNAL/REF).  
 ```{r eval = FALSE}
 source("./NFS_function.r")
-NFS_merging ("./","./","Exp_Test",suff="_merged",file_list0="Exp_Test_nt_NFS_data.rds")
+NFS_merging ("./","./","BT1_run4",suff="_merged",file_list0="BT1_run4_Megalodon_00_NFS_data.rds")
 ```
 
 ### Outpout data format explanation

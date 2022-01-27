@@ -18,8 +18,8 @@ REF=./data/S288CwExtrarDNA_ROMAN.fa
 # to which we add an extra chromosome (rDNA-10R) containing 10 rDNA tandem repats.
 # the fasta file for this reference is provided (S288CwExtrarDNA_ROMAN.fa.zip)
 CFG=BrdU_Configuration4megalodon.cfg
-INPUT=./data/EXP_fast5
-OUTPUT=./data/EXP_mega
+INPUT=./data/BT1_run4_fast5
+OUTPUT=./data/BT1_run4_mega
 
 nohup megalodon $INPUT --outputs mod_mappings --reference $REF  --output-dir $OUTPUT  --guppy-config $CFG --disable-mod-calibration --overwrite --device cuda:0 --processes 20 --guppy-timeout 90 --mod-min-prob 0  &
 # please notice than for experiment with many long reads, we had to increase the guppy-timeout to 600

@@ -299,11 +299,11 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 						summarise(signal = mean(Bprob,na.rm=T), .groups = "drop") %>% arrange(desc(positions))}
 				return(out)
 			})) %>%
-			select(chrom,strand,st,en,direc,speed,d.Y,type,X0,X1,X2,read_id,trac) %>%
+			select(read_id,chrom,strand,X0,X1,X2,speed,d.Y,direc,type,trac) %>%
 			# associated EXPname to fork
 			mutate(exp=EXPname)
 	}else{
-		EXPforks <- tibble(chrom=character(),strand=character(),st=integer(),en=integer(),direc=character(),speed=integer(),d.Y=double(),type=character(),X0=integer(),X1=integer(),X2=integer(),read_id=character(),trac=list(),exp=character())
+		EXPforks <- tibble(read_id=character(),chrom=character(),strand=character(),X0=integer(),X1=integer(),X2=integer(),speed=integer(),d.Y=double(),direc=character(),type=character(),trac=list(),exp=character())
 	}
 
 	# median speed
@@ -431,7 +431,7 @@ NFS_merging <- function(dir_in,dir_out,ExpName,suff="",file_list0=NA)
 
 	NFS_forks <- do.call(bind_rows,lapply(file_list, function(x) {
 		readRDS(paste0(dir_in,x))[[2]]})) %>%
-		arrange(chrom,st) %>%
+		arrange(chrom,pmin(X0,X1)) %>%
 		mutate(exp=ExpName)
 
 	NFS_initer <- do.call(bind_rows,lapply(file_list, function(x) {

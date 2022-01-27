@@ -65,8 +65,8 @@ NFS_merging ("./","./","BT1_run4",suff="_merged",file_list0="BT1_run4_Megalodon_
 ### Outpout data format explanation
 
 ##### NFSmaster output
-1 NFS_data  
-1.1: NFS_data$allRDP3  
+1- NFS_data  
+1.1- NFS_data$allRDP3  
 
 This tibble contains all the reads analyzed containing at least 3 linear segments after "Piecewise Linear Simplification".  
 - read_id= read identifier  
@@ -85,10 +85,121 @@ This tibble contains all the reads analyzed containing at least 3 linear segment
 - forks= position of the forks indicating the positions of the identifed start of the pulse (X0,Y0), end of the pulse (X1,Y1) and end of the last un amibiguous chase segment (X2, which might not coincide with the end of the chase), average speed during the pulse (speed), average signal slope during the pulse (sl_pulse) and the begining of the chase (sl_chase) and BrdU signal amplitude (d.Y, >0 for for rightward forks,<0 for for leftward forks )  
 - n.forks= number of forks detected in the read  
 
-1.2: NFS_data$with_forks  
+1.2- NFS_data$with_forks  
 
 same structure as NFS_data$allRDP3 after filtering out of the forks overlapping an alignment gap.    
 
+2- forks  
+- chrom= mapped chromosome  
+- strand= strand of the mapped read  
+_ direc= direction of the forks (L=left, R=right)  
+- speed= estimated average speed for the pulse duration
+- d.Y= amplitude of the  
+- type
+- X0= start of BrdU incorporation (position of the B/P and N/B transitions for rightward and leftward forks)  
+- X1= start of the thymidine chase (position of the (P|A)/N and P/(A|N) transitions for rightward and leftward forks, respectively)  
+- X2= end of the last non ambiguous chase segment  
+- read_id= read identifier
+- trac= raw BrdU signal from 1kb before X0 to 50kb after X0 by 100nt bin
+- exp= name of the experiment or of subfile
 
-#### NFS_merging output
 
+
+3- initer  
+- chrom= mapped chromosome
+- strand= strand of the mapped read
+- read_id= read identifier
+- x0
+- x1
+- center
+- spL
+- spR
+- yR
+- yL
+- type =
+
+4- stats  
+- EXPname
+- n_reads
+- n_reads(len>minlen)
+- sumlength(>minlen)
+- read_med_len_with_forks
+- b2a.thr
+- B_median
+- B_mad
+- n_reads(RDP>3)
+- n_reads_w_forks
+- n_forks
+- n_forks(no_gap)
+- speed.med
+- dY.median
+- nb_init
+- nb_ter
+- forkdens
+- initdens
+- terdens
+
+#### NFS_merged output
+1- reads 
+This tibble contains all the reads analyzed containing at least one fork.  
+- read_id= read identifier  
+- chrom= mapped chromosome  
+- start= start of the mapped read (1-based)  
+- end= end of the mapped read  
+- strand= strand of the mapped read  
+- gap_pos= position of gaps introduced during the alignment  
+- signalr= BrdU signal along the mapped read (positions=chromosomal coordinate, Bprob= raw BrdU probability from megodon witu our model), signal=smoothed BrdU signal using first a 100nt rolling mean then a 2500nt rolling weighted mean with a gaussian weight function)  
+- length= length of the read  
+- smBmedy= median of the smoothed BrdU signal  
+- Bmedy= median of the raw BrdU signal  
+- RDP= Piecewise Linear Simplification of the smoothed signal using the Ramer Douglas Peucker algorithm (x,y = positions of extremities of the linear segments)  
+- sl2= slope results after letter affectation  
+- forks= position of the forks indicating the positions of the identifed start of the pulse (X0,Y0), end of the pulse (X1,Y1) and end of the last un amibiguous chase segment (X2, which might not coincide with the end of the chase), average speed during the pulse (speed), average signal slope during the pulse (sl_pulse) and the begining of the chase (sl_chase) and BrdU signal amplitude (d.Y, >0 for for rightward forks,<0 for for leftward forks )  
+- n.forks= number of forks detected in the read  
+
+
+2- forks  
+- chrom
+- strand
+- st
+- en
+_ direc
+- speed
+- d.Y 
+- type
+- X0
+- X1 
+- X2
+- read_id
+- trac
+- exp
+
+3- initer  
+- chrom
+- strand
+- read_id
+- x0
+- x1
+- center
+- spL
+- spR
+- yR
+- yL
+- type
+
+4- stats  
+- Expname
+- n_reads
+- n_reads2
+- sumlength
+- b2a.thr
+- n_reads_RDP3
+- n_reads_w_forks
+- n_forks
+- speed_med
+- dY_med
+- nb_init
+- nb_ter
+- fork_dens
+- init_dens
+- ter_dens

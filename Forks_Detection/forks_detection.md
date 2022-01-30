@@ -118,7 +118,7 @@ signal=smoothed BrdU signal using first a 100nt rolling mean then a
 - RDP= Piecewise Linear Simplification of the smoothed signal using the
 Ramer Douglas Peucker algorithm (x,y = positions of extremities of the
 linear segments)  
-- RDP.length= number segment+1  
+- RDP.length= number of RDP anchoring points=number fo segments+1  
 - sl2= slope results after letter affectation  
 - forks= position of the forks indicating the positions of the identifed
 start of the pulse (X0,Y0), end of the pulse (X1,Y1) and end of the last
@@ -167,16 +167,39 @@ bin
 - type = Initiation or Termination
 
 4- stats  
-- EXPname - n\_reads - n\_reads(len&gt;minlen) - sumlength(&gt;minlen) -
-read\_med\_len\_with\_forks - b2a.thr - B\_median - B\_mad -
-n\_reads(RDP&gt;3) - n\_reads\_w\_forks - n\_forks - n\_forks(no\_gap) -
-speed.med - dY.median - nb\_init - nb\_ter - forkdens - initdens -
-terdens
+- EXPname= name of the experiment or of subfile  
+- n\_reads= number of starting reads  
+- n\_reads(len&gt;minlen)= number of reads whose length is above the
+minlen set in the NFSmaster function (default=5kb)  
+- sumlength(&gt;minlen)= sum of length of the reads longer than minlen
+(default=5kb)  
+- read\_med\_len\_with\_forks= mediane of length for reads with forks  
+- b2a.thr= threshold used to identify non-BrdU containing part of the
+reads  
+- B\_median= median of the reads BrdU signal median  
+- B\_mad= median absolute deviation of the reads BrdU signal median  
+- n\_reads(RDP&gt;3)= number of reads with 3 or more segment after
+piece-wise linear simplification with RDP  
+- n\_reads\_w\_forks= number of reads with forks  
+- n\_forks= number of forks  
+- n\_forks(no\_gap)= number of forks after filtering out forks
+overlapping with alignment gaps (±1kb)  
+- speed.med= median of estimated speeds  
+- dY.median= median of forks amplitude  
+- nb\_init= nb of initiations  
+- nb\_ter= nuber of terminations  
+- forkdens= number of forks per Mb of evaluated reads
+(n\_forks/sumlength*1e6)  
+- initdens= number of initiations per Mb of evaluated reads
+(n\_init/sumlength*1e6)  
+- terdens= number of terminations per Mb of evaluated reads
+(n\_ter/sumlength\*1e6)
 
 #### NFS\_merged output
 
-1- reads This tibble contains all the reads analyzed containing at least
-one fork.  
+1- reads  
+This tibble contains all the reads analyzed containing at least one
+fork.  
 - read\_id= read identifier  
 - chrom= mapped chromosome  
 - start= start of the mapped read (1-based)  
@@ -204,14 +227,58 @@ forks,&lt;0 for for leftward forks )
 - n.forks= number of forks detected in the read
 
 2- forks  
-- chrom - strand - st - en \_ direc - speed - d.Y - type - X0 - X1 - X2
-- read\_id - trac - exp
+- chrom= mapped chromosome  
+- strand= strand of the mapped read  
+- direc= direction of the forks (L=left, R=right)  
+- speed= estimated average speed for the pulse duration  
+- d.Y= amplitude of the forks (&gt;0 for R, &lt;0 for L)  
+- type= leading or lagging  
+- X0= start of BrdU incorporation (position of the B/P and N/B
+transitions for rightward and leftward forks)  
+- X1= start of the thymidine chase (position of the (P\|A)/N and
+P/(A\|N) transitions for rightward and leftward forks, respectively)  
+- X2= end of the last non ambiguous chase segment  
+- read\_id= read identifier  
+- trac= raw BrdU signal from 1kb before X0 to 50kb after X0 by 100nt
+bin  
+- exp= name of the experiment or of subfile
 
 3- initer  
-- chrom - strand - read\_id - x0 - x1 - center - spL - spR - yR - yL -
-type
+- chrom= mapped chromosome  
+- strand= strand of the mapped read  
+- read\_id= read identifier  
+- x0= start of the left (respectivaley right) fork for initiation
+(respectively termination)  
+- x1= start of the right (respectivaley left) fork for initiation
+(respectively termination)  
+- center= center of the x0-x1 segment (center=(x0+x1)/2)  
+- spL= speed of the left fork  
+- spR= speed of the right fork  
+- yR= amplitude of the left fork  
+- yL= amplitude of the right fork  
+- type= Initiation or Termination
 
 4- stats  
-- Expname - n\_reads - n\_reads2 - sumlength - b2a.thr - n\_reads\_RDP3
-- n\_reads\_w\_forks - n\_forks - speed\_med - dY\_med - nb\_init -
-nb\_ter - fork\_dens - init\_dens - ter\_dens
+- Expname= name of the experiment or of subfile  
+- n\_reads= number of starting reads  
+- n\_reads2= number of reads whose length is above the minlen set in the
+NFSmaster function (default=5kb)  
+- sumlength= sum of length of the reads longer than minlen
+(default=5kb)  
+- b2a.thr= threshold used to identify non-BrdU containing part of the
+reads  
+- n\_reads\_RDP3= number of reads with 3 or more segment after
+piece-wise linear simplification with RDP  
+- n\_reads\_w\_forks= number of reads with forks  
+- n\_forks= number of forks after filtering out forks overlapping with
+alignment gaps (±1kb)  
+- speed\_med= median of estimated speeds  
+- dY\_med= median of forks amplitude  
+- nb\_init= number of initiations  
+- nb\_ter= number of terminations  
+- fork\_dens= number of forks per Mb of evaluated reads
+(n\_forks/sumlength*1e6)  
+- init\_dens= number of initiations per Mb of evaluated reads
+(n\_init/sumlength*1e6)  
+- ter\_dens= number of terminations per Mb of evaluated reads
+(n\_ter/sumlength\*1e6)

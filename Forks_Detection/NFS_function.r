@@ -323,7 +323,6 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 	names(EXP_med_read_len) <- c(paste0("read_med_len_all(>",minlen/1000,"kb)"),"read_med_len_RDP3","read_med_len_with_forks")
 
 	### Detection of Initiation and Termination
-	# extrapolated center(Ext.center) ExC=X0L+spL/(spL+spR)*X0L_X0R
 	# for ini, x0=X0L and x1=X0R, for ter, x0=X1R and x1=X1L
 	# mapping R and L forks, and concatenating of the R and L letter for pattern search
 	initer2 <- EXP_NFS_det[[2]] %>% mutate(forks=map(forks, function(x) {y <- x %>% filter(!gapovl) %>% mutate(forkdir=case_when(d.Y>0 ~"R",T~"L"));return(y)})) %>% mutate(patIT=map(forks, function(x) paste0(x$forkdir,collapse="")))

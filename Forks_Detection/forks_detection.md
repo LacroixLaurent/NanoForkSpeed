@@ -25,7 +25,7 @@ ex.name <- "BT1_run4"
 expmeg <- ex.name %+% "_Megalodon_00_smdata.rds"
 
 EXP <- readRDS(pathdata %+% expmeg)  %>% filter(chrom!="chrM")
-plot_signal(EXP,EXPname=ex.name,EXP_b2a.thr0=0.02,alldata=F,nreads=500,saved=T,plotit=F)
+plot_signal(EXP,EXPname=ex.name,EXP_b2a.thr0=0.02,alldata=F,nreads=5000,saved=T,plotit=F)
 ```
 
 It is also possible to output the distribution for all the reads (of at

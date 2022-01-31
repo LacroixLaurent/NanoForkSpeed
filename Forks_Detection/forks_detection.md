@@ -2,8 +2,8 @@ NFS data generation
 ================
 
 This is a typical example how we proceed to detect forks, initiations
-and terminations from the reads base\_called with megalodon and our
-model (script=*basecalling\_sample.sh*) then parsed with the
+and terminations from the reads base-called with megalodon and our model
+(script=*basecalling\_sample.sh*) then parsed with the
 *Parsing\_function4Megalodon.r* (script=*basecalling\_sample.r*).
 
 ### Background threshold determination
@@ -31,7 +31,7 @@ plot_signal(EXP,EXPname=ex.name,EXP_b2a.thr0=0.02,alldata=F,nreads=5000,saved=T,
 It is also possible to output the distribution for all the reads (of at
 least 5kb) but usually this distribution is less informative due to the
 overwhelming presence of reads with very low signal. From the second
-plot of the PDF file (a zoom of the first plot of th e PDF), it is
+plot of the PDF file (a zoom of the first plot of the PDF), it is
 possible to draw a line between the 0 level signal (background) and the
 informative signal which usually come in two wide distribution. One of
 medium level mode corresponding to the DNA replicated during the chase
@@ -39,7 +39,7 @@ and one with higher level mode corresponding to the DNA replicated
 during the pulse.  
 The position of this line was the threshold we fixed for our further
 analysis. This threshold was quite similar between all the experiments
-we analyzed, thus a fixed threshold of 0.02 was chosen to simplify the
+we analysed, thus a fixed threshold of 0.02 was chosen to simplify the
 pipeline.  
 We also limit to 5000 the number of reads used for this evaluation to
 speed up the computation but all the reads can be used by setting
@@ -80,7 +80,7 @@ EXP <- readRDS(pathdata %+% expmeg)  %>% filter(chrom!="chrM")
 EXP_NFS <- NFSmaster(EXP,pulse0=ex.pulse,NFS.save=T,EXPname=ex.save,b2a=ex.b2a)
 ```
 
-As parsed data file were big, fork detection is performed on the split
+As parsed data files were big, fork detection is performed on the split
 data and then these results are merged using the NFS\_merging function
 from the *NFS\_function.r* file.  
 The merged data file keep the same organization with a slightly
@@ -100,7 +100,7 @@ NFS_merging ("./","./","BT1_run4",suff="_merged",file_list0="BT1_run4_Megalodon_
 1- NFS\_data  
 1.1- NFS\_data$allRDP3
 
-This tibble contains all the reads analyzed containing at least 3 linear
+This tibble contains all the reads analysed containing at least 3 linear
 segments after “Piecewise Linear Simplification”.  
 - read\_id= read identifier  
 - chrom= mapped chromosome  
@@ -109,7 +109,7 @@ segments after “Piecewise Linear Simplification”.
 - strand= strand of the mapped read  
 - gap\_pos= position of gaps introduced during the alignment  
 - signalr= BrdU signal along the mapped read (positions=chromosomal
-coordinate, Bprob= raw BrdU probability from megodon witu our model),
+coordinate, Bprob= raw BrdU probability from megodon with our model),
 signal=smoothed BrdU signal using first a 100nt rolling mean then a
 2500nt rolling weighted mean with a gaussian weight function)  
 - length= length of the read  
@@ -118,15 +118,15 @@ signal=smoothed BrdU signal using first a 100nt rolling mean then a
 - RDP= Piecewise Linear Simplification of the smoothed signal using the
 Ramer Douglas Peucker algorithm (x,y = positions of extremities of the
 linear segments)  
-- RDP.length= number of RDP anchoring points=number fo segments+1  
+- RDP.length= number of RDP anchoring points=number of segments+1  
 - sl2= slope results after letter affectation  
-- forks= position of the forks indicating the positions of the identifed
-start of the pulse (X0,Y0), end of the pulse (X1,Y1) and end of the last
-un amibiguous chase segment (X2, which might not coincide with the end
-of the chase), average speed during the pulse (speed), average signal
-slope during the pulse (sl\_pulse) and the begining of the chase
-(sl\_chase) and BrdU signal amplitude (d.Y, &gt;0 for for rightward
-forks,&lt;0 for for leftward forks )  
+- forks= position of the forks indicating the positions of the
+identified start of the pulse (X0,Y0), end of the pulse (X1,Y1) and end
+of the last un ambiguous chase segment (X2, which might not coincide
+with the end of the chase), average speed during the pulse (speed),
+average signal slope during the pulse (sl\_pulse) and the beginning of
+the chase (sl\_chase) and BrdU signal amplitude (d.Y, &gt;0 for
+rightward forks,&lt;0 for leftward forks )  
 - n.forks= number of forks detected in the read
 
 1.2- NFS\_data$with\_forks
@@ -155,9 +155,9 @@ bin
 - chrom= mapped chromosome  
 - strand= strand of the mapped read  
 - read\_id= read identifier  
-- x0= start of the left (respectivaley right) fork for initiation
+- x0= start of the left (respectively right) fork for initiation
 (respectively termination)  
-- x1= start of the right (respectivaley left) fork for initiation
+- x1= start of the right (respectively left) fork for initiation
 (respectively termination)  
 - center= center of the x0-x1 segment (center=(x0+x1)/2)  
 - spL= speed of the left fork  
@@ -173,7 +173,7 @@ bin
 minlen set in the NFSmaster function (default=5kb)  
 - sumlength(&gt;minlen)= sum of length of the reads longer than minlen
 (default=5kb)  
-- read\_med\_len\_with\_forks= mediane of length for reads with forks  
+- read\_med\_len\_with\_forks= median of length for reads with forks  
 - b2a.thr= threshold used to identify non-BrdU containing part of the
 reads  
 - B\_median= median of the reads BrdU signal median  
@@ -186,8 +186,8 @@ piece-wise linear simplification with RDP
 overlapping with alignment gaps (±1kb)  
 - speed.med= median of estimated speeds  
 - dY.median= median of forks amplitude  
-- nb\_init= nb of initiations  
-- nb\_ter= nuber of terminations  
+- nb\_init= number of initiations  
+- nb\_ter= number of terminations  
 - forkdens= number of forks per Mb of evaluated reads
 (n\_forks/sumlength*1e6)  
 - initdens= number of initiations per Mb of evaluated reads
@@ -198,7 +198,7 @@ overlapping with alignment gaps (±1kb)
 #### NFS\_merged output
 
 1- reads  
-This tibble contains all the reads analyzed containing at least one
+This tibble contains all the reads analysed containing at least one
 fork.  
 - read\_id= read identifier  
 - chrom= mapped chromosome  
@@ -207,7 +207,7 @@ fork.
 - strand= strand of the mapped read  
 - gap\_pos= position of gaps introduced during the alignment  
 - signalr= BrdU signal along the mapped read (positions=chromosomal
-coordinate, Bprob= raw BrdU probability from megodon witu our model),
+coordinate, Bprob= raw BrdU probability from megodon with our model),
 signal=smoothed BrdU signal using first a 100nt rolling mean then a
 2500nt rolling weighted mean with a gaussian weight function)  
 - length= length of the read  
@@ -217,13 +217,13 @@ signal=smoothed BrdU signal using first a 100nt rolling mean then a
 Ramer Douglas Peucker algorithm (x,y = positions of extremities of the
 linear segments)  
 - sl2= slope results after letter affectation  
-- forks= position of the forks indicating the positions of the identifed
-start of the pulse (X0,Y0), end of the pulse (X1,Y1) and end of the last
-un amibiguous chase segment (X2, which might not coincide with the end
-of the chase), average speed during the pulse (speed), average signal
-slope during the pulse (sl\_pulse) and the begining of the chase
-(sl\_chase) and BrdU signal amplitude (d.Y, &gt;0 for for rightward
-forks,&lt;0 for for leftward forks )  
+- forks= position of the forks indicating the positions of the
+identified start of the pulse (X0,Y0), end of the pulse (X1,Y1) and end
+of the last un ambiguous chase segment (X2, which might not coincide
+with the end of the chase), average speed during the pulse (speed),
+average signal slope during the pulse (sl\_pulse) and the beginning of
+the chase (sl\_chase) and BrdU signal amplitude (d.Y, &gt;0 for
+rightward forks,&lt;0 for leftward forks )  
 - n.forks= number of forks detected in the read
 
 2- forks  
@@ -247,9 +247,9 @@ bin
 - chrom= mapped chromosome  
 - strand= strand of the mapped read  
 - read\_id= read identifier  
-- x0= start of the left (respectivaley right) fork for initiation
+- x0= start of the left (respectively right) fork for initiation
 (respectively termination)  
-- x1= start of the right (respectivaley left) fork for initiation
+- x1= start of the right (respectively left) fork for initiation
 (respectively termination)  
 - center= center of the x0-x1 segment (center=(x0+x1)/2)  
 - spL= speed of the left fork  

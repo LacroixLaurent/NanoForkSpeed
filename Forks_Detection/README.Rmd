@@ -63,7 +63,7 @@ NFS_merging ("./","./","BT1_run4",suff="_merged",file_list0="BT1_run4_Megalodon_
 ```
 
 ### Session Info
-```{r}
+```{r eval = FALSE}
 library("devtools")
 library(magrittr)
 session_info() %>% capture.output(file="forks_detection_session_info.txt")

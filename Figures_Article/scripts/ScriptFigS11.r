@@ -10,6 +10,7 @@ path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/fi
 pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 pval <- read_tsv(paste0(pathdata,"pval_table.tsv.gz"))
 
+speedm <- 2130
 # tRNA
 toplot <- read_tsv(paste0(pathdata,"FigureS11_data.tsv.gz"))
 tRNA_tib3 <- toplot %>% group_by(feat_name,type) %>% summarise(m=round(mean(mea)),sd=sd(mea,na.rm=T),n=n()) %>% ungroup

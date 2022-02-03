@@ -1,5 +1,4 @@
 # script FigS4
-## 202120202
 suppressMessages(library(tidyverse))
 theme_set(theme_bw())
 library(patchwork)
@@ -7,12 +6,8 @@ library(ggdist)
 
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-setwd("/Users/ll/work/Ori/NFS_paper/")
-#path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-#pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
-pathdata <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/data/"
-path_figures <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/figures/"
-
+path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
+pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 
 toplot <- read_tsv(paste0(pathdata,"FigureS4_data.tsv.gz")) %>% mutate(B_pulse=factor(as.character(B_pulse),levels=unique(sort(B_pulse))))
 totext <- toplot %>% group_by(B_pulse) %>% summarise(n=n()) %>% ungroup
@@ -43,7 +38,7 @@ p2 <- ggplot(toplot,aes(x=B_pulse,y=dY))+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),plot.tag=element_text(face="bold"))+
 	labs(tag="a")+
 	ylab("BrdU signal amplitude")
-	
+
 p0 <- p2 / p1 & theme(legend.position = "right",axis.text.x = element_blank(),axis.title.x = element_blank(),axis.ticks.x = element_blank())
 p0 + plot_layout(guides = "collect")
 ggsave(paste0(path_figures,"FigureS4.pdf"),h=7,w=6)

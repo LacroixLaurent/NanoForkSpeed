@@ -1,6 +1,6 @@
 # NanoForkSpeed
 ### Laurent Lacroix (laurent.lacroix@inserm.fr)
-### BrdU Basecalling
+### BrdU Base calling
 
 Raw data are available from ENA repository under accession number PRJEB50302.  
 A fast5 sample  from the BT1_run4 is available from the Zenodo repository under the DOI [10.5281/zenodo.5958270](https://doi.org/10.5281/zenodo.5958270).  

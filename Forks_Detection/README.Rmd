@@ -3,7 +3,7 @@ title: "NFS data generation"
 output: github_document
 ---
 
-This is a typical example of how we proceed to detect forks, initiations and terminations from the reads base-called with megalodon and our model (script=*basecalling_sample.sh*) then parsed with the *Parsing_function4Megalodon.r*  (script=*basecalling_sample.r*).  
+This is a typical example of how we proceed to detect forks, initiations and terminations from the reads base called with megalodon and our model (script=*basecalling_sample.sh*) then parsed with the *Parsing_function4Megalodon.r*  (script=*basecalling_sample.r*).  
 
 ### Background threshold determination
 The first step of the analysis requires to check the distribution of the signal in order to set the b2a threshold, used to identify the background of the signal.  

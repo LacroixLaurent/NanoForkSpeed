@@ -1,5 +1,4 @@
 ### Script Fig5, S8 and S9
-# LL 20220202
 ## Figure 5ABCD
 suppressMessages(library(GenomicRanges))
 suppressMessages(library(rtracklayer))
@@ -10,11 +9,8 @@ library(ggprism)
 theme_set(theme_bw())
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-setwd("/Users/ll/work/Ori/NFS_paper/")
-#path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-#pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
-pathdata <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/data/"
-path_figures <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/figures/"
+path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
+pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 
 seqinf <- readRDS(paste0(pathdata,"seqinfS288CrDNA.rds"))
 root_title <- "BT1_wt"
@@ -57,7 +53,7 @@ toplot_bin2 <- toplot_bin %>% mutate(pos = round(pos/bs0)*bs0+1) %>%
 toplot_cov <- tibble(pos=start(ROI):end(ROI),
 coverage=as.numeric(unlist(coverage(bin_cov,weight=bin_cov$score)[ROI])))
 toplot_cov[toplot_cov==0] <- NA
-toplot_cov2 <- toplot_cov %>% 
+toplot_cov2 <- toplot_cov %>%
 		mutate(pos = round(pos/bs0)*bs0+1) %>%
 		group_by(pos) %>%
 		summarise(coverage = mean(coverage,na.rm=T), .groups = "drop")
@@ -96,8 +92,6 @@ p1cov <- ggplot(toplot_cov2)+
 
 return(list(p1,p1cov))
 })
-
-
 
 ###MWW
 wtl.1k <- import(paste0(pathdata,root_title,"_wl_adj_bin1k_center.bw"))
@@ -172,7 +166,7 @@ toplot_wtg2 <- toplot_wtg %>%
 		mutate(pos = floor((pos-1)/bs0)*bs0+1) %>%
 		group_by(type2,pos) %>%
 		summarise(wt = mean(wt,na.rm=T), .groups = "drop")
-		
+
 ## group and fix test threshold to 1e-2
 MWW.th <- 1e-2
 toplot_wt2 <- full_join(toplot_wtg2,toplot_wtl2,by=c("type2","pos"),suffix=c(".f",".s")) %>%
@@ -198,7 +192,7 @@ return(p2)
 })
 
 
-### creat geno_track, edit it for i=12 (rDNA), i=3 (HMLR)
+### generate geno_track, edit it for i=12 (rDNA), i=3 (HMLR)
 feat.list <- GRangesList(
 	import(paste0(pathdata,"sc3_CEN.bed")),
 	import(paste0(pathdata,"sc3_TRNA.bed")),
@@ -218,7 +212,7 @@ geno_pal <- mypal[c(5,3,9,13,19)]
 names(geno_pal) <- geno_leg
 i=12
 	ROI <- chrom[i]
-	featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% rename(featname=name)
+	featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% dplyr::rename(featname=name)
 pl_geno_12 <- ggplot(featROI)+
 	geom_rect(data=featROI %>% filter(type %in% c("rDNA","tRNA")),aes(xmin=start,xmax=end,ymin=2,ymax=3,col=type,fill=type))+
 	geom_rect(data=featROI%>% filter(type %in% c("CEN","TEL")),aes(xmin=start,xmax=end,ymin=1,ymax=2,col=type,fill=type))+
@@ -241,7 +235,7 @@ geno_pal <- mypal[c(5,3,17,13,19)]
 names(geno_pal) <- geno_leg
 i=3
 	ROI <- chrom[i]
-	featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% rename(featname=name)
+	featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% dplyr::rename(featname=name)
 pl_geno_3 <-ggplot(featROI)+
 	geom_rect(data=featROI %>% filter(type %in% c("tRNA")),aes(xmin=start,xmax=end,ymin=2,ymax=3,col=type,fill=type))+
 	geom_rect(data=featROI%>% filter(type %in% c("CEN","TEL","HML/HMR")),aes(xmin=start,xmax=end,ymin=1,ymax=2,col=type,fill=type))+
@@ -265,7 +259,7 @@ names(geno_pal) <- geno_leg
 
 pl_geno_other <- lapply(seq_along(chrom), function(i) {
 	ROI <- chrom[i]
-	featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% rename(featname=name)
+	featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% dplyr::rename(featname=name)
 ggplot(featROI)+
 	geom_rect(data=featROI %>% filter(type %in% c("tRNA")),aes(xmin=start,xmax=end,ymin=2,ymax=3,col=type,fill=type))+
 	geom_rect(data=featROI%>% filter(type %in% c("CEN","TEL")),aes(xmin=start,xmax=end,ymin=1,ymax=2,col=type,fill=type))+
@@ -285,7 +279,7 @@ ggplot(featROI)+
 
 ###
 pp <- list()
-for (i in 1:16) 
+for (i in 1:16)
 {
 pl_speed <- pl20k[[i]][[1]]+theme(axis.title.x=element_blank(),legend.key.size = unit(0.3, 'cm'))+coord_cartesian(ylim=c(900,2600))+labs(tag=names(chrom)[i])+theme(plot.tag=element_text(face="bold"))
 pl_gen <- pl_geno_other[[i]]+theme(legend.title=element_blank(),axis.title.x=element_blank(),axis.ticks.x = element_blank(),axis.text.x = element_blank(),legend.key.size = unit(0.3, 'cm'))+ylab("Features")
@@ -349,7 +343,7 @@ toplot_bin2 <- toplot_bin %>% mutate(pos = round(pos/bs0)*bs0+1) %>%
 toplot_cov <- tibble(pos=start(ROI):end(ROI),
 coverage=as.numeric(unlist(coverage(bin_cov,weight=bin_cov$score)[ROI])))
 toplot_cov[toplot_cov==0] <- NA
-toplot_cov2 <- toplot_cov %>% 
+toplot_cov2 <- toplot_cov %>%
 		mutate(pos = (round(pos/bs0)+1)*bs0) %>%
 		group_by(pos) %>%
 		summarise(coverage = mean(coverage,na.rm=T), .groups = "drop")
@@ -407,7 +401,7 @@ names(geno_pal2) <- geno_leg2
 
 pl_geno2 <- lapply(seq_along(chrom), function(i) {
 	ROI <- chrom[i]
-	featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% rename(featname=name)
+	featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% dplyr::rename(featname=name)
 	geneROIR <- as_tibble(gene_GR[overlapsAny(gene_GR,ROI) & strand(gene_GR)=="+"]) %>% mutate(type="geneR")
 	geneROIL <- as_tibble(gene_GR[overlapsAny(gene_GR,ROI) & strand(gene_GR)=="-"]) %>% mutate(type="geneL")
 ggplot(featROI)+
@@ -428,7 +422,7 @@ ggplot(featROI)+
 	theme(axis.ticks.y = element_blank(),axis.text.y = element_blank(),panel.grid.major.y=element_blank(),panel.grid.minor.y=element_blank(),legend.key = element_rect(colour = "black"))
 })
 
-	
+
 # zoom
 roi <- as_tibble(ROI_z)
 ch <- roi$seqnames
@@ -446,6 +440,6 @@ pl_cov <- pl1k[[roi$seqnames]][[2]]+
 	scale_x_continuous(labels=scales::unit_format(big.mark ="",suffix="",scale=1e-3,sep="",accuracy=1),limits=c(roi$start,min(seqlengths(seqinf)[roi$seqnames],roi$end)))+
 	coord_cartesian(ylim=c(0,50),expand=F)+
 	ylab("Coverage")
-	
+
 pl_speed/pl_test/pl_gen/pl_cov+plot_layout(ncol = 1, heights = c(2,1,0.5,0.5))
 ggsave(paste0(path_figures,"FigureS9_.pdf"),h=7,w=7)

@@ -1,5 +1,4 @@
 ### Script Fig6ABCD
-## LL20220202
 suppressMessages(library(tidyverse))
 library(patchwork)
 library(ggdist)
@@ -7,11 +6,8 @@ library(ggdist)
 theme_set(theme_bw())
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-setwd("/Users/ll/work/Ori/NFS_paper/")
-#path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-#pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
-pathdata <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/data/"
-path_figures <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/figures/"
+path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
+pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 pval <- read_tsv(paste0(pathdata,"pval_table.tsv.gz")) %>% mutate(type=case_when(type=="rRNA"~"rDNA",T~type))
 
 ### Figure6A speed feature
@@ -35,7 +31,7 @@ f6a <- ggplot(toplot,aes(x=feat,y=mea))+
 	theme(axis.ticks.x = element_blank(),axis.text.x = element_text(angle=45,hjust=1,colour=mypal[c(3,5,7,9,1)]),legend.position = "none",plot.tag=element_text(face="bold"))+
 	xlab("Genomic Features")+
 	ylab("Speed (bp/min)")+
-	labs(tag="a") 
+	labs(tag="a")
 
 
 ### Figure6b
@@ -54,7 +50,7 @@ f6b <- ggplot(toplot,aes(x=type,y=mea))+
 	theme(axis.ticks.x = element_blank(),axis.text.x = element_text(angle=45,hjust=1,colour=mypal[c(1,7)]),legend.position = "none",plot.tag=element_text(face="bold"))+
 	xlab("tRNA gene")+
 	ylab("Speed (bp/min)")+
-	labs(tag="b")	
+	labs(tag="b")
 
 ### Figure6c lead/lag
 toplot <- read_tsv(paste0(pathdata,"Figure6C_data.tsv.gz"))
@@ -98,5 +94,4 @@ CCDDDD"
 
 p0 <- f6a+f6b+f6c+f6d+plot_layout(design = layout)
 ggsave(paste0(path_figures,"Figure6.pdf"),h=9,w=9,p0)
-
 

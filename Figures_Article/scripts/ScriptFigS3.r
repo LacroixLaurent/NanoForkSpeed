@@ -1,29 +1,21 @@
 ## script figure S3
-## LL20220202
-
 suppressMessages(library(GenomicRanges))
 seqinf <- readRDS("/Users/ll/work/Ori/seqinfS288CrDNA.rds")
 suppressMessages(library(rtracklayer))
-
 suppressMessages(library(tidyverse))
 library(patchwork)
 library(ggprism)
 library(ggcorrplot)
 
-
 theme_set(theme_bw())
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-setwd("/Users/ll/work/Ori/NFS_paper/")
-#path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-#pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
-pathdata <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/data/"
-path_figures <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/figures/"
-
+path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
+pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 
 ## Figure S3B
 toplot <- read_tsv(paste0(pathdata,"FigureS3B_data.tsv.gz"))
-mcornt <- as.data.frame(toplot) 
+mcornt <- as.data.frame(toplot)
 rownames(mcornt) <- mcornt$X0
 mcornt <- mcornt[,1:3]
 ggcorrplot(mcornt,lab=T,lab_size=8)+
@@ -44,7 +36,7 @@ chrom <- as(seqinf,"GRanges")[-17]
 
 i=15
 	ROI <- chrom[i]
-	ARS_ROI <- as_tibble(ARS[overlapsAny(ARS,ROI)]) %>% rename(featname=name)
+	ARS_ROI <- as_tibble(ARS[overlapsAny(ARS,ROI)]) %>% dplyr::rename(featname=name)
 bs=100
 
 
@@ -60,7 +52,7 @@ pl_ARS <- ggplot(ARS_ROI)+
 		minor_breaks=seq(0,seqlengths(seqinf)[i],20000),
 		expand=c(0,0))+
 	theme(axis.ticks.y = element_blank(),axis.text.y = element_blank(),panel.grid.major.y=element_blank(),panel.grid.minor.y=element_blank())
-	
+
 rfd_nfs <- import(paste0(pathdata,"BT1_NFS_RFD_bs0.001k_lr0_wiNA.bw"))
 toplot_rfd <- tibble(pos=start(ROI):end(ROI), value=as.numeric(unlist(coverage(rfd_nfs,weight=rfd_nfs$score)[ROI]))) %>% mutate(type=ifelse(sign(value)>=0,"RFD_R","RFD_L"))
 
@@ -84,7 +76,7 @@ pl_RFD_NFS <- ggplot(toplot_rfd2)+
 	ggtitle("NFS (BT1)")+
 	scale_color_manual("RFD",breaks=c("RFD_R","RFD_L"),values=c("red","blue"))+
 	guides(colour = guide_legend(override.aes = list(size=2)))
-	
+
 rfd_OK <- import(paste0(pathdata,"MCM869_OKseq_RFD_rm.bw"))
 toplot_OK <- tibble(pos=start(ROI):end(ROI),
 value=as.numeric(unlist(coverage(rfd_OK,weight=rfd_OK$score)[ROI]))) %>% mutate(type=ifelse(sign(value)>=0,"RFD_R","RFD_L"))

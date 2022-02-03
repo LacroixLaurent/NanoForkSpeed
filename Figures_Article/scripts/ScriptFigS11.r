@@ -1,5 +1,4 @@
 ### script fig 11
-### 20220202
 suppressMessages(library(tidyverse))
 library(patchwork)
 library(ggdist)
@@ -7,18 +6,12 @@ library(ggdist)
 theme_set(theme_bw())
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-setwd("/Users/ll/work/Ori/NFS_paper/")
-#path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-#pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
-pathdata <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/data/"
-path_figures <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/figures/"
+path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
+pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 pval <- read_tsv(paste0(pathdata,"pval_table.tsv.gz"))
-
 
 # tRNA
 toplot <- read_tsv(paste0(pathdata,"FigureS11_data.tsv.gz"))
-
-
 tRNA_tib3 <- toplot %>% group_by(feat_name,type) %>% summarise(m=round(mean(mea)),sd=sd(mea,na.rm=T),n=n()) %>% ungroup
 tRNA_tib3$feat_name <- fct_reorder(tRNA_tib3$feat_name, tRNA_tib3$m)
 
@@ -39,7 +32,7 @@ p1 <- ggplot(toplot1)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q1")
-	
+
 toplot2 <- tRNA2plot %>% filter(qtile=="q2")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -52,7 +45,7 @@ p2 <- ggplot(toplot2)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q2")
-	
+
 toplot3 <- tRNA2plot %>% filter(qtile=="q3")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -96,7 +89,7 @@ p1 <- ggplot(toplot1)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q5")
-	
+
 toplot2 <- tRNA2plot %>% filter(qtile=="q6")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -109,7 +102,7 @@ p2 <- ggplot(toplot2)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q6")
-	
+
 toplot3 <- tRNA2plot %>% filter(qtile=="q7")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -135,7 +128,7 @@ p4 <- ggplot(toplot4)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q8")
-	
+
 
 p0 <- p1/p2/p3/p4 & theme(legend.position = "bottom",axis.title.x=element_blank())
 p0 + plot_layout(guides = "collect")
@@ -153,7 +146,7 @@ p1 <- ggplot(toplot1)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q9")
-	
+
 toplot2 <- tRNA2plot %>% filter(qtile=="q10")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -166,7 +159,7 @@ p2 <- ggplot(toplot2)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q10")
-	
+
 toplot3 <- tRNA2plot %>% filter(qtile=="q11")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -192,14 +185,14 @@ p4 <- ggplot(toplot4)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q12")
-	
+
 
 p0 <- p1/p2/p3/p4 & theme(legend.position = "bottom",axis.title.x=element_blank())
 p0 + plot_layout(guides = "collect")
 ggsave(paste0(path_figures,"FigureS11C.pdf"),h=12,w=12)
 
 # without the n filter
-tRNA2plot <- left_join(tRNA_tib3,pval %>% filter(Figure=="S11") %>% select(feat_name=type,signif,pval_adj)) 
+tRNA2plot <- left_join(tRNA_tib3,pval %>% filter(Figure=="S11") %>% select(feat_name=type,signif,pval_adj))
 tRNA2plot$feat_name <- fct_reorder(tRNA2plot$feat_name, tRNA2plot$m)
 
 tRNA2plot$qtile <- cut(tRNA2plot$m,quantile(tRNA2plot$m,probs=seq(0,1,1/12)),include.lowest=T,labels=c(paste0("q",1:12)))
@@ -216,7 +209,7 @@ p1 <- ggplot(toplot1)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q1")
-	
+
 toplot2 <- tRNA2plot %>% filter(qtile=="q2")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -229,7 +222,7 @@ p2 <- ggplot(toplot2)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q2")
-	
+
 toplot3 <- tRNA2plot %>% filter(qtile=="q3")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -273,7 +266,7 @@ p1 <- ggplot(toplot1)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q5")
-	
+
 toplot2 <- tRNA2plot %>% filter(qtile=="q6")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -286,7 +279,7 @@ p2 <- ggplot(toplot2)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q6")
-	
+
 toplot3 <- tRNA2plot %>% filter(qtile=="q7")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -312,7 +305,7 @@ p4 <- ggplot(toplot4)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q8")
-	
+
 
 p0 <- p1/p2/p3/p4 & theme(legend.position = "bottom",axis.title.x=element_blank())
 p0 + plot_layout(guides = "collect")
@@ -330,7 +323,7 @@ p1 <- ggplot(toplot1)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q9")
-	
+
 toplot2 <- tRNA2plot %>% filter(qtile=="q10")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -343,7 +336,7 @@ p2 <- ggplot(toplot2)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q10")
-	
+
 toplot3 <- tRNA2plot %>% filter(qtile=="q11")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
@@ -369,7 +362,7 @@ p4 <- ggplot(toplot4)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x = element_blank(),axis.ticks.x = element_blank())+
 	ylab("Speed (bp/min)")+
 	ggtitle("tRNA_q12")
-	
+
 
 p0 <- p1/p2/p3/p4 & theme(legend.position = "bottom",axis.title.x=element_blank())
 p0 + plot_layout(guides = "collect")

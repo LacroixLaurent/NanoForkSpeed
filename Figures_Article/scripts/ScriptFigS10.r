@@ -1,6 +1,4 @@
 ### script fig S10
-### 20220202
-
 suppressMessages(library(tidyverse))
 library(patchwork)
 library(ggdist)
@@ -8,16 +6,11 @@ library(ggdist)
 theme_set(theme_bw())
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-setwd("/Users/ll/work/Ori/NFS_paper/")
-#path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-#pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
-pathdata <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/data/"
-path_figures <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/figures/"
+path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
+pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 pval <- read_tsv(paste0(pathdata,"pval_table.tsv.gz"))
 
-
 ### CEN
-
 toplot <- read_tsv(paste0(pathdata,"FigureS10A_data.tsv.gz"))
 toplot$feat_name <- factor(toplot$feat_name,levels=c(paste0("CEN",1:16),"other"))
 toplot2 <- toplot %>% group_by(feat_name) %>% summarise(n=n(),m=round(mean(mea)),sd=sd(mea,na.rm=T)) %>% ungroup

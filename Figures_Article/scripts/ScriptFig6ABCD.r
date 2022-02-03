@@ -14,7 +14,7 @@ pval <- read_tsv(paste0(pathdata,"pval_table.tsv.gz")) %>% mutate(type=case_when
 toplot <- read_tsv(paste0(pathdata,"Figure6A_data.tsv.gz"))
 toplot$feat <- factor(toplot$feat,levels=c("centromere","telomere","rDNA","tRNA","other"))
 
-toplot <- toplot %>% mutate(feat=fct_recode(feat,"Centromeres"="centromere","Telomeres"="telomere","rDNA"="rDNA","tRNA genes"="tRNA","Rest of the genome"="other"))
+toplot <- toplot %>% mutate(feat=fct_recode(feat,"Centromeres"="centromere","Telomeres"="telomere","rDNA"="rDNA","tRNA genes"="tRNA","Rest of the \ngenome"="other"))
 toplot2 <- toplot %>% group_by(feat) %>% summarise(m=round(mean(mea)),sd=sd(mea,na.rm=T),n=n()) %>% ungroup
 topval <- left_join(toplot2 %>% select(feat),pval %>% filter(Figure=="6A") %>% select(feat=type,signif,pval_adj) %>% mutate(feat=fct_recode(feat,"Centromeres"="centromere","Telomeres"="telomere","rDNA"="rDNA","tRNA genes"="tRNA")))
 

@@ -3,7 +3,7 @@ title: "NFS data generation"
 output: github_document
 ---
 
-This is a typical example how we proceed to detect forks, initiations and terminations from the reads base-called with megalodon and our model (script=*basecalling_sample.sh*) then parsed with the *Parsing_function4Megalodon.r*  (script=*basecalling_sample.r*).  
+This is a typical example of how we proceed to detect forks, initiations and terminations from the reads base-called with megalodon and our model (script=*basecalling_sample.sh*) then parsed with the *Parsing_function4Megalodon.r*  (script=*basecalling_sample.r*).  
 
 ### Background threshold determination
 The first step of the analysis requires to check the distribution of the signal in order to set the b2a threshold, used to identify the background of the signal.  
@@ -55,7 +55,7 @@ EXP <- readRDS(pathdata %+% expmeg)  %>% filter(chrom!="chrM")
 EXP_NFS <- NFSmaster(EXP,pulse0=ex.pulse,NFS.save=T,EXPname=ex.save,b2a=ex.b2a)
 ```
 
-As parsed data files were big, fork detection is performed on the split data and then these results are merged using the NFS_merging function from the *NFS_function.r* file.  
+As parsed data files are big, fork detection is performed on the split data and then these results are merged using the NFS_merging function from the *NFS_function.r* file.  
 The merged data file keep the same organization with a slightly simplified summary table. Those merged file are then used to produce the figures and data discussed in the manuscript [Theulot et al., 2022](https://doi.org/XX.XXXXX/JOURNAL/REF).  
 ```{r eval = FALSE}
 source("./NFS_function.r")

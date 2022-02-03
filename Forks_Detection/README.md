@@ -1,7 +1,7 @@
 NFS data generation
 ================
 
-This is a typical example how we proceed to detect forks, initiations
+This is a typical example of how we proceed to detect forks, initiations
 and terminations from the reads base-called with megalodon and our model
 (script=*basecalling\_sample.sh*) then parsed with the
 *Parsing\_function4Megalodon.r* (script=*basecalling\_sample.r*).
@@ -80,7 +80,7 @@ EXP <- readRDS(pathdata %+% expmeg)  %>% filter(chrom!="chrM")
 EXP_NFS <- NFSmaster(EXP,pulse0=ex.pulse,NFS.save=T,EXPname=ex.save,b2a=ex.b2a)
 ```
 
-As parsed data files were big, fork detection is performed on the split
+As parsed data files are big, fork detection is performed on the split
 data and then these results are merged using the NFS\_merging function
 from the *NFS\_function.r* file.  
 The merged data file keep the same organization with a slightly

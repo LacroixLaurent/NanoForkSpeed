@@ -1,16 +1,12 @@
 ### Script for figures 3 and S7
-## LL20220128
 suppressMessages(library(tidyverse))
 theme_set(theme_bw())
 library(patchwork)
 library(ggdist)
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-setwd("/Users/ll/work/Ori/PLS_paper/")
-#path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-#pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
-pathdata <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/data/"
-path_figures <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/figures/"
+path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
+pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 
 ## fig3A
 toplotA <- read_tsv(paste0(pathdata,"Figure3A_data.tsv.gz"))%>% mutate(type=fct_relevel(type,c("Single tracks without noise","Single tracks with noise","Multiple tracks without noise","Multiple tracks with noise")))
@@ -32,7 +28,7 @@ toplotA %>% group_by(type) %>% summarise(iqr=IQR(speed_error))
 #  type                            iqr
 #1 Single tracks without noise    123.
 #2 Single tracks with noise       371.
-#3 Multiple tracks without noise  186 
+#3 Multiple tracks without noise  186
 #4 Multiple tracks with noise     438.
 
 
@@ -52,7 +48,7 @@ f3b <- ggplot(toplotB)+
 
 toplotC <- read_tsv(paste0(pathdata,"Figure3C_data.tsv.gz"))
 set.seed(123)
-g4 <- tibble(g=rnorm(n=100000,mean=2486,sd=150))	
+g4 <- tibble(g=rnorm(n=100000,mean=2486,sd=150))
 f3c <- ggplot(toplotC)+
 	geom_density(aes(x=speed0,col="Deconv_distribution"))+
 	geom_density(data=g4,aes(x=g,y=..density..*0.63,col="Fitted mode\n(m=2486,sd=150,p=63%)"))+
@@ -113,7 +109,7 @@ fs7b <- ggplot(toplotS7B)+
 	ggtitle("Single tracks with noise")+
 	ylab("Speed Error (bp/min)")+
 	xlab("True Speed (bp/min)")
-	
+
 toplotS7C <- read_tsv(paste0(pathdata,"FigureS7C_data.tsv.gz"))
 totext <- toplotS7C %>% group_by(gp) %>% summarise(n=n())
 tomed <- toplotS7C %>% group_by(gp) %>% summarise(med=round(median(speed_error)))
@@ -152,3 +148,4 @@ fs7d <- ggplot(toplotS7D)+
 p0 <- fs7a+fs7b+fs7c+fs7d + plot_layout(ncol=1)
 
 ggsave(paste0(path_figures,"FigureS7.pdf"),h=10,w=16,p0)
+

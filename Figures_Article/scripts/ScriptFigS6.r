@@ -1,6 +1,4 @@
 ### Script FigS6
-## 20220202
-
 suppressMessages(library(tidyverse))
 library(patchwork)
 library(ggprism)
@@ -8,12 +6,8 @@ library(ggprism)
 theme_set(theme_bw())
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-setwd("/Users/ll/work/Ori/NFS_paper/")
-#path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-#pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
-pathdata <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/data/"
-path_figures <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/figures/"
-
+path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
+pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 
 ### Manip
 toplot0 <- readRDS(paste0(pathdata,"FigureS6E_data.rds"))
@@ -117,14 +111,14 @@ coord_cartesian(ylim=c(0,1))
 }
 
 
-p0 <- pl_MonoGT[[1]]+pl_MonoGT[[2]]+pl_MonoGT[[3]]+pl_MonoGT[[4]]+pl_MonoGT[[5]]+pl_Mono[[1]]+pl_Mono[[2]]+pl_Mono[[3]]+pl_Mono[[5]]+pl_Mono[[4]]+pl_MultiGT[[1]]+pl_MultiGT[[2]]+pl_MultiGT[[3]]+pl_MultiGT[[4]]+pl_MultiGT[[5]]+pl_Multi[[1]]+pl_Multi[[2]]+pl_Multi[[3]]+pl_Multi[[4]]+pl_Multi[[5]]+pl_BT1[[1]]+pl_BT1[[2]]+pl_BT1[[3]]+pl_BT1[[4]]+pl_BT1[[5]] & theme(legend.position="none") 
+p0 <- pl_MonoGT[[1]]+pl_MonoGT[[2]]+pl_MonoGT[[3]]+pl_MonoGT[[4]]+pl_MonoGT[[5]]+pl_Mono[[1]]+pl_Mono[[2]]+pl_Mono[[3]]+pl_Mono[[5]]+pl_Mono[[4]]+pl_MultiGT[[1]]+pl_MultiGT[[2]]+pl_MultiGT[[3]]+pl_MultiGT[[4]]+pl_MultiGT[[5]]+pl_Multi[[1]]+pl_Multi[[2]]+pl_Multi[[3]]+pl_Multi[[4]]+pl_Multi[[5]]+pl_BT1[[1]]+pl_BT1[[2]]+pl_BT1[[3]]+pl_BT1[[4]]+pl_BT1[[5]] & theme(legend.position="none")
 p0[[1]] <- p0[[1]]+ggtitle("Single tracks without noise")+labs(tag="a")+theme(plot.tag=element_text(face="bold"))
 p0[[6]] <- p0[[6]]+ggtitle("Single tracks with noise")+labs(tag="b")+theme(plot.tag=element_text(face="bold"))
 p0[[11]] <- p0[[11]]+ggtitle("Multiple tracks without noise")+labs(tag="c")+theme(plot.tag=element_text(face="bold"))
 p0[[16]] <- p0[[16]]+ggtitle("Multiple tracks with noise")+labs(tag="d")+theme(plot.tag=element_text(face="bold"))
 p0[[21]] <- p0[[21]]+ggtitle("BT1")+labs(tag="e")+theme(plot.tag=element_text(face="bold"))
 
-p0 +plot_layout(byrow = FALSE,ncol=5,guide="collect")
+p0 +plot_layout(byrow = FALSE,ncol=5,guides="collect")
 ggsave(paste0(path_figures,"FigureS6A-E.pdf"),h=9,w=18)
 
 ### figure simu
@@ -148,5 +142,5 @@ fs6g <- ggplot(toplot,aes(x=distance,y=value,col=name))+
 	labs(tag="g")+
 	theme(plot.tag=element_text(face="bold"))
 
-fs6f+fs6g +plot_layout(guide="collect")
+fs6f+fs6g +plot_layout(guides="collect")
 ggsave(paste0(path_figures,"FigureS6FG.pdf"),h=4,w=9)

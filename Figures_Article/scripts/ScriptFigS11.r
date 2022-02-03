@@ -10,7 +10,11 @@ path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/fi
 pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 pval <- read_tsv(paste0(pathdata,"pval_table.tsv.gz"))
 
+#toto <- read_tsv("/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data_stat/data4stat_fig6b_S11.tsv.gz")
+#toto %>% filter(feat_name=="other") %>% group_by(run) %>% summarise(m=mean(speed)) %>% pull(m) %>% mean
+# 2129.561
 speedm <- 2130
+
 # tRNA
 toplot <- read_tsv(paste0(pathdata,"FigureS11_data.tsv.gz"))
 tRNA_tib3 <- toplot %>% group_by(feat_name,type) %>% summarise(m=round(mean(mea)),sd=sd(mea,na.rm=T),n=n()) %>% ungroup
@@ -24,6 +28,7 @@ tRNA2plot$qtile <- cut(tRNA2plot$m,quantile(tRNA2plot$m,probs=seq(0,1,1/12)),inc
 toplot1 <- tRNA2plot %>% filter(qtile=="q1")
 p1 <- ggplot(toplot1)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -37,6 +42,7 @@ p1 <- ggplot(toplot1)+
 toplot2 <- tRNA2plot %>% filter(qtile=="q2")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -50,6 +56,7 @@ p2 <- ggplot(toplot2)+
 toplot3 <- tRNA2plot %>% filter(qtile=="q3")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -63,6 +70,7 @@ p3 <- ggplot(toplot3)+
 toplot4 <- tRNA2plot %>% filter(qtile=="q4")
 p4 <- ggplot(toplot4)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -81,6 +89,7 @@ ggsave(paste0(path_figures,"FigureS11A.pdf"),h=12,w=12)
 toplot1 <- tRNA2plot %>% filter(qtile=="q5")
 p1 <- ggplot(toplot1)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -94,6 +103,7 @@ p1 <- ggplot(toplot1)+
 toplot2 <- tRNA2plot %>% filter(qtile=="q6")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -107,6 +117,7 @@ p2 <- ggplot(toplot2)+
 toplot3 <- tRNA2plot %>% filter(qtile=="q7")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -120,6 +131,7 @@ p3 <- ggplot(toplot3)+
 toplot4 <- tRNA2plot %>% filter(qtile=="q8")
 p4 <- ggplot(toplot4)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -138,6 +150,7 @@ ggsave(paste0(path_figures,"FigureS11B.pdf"),h=12,w=12)
 toplot1 <- tRNA2plot %>% filter(qtile=="q9")
 p1 <- ggplot(toplot1)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -151,6 +164,7 @@ p1 <- ggplot(toplot1)+
 toplot2 <- tRNA2plot %>% filter(qtile=="q10")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -164,6 +178,7 @@ p2 <- ggplot(toplot2)+
 toplot3 <- tRNA2plot %>% filter(qtile=="q11")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -177,6 +192,7 @@ p3 <- ggplot(toplot3)+
 toplot4 <- tRNA2plot %>% filter(qtile=="q12")
 p4 <- ggplot(toplot4)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -201,6 +217,7 @@ tRNA2plot$qtile <- cut(tRNA2plot$m,quantile(tRNA2plot$m,probs=seq(0,1,1/12)),inc
 toplot1 <- tRNA2plot %>% filter(qtile=="q1")
 p1 <- ggplot(toplot1)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -214,6 +231,7 @@ p1 <- ggplot(toplot1)+
 toplot2 <- tRNA2plot %>% filter(qtile=="q2")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -227,6 +245,7 @@ p2 <- ggplot(toplot2)+
 toplot3 <- tRNA2plot %>% filter(qtile=="q3")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -240,6 +259,7 @@ p3 <- ggplot(toplot3)+
 toplot4 <- tRNA2plot %>% filter(qtile=="q4")
 p4 <- ggplot(toplot4)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -258,6 +278,7 @@ ggsave(paste0(path_figures,"FigureS11Aalt.pdf"),h=12,w=12)
 toplot1 <- tRNA2plot %>% filter(qtile=="q5")
 p1 <- ggplot(toplot1)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -271,6 +292,7 @@ p1 <- ggplot(toplot1)+
 toplot2 <- tRNA2plot %>% filter(qtile=="q6")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -284,6 +306,7 @@ p2 <- ggplot(toplot2)+
 toplot3 <- tRNA2plot %>% filter(qtile=="q7")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -297,6 +320,7 @@ p3 <- ggplot(toplot3)+
 toplot4 <- tRNA2plot %>% filter(qtile=="q8")
 p4 <- ggplot(toplot4)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -315,6 +339,7 @@ ggsave(paste0(path_figures,"FigureS11Balt.pdf"),h=12,w=12)
 toplot1 <- tRNA2plot %>% filter(qtile=="q9")
 p1 <- ggplot(toplot1)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -328,6 +353,7 @@ p1 <- ggplot(toplot1)+
 toplot2 <- tRNA2plot %>% filter(qtile=="q10")
 p2 <- ggplot(toplot2)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -341,6 +367,7 @@ p2 <- ggplot(toplot2)+
 toplot3 <- tRNA2plot %>% filter(qtile=="q11")
 p3 <- ggplot(toplot3)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +
@@ -354,6 +381,7 @@ p3 <- ggplot(toplot3)+
 toplot4 <- tRNA2plot %>% filter(qtile=="q12")
 p4 <- ggplot(toplot4)+
 	coord_cartesian(ylim=c(0,5000))+
+	geom_hline(aes(yintercept=speedm),lty=2)+
 	geom_point(aes(x=feat_name,y=m,col=type),shape=95,size=10,show.legend=F)+
 	geom_errorbar(aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=type),width=0.2)+
 	geom_text(aes(x=feat_name,y=0,label=n),fontface="italic") +

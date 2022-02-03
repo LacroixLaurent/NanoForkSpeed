@@ -93,6 +93,19 @@ source("./NFS_function.r")
 NFS_merging ("./","./","BT1_run4",suff="_merged",file_list0="BT1_run4_Megalodon_00_NFS_data.rds")
 ```
 
+### Session Info
+
+``` r
+library("devtools")
+```
+
+    ## Loading required package: usethis
+
+``` r
+library(magrittr)
+session_info() %>% capture.output(file="forks_detection_session_info.txt")
+```
+
 ### Outpout data format explanation
 
 ##### NFSmaster output

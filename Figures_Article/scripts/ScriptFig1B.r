@@ -5,11 +5,9 @@ theme_set(theme_bw())
 library(patchwork)
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-setwd("/Users/ll/work/Ori/NFS_paper/")
-#path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-#pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
-pathdata <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/data/"
-path_figures <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/figures/"
+#setwd("/Users/ll/work/Ori/NFS_paper/")
+path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
+pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 toplot <- readRDS(paste0(pathdata,"Figure1B_data.rds"))
 b2a.thr=0.02
 pl <- list()
@@ -21,7 +19,7 @@ pl[[i]] <- ggplot(test$signalr[[1]]) +
 	geom_line(aes(x=positions,y=signal,col="data.smoothed"))+
 	geom_line(data=test$RDP[[1]],aes(x=x,y=y,col="RDP_segment"))+
 	geom_text(data=test$sl2[[1]],
-		aes(x=sl.x,y=-0.02,col="PLS_segment",label=sl.pat2,fontface="bold",vjust=1), 
+		aes(x=sl.x,y=-0.02,col="PLS_segment",label=sl.pat2,fontface="bold",vjust=1),
 		show.legend = F,size=2)+
 	geom_hline(yintercept=b2a.thr,linetype="dashed",alpha=0.3) +
 	geom_vline(data=test$forks[[1]],aes(xintercept=X0),linetype="longdash",alpha=0.3)+
@@ -71,3 +69,4 @@ p01 <- p0 + plot_layout(guides = "collect")
 (plot_spacer()+p01) + plot_layout(heights=c(1,5))
 #ggsave(paste0(path_figures,"Figure1Bscale.pdf"),h=9,w=7)
 ggsave(paste0(path_figures,"Figure1Bscale.png"),h=9,w=7)
+

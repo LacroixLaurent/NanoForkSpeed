@@ -6,11 +6,8 @@ library(patchwork)
 library(ggdist)
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-setwd("/Users/ll/work/Ori/PLS_paper/")
-#path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-#pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
-pathdata <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/data/"
-path_figures <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/figures/"
+path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
+pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 
 
 ## Figure2A
@@ -35,11 +32,11 @@ p1 <- ggplot(toplot,aes(x=name4,y=speed))+
 	ylab("Speed (bp/min)")+
 	labs(tag="a")+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x=element_blank(),plot.tag=element_text(face="bold"))
-	
-	
+
+
 
 ## Figure 2B
-toplot2 <- read_tsv(paste0(pathdata,"Figure2B_data.tsv.gz")) %>% 
+toplot2 <- read_tsv(paste0(pathdata,"Figure2B_data.tsv.gz")) %>%
 	mutate(name4=factor(name4) %>% fct_shift)
 
 totext2 <- toplot2 %>% group_by(name4) %>% summarise(n=n()) %>% ungroup
@@ -58,6 +55,6 @@ p2 <- ggplot(toplot2,aes(x=name4,y=speed))+
 	labs(tag="b")+
 	theme(plot.tag=element_text(face="bold"),axis.text.x = element_text(angle = 45,hjust=1),axis.title.x=element_blank())
 
-p0 <- (p1|p2)+plot_layout(guides = "keep", ncol=2,byrow=F,width=c(24,4))
+p0 <- (p1|p2) + plot_layout(guides = "keep", ncol=2,byrow=F,widths = c(24,4))
 ggsave(paste0(path_figures,"Figure2AB.pdf"),h=5,w=18,p0)
 

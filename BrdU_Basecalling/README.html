@@ -175,7 +175,7 @@ pre code {
 <div id="brdu-basecalling" class="section level3">
 <h3>BrdU Basecalling</h3>
 <p>Raw data are available from ENA repository under accession number PRJEB50302.<br />
-A fast5 sample from the BT1_run4 is available from the Zenodo repository under the DOI <a href="https://doi.org/10.5281/zenodo.5931058">10.5281/zenodo.5958270</a>.</p>
+A fast5 sample from the BT1_run4 is available from the Zenodo repository under the DOI <a href="https://doi.org/10.5281/zenodo.5958270">10.5281/zenodo.5958270</a>.</p>
 <p>In order to test this procedure, the BT1_run4.tar.gz file should be downloaded and expanded into a BT1_run4_fast5 folder.</p>
 <p><em>basecalling_sample.sh</em> contains a example of the base calling procedure going from RawData to the megalodon mod_mappings.bam file.</p>
 <p><em>basecalling_sample.r</em> proceeds in R from the mod_mappings.bam file to smoothed signal in a .rds format (to open with R) used for forks detection. In this script the bam file is first split into 50 000 reads bam files to allow better memory handling. This process requires samtools (we used v1.10).<br />

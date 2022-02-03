@@ -2,7 +2,7 @@ NFS data generation
 ================
 
 This is a typical example of how we proceed to detect forks, initiations
-and terminations from the reads base-called with megalodon and our model
+and terminations from the reads base called with megalodon and our model
 (script=*basecalling\_sample.sh*) then parsed with the
 *Parsing\_function4Megalodon.r* (script=*basecalling\_sample.r*).
 

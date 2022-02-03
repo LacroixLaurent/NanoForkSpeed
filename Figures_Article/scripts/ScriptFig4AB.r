@@ -1,6 +1,4 @@
 ## Script Fig4A-B
-## LL20220202
-
 suppressMessages(library(tidyverse))
 library(patchwork)
 library(ggdist)
@@ -8,13 +6,9 @@ library(ggdist)
 theme_set(theme_bw())
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-setwd("/Users/ll/work/Ori/NFS_paper/")
-#path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-#pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
-pathdata <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/data/"
-path_figures <- "/Users/ll/work/Ori/NFS_paper/GitHub_upload/figures/"
+path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
+pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 pval <- read_tsv(paste0(pathdata,"pval_table.tsv.gz"))
-#speedmed0 <- 2174
 
 ### Figure4A HU
 # selecting forks
@@ -57,5 +51,5 @@ f4b <- ggplot(toplot,aes(x=mutant,y=mea))+
 	ylab("Speed (bp/min)")+
 	labs(tag="b")
 
-p0 <- (f4a|f4b) + plot_layout( ncol=2, byrow=F,width=c(9,7))
-ggsave(paste0(path_figures,"Figure4AB.pdf"),h=4,w=12,p0) 
+p0 <- (f4a|f4b) + plot_layout( ncol=2, byrow=F,widths=c(9,7))
+ggsave(paste0(path_figures,"Figure4AB.pdf"),h=4,w=12,p0)

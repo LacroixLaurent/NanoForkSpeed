@@ -1,5 +1,4 @@
 ### Script for figures 2AB
-## 20220202
 suppressMessages(library(tidyverse))
 theme_set(theme_bw())
 library(patchwork)

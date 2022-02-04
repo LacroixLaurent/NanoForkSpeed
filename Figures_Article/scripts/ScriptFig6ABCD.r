@@ -20,15 +20,15 @@ topval <- left_join(toplot2 %>% select(feat),pval %>% filter(Figure=="6A") %>% s
 
 
 f6a <- ggplot(toplot,aes(x=feat,y=mea))+
-	stat_dots(col="grey40",size=1,shape=16,side="both")+
-	geom_point(data=toplot2,aes(x=feat,y=m),col="red",shape=95,alpha=0.6,size=10,show.legend=F)+
-	geom_errorbar(data=toplot2,aes(x=feat,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2,alpha=0.6)+
-	geom_text(data=toplot2,aes(x=feat,y=0,label=n),col="grey40",fontface="italic") +
-	geom_text(data=toplot2,aes(x=feat,y=3400,label=m),col="red") +
-	geom_text(data=topval,aes(x=feat,y=3100,label=signif),col="grey20",size=6) +
+	geom_point(data=toplot2,aes(x=feat,y=m),col="red",shape=95,size=10,show.legend=F)+
+	geom_errorbar(data=toplot2,aes(x=feat,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
+	stat_dots(col="black",shape=16,side="both")+
+	geom_text(data=toplot2,aes(x=feat,y=0,label=n),col="black",fontface="italic",size=3) +
+	geom_text(data=toplot2,aes(x=feat,y=3400,label=m),col="red",size=3) +
+	geom_text(data=topval,aes(x=feat,y=3100,label=signif),size=5) +
 	scale_colour_manual("Features",values=mypal[c(3,5,7,9,1)])+
 	coord_cartesian(ylim=c(0,3500))+
-	theme(axis.ticks.x = element_blank(),axis.text.x = element_text(angle=45,hjust=1),legend.position = "none",plot.tag=element_text(face="bold"))+
+	theme(axis.text.x = element_text(angle=45,hjust=1),legend.position = "none",plot.tag=element_text(face="bold"))+
 	xlab("Genomic Features")+
 	ylab("Speed (bp/min)")+
 	labs(tag="a")
@@ -39,15 +39,15 @@ toplot <- read_tsv(paste0(pathdata,"Figure6B_data.tsv.gz")) %>%
 	mutate(type=fct_recode(type,"Co-Directional"="CD","Head-On"="HO"))
 toplot2 <- toplot %>% group_by(type) %>% summarise(m=round(mean(mea)),sd=sd(mea,na.rm=T),n=n()) %>% ungroup
 f6b <- ggplot(toplot,aes(x=type,y=mea))+
-	stat_dots(col="grey40",size=1,shape=16,side="both")+
-	geom_point(data=toplot2,aes(x=type,y=m),col="red",shape=95,alpha=0.6,size=10,show.legend=F)+
-	geom_errorbar(data=toplot2,aes(x=type,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2,alpha=0.6)+
-	geom_text(data=toplot2,aes(x=type,y=3400,label=m),col="red") +
-	annotate(geom="text",x=1.5,y=3100,label="*",col="grey20",size=6) +
-	geom_text(data=toplot2,aes(x=type,y=0,label=n),col="grey40",fontface="italic") +
+	geom_point(data=toplot2,aes(x=type,y=m),col="red",shape=95,size=10,show.legend=F)+
+	geom_errorbar(data=toplot2,aes(x=type,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
+	stat_dots(col="black",shape=16,side="both")+
+	geom_text(data=toplot2,aes(x=type,y=3400,label=m),col="red",size=3) +
+	annotate(geom="text",x=1.5,y=3100,label="*",col="black",size=5) +
+	geom_text(data=toplot2,aes(x=type,y=0,label=n),col="black",fontface="italic",size=3) +
 	scale_colour_manual("tRNA",values=mypal[c(1,7)],labels=c("Co-Directional","Head-On"))+
 	coord_cartesian(ylim=c(0,3500))+
-	theme(axis.ticks.x = element_blank(),axis.text.x = element_text(angle=45,hjust=1),legend.position = "none",plot.tag=element_text(face="bold"))+
+	theme(axis.text.x = element_text(angle=45,hjust=1),legend.position = "none",plot.tag=element_text(face="bold"))+
 	xlab("tRNA gene")+
 	ylab("Speed (bp/min)")+
 	labs(tag="b")
@@ -58,15 +58,15 @@ toplot$type <- factor(toplot$type, levels=c("leading","lagging"))
 toplot2 <- toplot %>% group_by(type) %>% summarise(m=round(mean(mea)),sd=sd(mea,na.rm=T),n=n()) %>% ungroup
 
 f6c <- ggplot(toplot,aes(x=type,y=mea))+
-	stat_dots(col="grey40",size=1,shape=16,side="both")+
-	geom_point(data=toplot2,aes(x=type,y=m),col="red",shape=95,alpha=0.6,size=10,show.legend=F)+
-	geom_errorbar(data=toplot2,aes(x=type,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2,alpha=0.6)+
-	geom_text(data=toplot2,aes(x=type,y=3400,label=m),col="red") +
-	geom_text(data=toplot2,aes(x=type,y=0,label=n),col="grey40",fontface="italic") +
-	annotate(geom="text",x=1.5,y=3100,label="-",col="grey20",size=6) +
+	geom_point(data=toplot2,aes(x=type,y=m),col="red",shape=95,size=10,show.legend=F)+
+	geom_errorbar(data=toplot2,aes(x=type,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
+	stat_dots(col="black",shape=16,side="both")+
+	geom_text(data=toplot2,aes(x=type,y=3400,label=m),col="red",size=3) +
+	geom_text(data=toplot2,aes(x=type,y=0,label=n),col="black",fontface="italic",size=3) +
+	annotate(geom="text",x=1.5,y=3100,label="-",col="black",size=5) +
 	scale_colour_manual("",values=mypal[c(1,7)])+
 	coord_cartesian(ylim=c(0,3500))+
-	theme(axis.ticks.x = element_blank(),axis.text.x = element_text(angle=45,hjust=1),legend.position = "none",plot.tag=element_text(face="bold"))+
+	theme(axis.text.x = element_text(angle=45,hjust=1),legend.position = "none",plot.tag=element_text(face="bold"))+
 	xlab("Replication Type")+
 	ylab("Speed (bp/min)")+
 	labs(tag="c")
@@ -88,9 +88,9 @@ f6d <- ggplot(toplot2,aes(x=RTsc3,y=speed))+
 	labs(tag="d")
 
 layout <- "
-AAAABB
-CCDDDD"
+AAAAABBCC
+DDDDDDDDD"
 
 p0 <- f6a+f6b+f6c+f6d+plot_layout(design = layout)
-ggsave(paste0(path_figures,"Figure6.pdf"),h=9,w=9,p0)
+ggsave(paste0(path_figures,"Figure6.pdf"),h=9,w=7,p0)
 

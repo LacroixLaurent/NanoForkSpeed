@@ -17,17 +17,17 @@ toplot2 <- toplot %>% group_by(feat_name) %>% summarise(n=n(),m=round(mean(mea))
 topval <- left_join(toplot2 %>% select(feat_name),pval %>% filter(Figure=="S10A") %>% select(feat_name=type,signif,pval_adj))
 
 fs10a <- ggplot(toplot,aes(x=feat_name,y=mea))+
-	stat_dots(col="grey40",alpha=0.6,size=1,shape=16,side="both")+
-	geom_point(data=toplot2,aes(x=feat_name,y=m,col=feat_name),shape=95,alpha=0.6,size=10,show.legend=F)+
-	geom_errorbar(data=toplot2,aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=feat_name),width=0.2,alpha=0.6)+
-	geom_text(data=toplot2,aes(x=feat_name,y=3900,label=m),col="red") +
-	geom_text(data=topval,aes(x=feat_name,y=3600,label=signif),col="grey20",size=6) +
-	geom_text(data=toplot2,aes(x=feat_name,y=0,label=n),fontface="italic") +
+	geom_point(data=toplot2,aes(x=feat_name,y=m),col="red",shape=95,size=10,show.legend=F)+
+	geom_errorbar(data=toplot2,aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
+	stat_dots(col="black",shape=16,side="both")+
+	geom_text(data=toplot2,aes(x=feat_name,y=3900,label=m),col="red",size=3) +
+	geom_text(data=topval,aes(x=feat_name,y=3600,label=signif),col="black",size=5) +
+	geom_text(data=toplot2,aes(x=feat_name,y=0,label=n),fontface="italic",size=3) +
 	coord_cartesian(ylim=c(0,4000))+
 	scale_colour_manual("",values=mypal[c(3:18,1)])+
 	ylab("Speed (bp/min)")+
 	xlab("Centromeres")+
-	theme(axis.ticks.x = element_blank(),axis.text.x = element_text(angle=45,hjust=1,colour=mypal[c(3:18,1)]),legend.position = "none",plot.tag=element_text(face="bold"),legend.key.size = unit(0.3, 'cm'))+
+	theme(axis.text.x = element_text(angle=45,hjust=1),legend.position = "none",plot.tag=element_text(face="bold"),legend.key.size = unit(0.3, 'cm'))+
 	labs(tag="a")
 
 
@@ -38,17 +38,17 @@ toplot2 <- toplot %>% group_by(feat_name) %>% summarise(n=n(),m=round(mean(mea))
 topval <- left_join(toplot2 %>% select(feat_name),pval %>% filter(Figure=="S10B") %>% select(feat_name=type,signif,pval_adj))
 
 fs10b <- ggplot(toplot,aes(x=feat_name,y=mea))+
-	stat_dots(col="grey40",alpha=0.6,size=1,shape=16,side="both")+
-	geom_point(data=toplot2,aes(x=feat_name,y=m,col=feat_name),shape=95,alpha=0.6,size=10,show.legend=F)+
-	geom_errorbar(data=toplot2,aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd,col=feat_name),width=0.2,alpha=0.6)+
-	geom_text(data=toplot2,aes(x=feat_name,y=3900,label=m),col="red") +
-	geom_text(data=topval,aes(x=feat_name,y=3600,label=signif),col="grey20",size=6) +
-	geom_text(data=toplot2,aes(x=feat_name,y=0,label=n),fontface="italic") +
+	geom_point(data=toplot2,aes(x=feat_name,y=m),col="red",shape=95,size=10,show.legend=F)+
+	geom_errorbar(data=toplot2,aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
+	stat_dots(col="black",shape=16,side="both")+
+	geom_text(data=toplot2,aes(x=feat_name,y=3900,label=m),col="red",size=3) +
+	geom_text(data=topval,aes(x=feat_name,y=3600,label=signif),col="black",size=5) +
+	geom_text(data=toplot2,aes(x=feat_name,y=0,label=n),fontface="italic",size=3) +
 	coord_cartesian(ylim=c(0,4000))+
 	scale_colour_manual("",values=mypal[c(3:18,1)])+
 	ylab("Speed (bp/min)")+
 	xlab("Telomeres")+
-	theme(axis.ticks.x = element_blank(),axis.text.x = element_text(angle=45,hjust=1,colour=mypal[c(3:18,1)]),legend.position = "none",plot.tag=element_text(face="bold"),legend.key.size = unit(0.3, 'cm'))+
+	theme(axis.text.x = element_text(angle=45,hjust=1),legend.position = "none",plot.tag=element_text(face="bold"),legend.key.size = unit(0.3, 'cm'))+
 	labs(tag="b")
 
 layout <- "
@@ -57,5 +57,5 @@ B
 "
 
 fs10 <- wrap_plots(fs10a,fs10b,design=layout)
-ggsave(paste0(path_figures,"FigureS10.pdf"),h=8,w=9,fs10)
+ggsave(paste0(path_figures,"FigureS10.pdf"),h=7,w=7,fs10)
 

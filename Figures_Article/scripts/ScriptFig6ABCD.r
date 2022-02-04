@@ -22,7 +22,7 @@ topval <- left_join(toplot2 %>% select(feat),pval %>% filter(Figure=="6A") %>% s
 f6a <- ggplot(toplot,aes(x=feat,y=mea))+
 	geom_point(data=toplot2,aes(x=feat,y=m),col="red",shape=95,size=10,show.legend=F)+
 	geom_errorbar(data=toplot2,aes(x=feat,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
-	stat_dots(col="black",shape=16,side="both")+
+	stat_dots(col="black",shape=16,side="both",dotsize=1.5,alpha=0.6)+
 	geom_text(data=toplot2,aes(x=feat,y=0,label=n),col="black",fontface="italic",size=3) +
 	geom_text(data=toplot2,aes(x=feat,y=3400,label=m),col="red",size=3) +
 	geom_text(data=topval,aes(x=feat,y=3100,label=signif),size=5) +
@@ -41,7 +41,7 @@ toplot2 <- toplot %>% group_by(type) %>% summarise(m=round(mean(mea)),sd=sd(mea,
 f6b <- ggplot(toplot,aes(x=type,y=mea))+
 	geom_point(data=toplot2,aes(x=type,y=m),col="red",shape=95,size=10,show.legend=F)+
 	geom_errorbar(data=toplot2,aes(x=type,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
-	stat_dots(col="black",shape=16,side="both")+
+	stat_dots(col="black",shape=16,side="both",dotsize=1.5,alpha=0.6)+
 	geom_text(data=toplot2,aes(x=type,y=3400,label=m),col="red",size=3) +
 	annotate(geom="text",x=1.5,y=3100,label="*",col="black",size=5) +
 	geom_text(data=toplot2,aes(x=type,y=0,label=n),col="black",fontface="italic",size=3) +
@@ -60,7 +60,7 @@ toplot2 <- toplot %>% group_by(type) %>% summarise(m=round(mean(mea)),sd=sd(mea,
 f6c <- ggplot(toplot,aes(x=type,y=mea))+
 	geom_point(data=toplot2,aes(x=type,y=m),col="red",shape=95,size=10,show.legend=F)+
 	geom_errorbar(data=toplot2,aes(x=type,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
-	stat_dots(col="black",shape=16,side="both")+
+	stat_dots(col="black",shape=16,side="both",dotsize=1.5,alpha=0.6)+
 	geom_text(data=toplot2,aes(x=type,y=3400,label=m),col="red",size=3) +
 	geom_text(data=toplot2,aes(x=type,y=0,label=n),col="black",fontface="italic",size=3) +
 	annotate(geom="text",x=1.5,y=3100,label="-",col="black",size=5) +

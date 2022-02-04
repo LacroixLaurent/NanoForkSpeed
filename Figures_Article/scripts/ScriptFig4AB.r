@@ -17,7 +17,7 @@ topval <- left_join(tibble(HU=factor(c(0,1,2.5,5,10,25,50,100))),pval %>% filter
 f4a <- ggplot(toplot,aes(x=HU,y=mea))+
 	geom_point(data=toplot2,aes(x=HU,y=m),col="red",shape=95,size=10,show.legend=F)+
 	geom_errorbar(data=toplot2,aes(x=HU,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
-	stat_dots(col="black",shape=16,side="both")+
+	stat_dots(col="black",shape=16,side="both",dotsize=1.5,alpha=0.6)+
 	geom_text(data=toplot2,aes(x=HU,y=0,label=n),col="black",fontface="italic",size=3) +
 	geom_text(data=toplot2,aes(x=HU,y=3400,label=m),col="red",size=3) +
 	geom_text(data=topval,aes(x=HU,y=3100,label=signif),size=5) +
@@ -35,7 +35,7 @@ topval <- left_join(tibble(mutant=c("WT","rtt109","sml1","csm3","tof1","mrc1")),
 f4b <- ggplot(toplot,aes(x=mutant,y=mea))+
 	geom_point(data=toplot2,aes(x=mutant,y=m),col="red",shape=95,size=10,show.legend=F)+
 	geom_errorbar(data=toplot2,aes(x=mutant,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
-	stat_dots(col="black",shape=16,side="both")+
+	stat_dots(col="black",shape=16,side="both",dotsize=1.5,alpha=0.6)+
 	geom_text(data=toplot2,aes(x=mutant,y=0,label=n),col="black",fontface="italic",size=3) +
 	geom_text(data=toplot2,aes(x=mutant,y=3400,label=m),col="red",size=3) +
 	geom_text(data=topval,aes(x=mutant,y=3100,label=signif),size=5) +

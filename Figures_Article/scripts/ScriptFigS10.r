@@ -19,7 +19,7 @@ topval <- left_join(toplot2 %>% select(feat_name),pval %>% filter(Figure=="S10A"
 fs10a <- ggplot(toplot,aes(x=feat_name,y=mea))+
 	geom_point(data=toplot2,aes(x=feat_name,y=m),col="red",shape=95,size=10,show.legend=F)+
 	geom_errorbar(data=toplot2,aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
-	stat_dots(col="black",shape=16,side="both")+
+	stat_dots(col="black",shape=16,side="both",dotsize=1.5,alpha=0.6)+
 	geom_text(data=toplot2,aes(x=feat_name,y=3900,label=m),col="red",size=3) +
 	geom_text(data=topval,aes(x=feat_name,y=3600,label=signif),col="black",size=5) +
 	geom_text(data=toplot2,aes(x=feat_name,y=0,label=n),fontface="italic",size=3) +
@@ -40,7 +40,7 @@ topval <- left_join(toplot2 %>% select(feat_name),pval %>% filter(Figure=="S10B"
 fs10b <- ggplot(toplot,aes(x=feat_name,y=mea))+
 	geom_point(data=toplot2,aes(x=feat_name,y=m),col="red",shape=95,size=10,show.legend=F)+
 	geom_errorbar(data=toplot2,aes(x=feat_name,y=m,ymin=m-sd,ymax=m+sd),col="red",width=0.2)+
-	stat_dots(col="black",shape=16,side="both")+
+	stat_dots(col="black",shape=16,side="both",dotsize=1.5,alpha=0.6)+
 	geom_text(data=toplot2,aes(x=feat_name,y=3900,label=m),col="red",size=3) +
 	geom_text(data=topval,aes(x=feat_name,y=3600,label=signif),col="black",size=5) +
 	geom_text(data=toplot2,aes(x=feat_name,y=0,label=n),fontface="italic",size=3) +

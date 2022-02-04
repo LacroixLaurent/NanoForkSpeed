@@ -18,16 +18,12 @@ toplot <- read_tsv(paste0(pathdata,"FigureS3B_data.tsv.gz"))
 mcornt <- as.data.frame(toplot)
 rownames(mcornt) <- mcornt$X0
 mcornt <- mcornt[,1:3]
-ggcorrplot(mcornt,lab=T,lab_size=8)+
-scale_fill_gradient2(limit=c(0,1),low="blue",mid="white",high="red",midpoint=0.5)+
-labs(tag="b")+
-theme(plot.tag=element_text(face="bold"))
-ggsave(paste0(path_figures,"FigureS3B.pdf"),h=6,w=6)
-pE <- ggcorrplot(mcornt,lab=T,lab_size=8,type="lower")+
+
+pE <- ggcorrplot(mcornt,lab=T,lab_size=8,type="upper",outline.color = NA)+
 	scale_fill_gradient2(limit=c(0,1),low="blue",mid="white",high="red",midpoint=0.5)+
 	labs(tag="b")+
-	theme(plot.tag=element_text(face="bold"))
-ggsave(paste0(path_figures,"FigureS3Balt.pdf"),h=6,w=6,pE)
+	theme(plot.tag=element_text(face="bold"),panel.grid=element_blank())
+ggsave(paste0(path_figures,"FigureS3B.pdf"),h=6,w=6,pE)
 
 
 # Figure S3A

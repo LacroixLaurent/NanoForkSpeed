@@ -23,9 +23,9 @@ fs1a <- ggplot(toplot,aes(x=pBMS,y=B.mean,col=type))+
 	coord_cartesian(ylim=c(0,1),xlim=c(0,1))+
 	geom_smooth(method="lm",se=F)+
 	geom_abline(slope=1,intercept=0,linetype="dashed")+
-	stat_regline_equation(aes(label =  paste(..eq.label.., ..rr.label.., sep = "~~~~")),label.y=c(1,0.9,0.8,0.7,0.6),show.legend=F)+
+	stat_regline_equation(aes(label =  paste(..eq.label.., ..rr.label.., sep = "~~~~")),label.y=c(1,0.9,0.8,0.7,0.6),show.legend=F,size=3)+
 	scale_color_manual(breaks = c("Megalodon_BrdU","RepNano_CNN","RepNano_TM","DNAscent_v2","DNAscent_v1"),values = mypal[c(1,3,5,7,9)])+
-	geom_text(data=res_mse,aes(x=0,y=c(0.95,0.85,0.75,0.65,0.55),label=paste0("mse=",mse),col=type),hjust=0,show.legend=F)+
+	geom_text(data=res_mse,aes(x=0,y=c(0.95,0.85,0.75,0.65,0.55),label=paste0("mse=",mse),col=type),hjust=0,show.legend=F,size=3,fontface="bold")+
 	xlab("BrdU ratio (MS)")+
 	ylab("BrdU ratio (nanopore)")+theme(plot.tag=element_text(face="bold"))
 

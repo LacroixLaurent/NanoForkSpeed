@@ -11,8 +11,8 @@ pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 pval <- read_tsv(paste0(pathdata,"pval_table.tsv.gz"))
 
 ### CEN
-toplot <- read_tsv(paste0(pathdata,"FigureS10A_data.tsv.gz")) %>% mutate(feat_name=case_when(feat_name=="other"~"Rest of the\nGenome",T~feat_name))
-toplot$feat_name <- factor(toplot$feat_name,levels=c(paste0("CEN",1:16),"Rest of the\nGenome"))
+toplot <- read_tsv(paste0(pathdata,"FigureS10A_data.tsv.gz")) %>% mutate(feat_name=case_when(feat_name=="other"~"Rest of the\ngenome",T~feat_name))
+toplot$feat_name <- factor(toplot$feat_name,levels=c(paste0("CEN",1:16),"Rest of the\ngenome"))
 toplot2 <- toplot %>% group_by(feat_name) %>% summarise(n=n(),m=round(mean(mea)),sd=sd(mea,na.rm=T)) %>% ungroup
 topval <- left_join(toplot2 %>% select(feat_name),pval %>% filter(Figure=="S10A") %>% select(feat_name=type,signif,pval_adj,signif1,signif2))
 
@@ -33,7 +33,7 @@ fs10a <- ggplot(toplot,aes(x=feat_name,y=mea))+
 
 
 ### TEL
-toplot <- read_tsv(paste0(pathdata,"FigureS10B_data.tsv.gz"))%>% mutate(feat_name=case_when(feat_name=="other"~"Rest of the\nGenome",T~feat_name))
+toplot <- read_tsv(paste0(pathdata,"FigureS10B_data.tsv.gz"))%>% mutate(feat_name=case_when(feat_name=="other"~"Rest of the\ngenome",T~feat_name))
 toplot$feat_name <- factor(toplot$feat_name,levels=unique(toplot$feat_name)[c(1:15,17,16)])
 toplot2 <- toplot %>% group_by(feat_name) %>% summarise(n=n(),m=round(mean(mea)),sd=sd(mea,na.rm=T)) %>% ungroup
 topval <- left_join(toplot2 %>% select(feat_name),pval %>% filter(Figure=="S10B") %>% select(feat_name=type,signif,pval_adj,signif1,signif2))

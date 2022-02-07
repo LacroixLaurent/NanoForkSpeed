@@ -10,7 +10,7 @@ pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 
 
 ## Figure2A
-toplot <- read_tsv(paste0(pathdata,"Figure2A_data.tsv.gz")) %>% filter(name4!="All")
+toplot <- read_tsv(paste0(pathdata,"Figure2A_data.tsv.gz"))
 toplot$name4 <- factor(toplot$name4,levels=c(paste0("BT1_run",1:21),"BT1_run21b"))
 totext <- toplot %>% group_by(name4) %>% summarise(n=n()) %>% ungroup
 tomea <- toplot %>% group_by(name4) %>% summarise(mea=round(mean(speed))) %>% ungroup
@@ -32,11 +32,9 @@ p1 <- ggplot(toplot,aes(x=name4,y=speed))+
 	labs(tag="a")+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),axis.title.x=element_blank(),plot.tag=element_text(face="bold"))
 
-
-
 ## Figure 2B
 toplot2 <- read_tsv(paste0(pathdata,"Figure2B_data.tsv.gz")) %>%
-	mutate(name4=factor(name4) %>% fct_shift) %>% filter(name4!="All")
+	mutate(name4=factor(name4))
 
 totext2 <- toplot2 %>% group_by(name4) %>% summarise(n=n()) %>% ungroup
 tomea2 <- toplot2 %>% group_by(name4) %>% summarise(mea=round(mean(speed))) %>% ungroup

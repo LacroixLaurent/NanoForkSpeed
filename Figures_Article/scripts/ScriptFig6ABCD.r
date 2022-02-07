@@ -48,7 +48,7 @@ f6b <- ggplot(toplot,aes(x=type,y=mea))+
 	scale_colour_manual("tRNA",values=mypal[c(1,7)],labels=c("Co-Directional","Head-On"))+
 	coord_cartesian(ylim=c(0,3500))+
 	theme(axis.text.x = element_text(angle=45,hjust=1),legend.position = "none",plot.tag=element_text(face="bold"))+
-	xlab("tRNA gene")+
+	xlab("tRNA genes")+
 	ylab("Speed (bp/min)")+
 	labs(tag="b")
 

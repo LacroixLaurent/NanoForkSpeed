@@ -207,9 +207,14 @@ feat.list <- lapply(seq_along(feat.list), function(x) {feat.list[[x]]$type=names
 feat <- do.call(c,feat.list)
 
 ### genomic track chrXII
-geno_leg <- factor(c("CEN","tRNA","rDNA","ORI","TEL"),levels=c("tRNA","rDNA","CEN","TEL","ORI"))
-geno_pal <- mypal[c(5,3,9,13,19)]
+#geno_leg <- factor(c("CEN","tRNA","rDNA","ORI","TEL"),levels=c("tRNA","rDNA","CEN","TEL","ORI"))
+#geno_pal <- mypal[c(5,3,9,13,19)]
+#names(geno_pal) <- geno_leg
+
+geno_leg <- c("tRNA","rDNA","CEN","TEL","ORI")
+geno_pal <- mypal[c(3,9,5,19,13)]
 names(geno_pal) <- geno_leg
+
 i=12
 	ROI <- chrom[i]
 	featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% dplyr::rename(featname=name)
@@ -230,9 +235,14 @@ pl_geno_12 <- ggplot(featROI)+
 	theme(axis.ticks.y = element_blank(),axis.text.y = element_blank(),panel.grid.major.y=element_blank(),panel.grid.minor.y=element_blank(),legend.key = element_rect(colour = "black"))
 
 ### genomic track chrIII
-geno_leg <- factor(c("CEN","tRNA","HML/HMR","ORI","TEL"),levels=c("tRNA","CEN","TEL","HML/HMR","ORI"))
-geno_pal <- mypal[c(5,3,17,13,19)]
+#geno_leg <- factor(c("CEN","tRNA","HML/HMR","ORI","TEL"),levels=c("tRNA","CEN","TEL","HML/HMR","ORI"))
+#geno_pal <- mypal[c(5,3,17,13,19)]
+#names(geno_pal) <- geno_leg
+
+geno_leg <- c("tRNA","CEN","TEL","HML/HMR","ORI")
+geno_pal <- mypal[c(3,5,19,17,13)]
 names(geno_pal) <- geno_leg
+
 i=3
 	ROI <- chrom[i]
 	featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% dplyr::rename(featname=name)
@@ -253,10 +263,12 @@ pl_geno_3 <-ggplot(featROI)+
 	theme(axis.ticks.y = element_blank(),axis.text.y = element_blank(),panel.grid.major.y=element_blank(),panel.grid.minor.y=element_blank(),legend.key = element_rect(colour = "black"))
 
 ### genomic track chrOTHER
-geno_leg <- factor(c("CEN","tRNA","ORI","TEL"),levels=c("tRNA","CEN","TEL","ORI"))
-geno_pal <- mypal[c(5,3,13,19)]
+#geno_leg <- factor(c("CEN","tRNA","ORI","TEL"),levels=c("tRNA","CEN","TEL","ORI"))
+#geno_pal <- mypal[c(5,3,13,19)]
+#names(geno_pal) <- geno_leg
+geno_leg <- c("tRNA","CEN","TEL","ORI")
+geno_pal <- mypal[c(3,5,19,13)]
 names(geno_pal) <- geno_leg
-
 pl_geno_other <- lapply(seq_along(chrom), function(i) {
 	ROI <- chrom[i]
 	featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% dplyr::rename(featname=name)

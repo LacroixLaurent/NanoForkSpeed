@@ -77,16 +77,14 @@ f6c <- ggplot(toplot,aes(x=type,y=mea))+
 toplot2 <- read_tsv(paste0(pathdata,"Figure6D_data.tsv.gz"))
 library(ggpubr)
 
-#toplot_lim <- toplot2 %>% filter(RTsc3>0.95 & RTsc3<1.95)
 f6d <- ggplot(toplot2,aes(x=RTsc3,y=speed))+
 	geom_hex()+
-#	geom_smooth(data=toplot_lim,aes(x=RTsc3,y=speed))+
-	stat_cor(data=toplot_lim,aes(x=RTsc3,y=speed),label.y = 5000,method="spearman",cor.coef.name="rho",col="grey20",fontface="italic",size=4)+
+	stat_cor(data=toplot2,aes(x=RTsc3,y=speed),label.y = 5000,method="spearman",cor.coef.name="rho",col="grey20",fontface="italic",size=4)+
 	scale_fill_continuous(type = "viridis",direction=-1,option="magma")+
 	scale_x_reverse()+
 	ylim(c(0,5000))+
 	ylab("Speed (bp/min)")+
-	xlab("RT (early to late)")+
+	xlab("Replication Timing (Early to Late)")+
 	labs(tag="d")
 
 layout <- "

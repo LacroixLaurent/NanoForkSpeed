@@ -15,16 +15,16 @@ toplot$name4 <- factor(toplot$name4,levels=c(paste0("BT1_run",1:21),"BT1_run21b"
 totext <- toplot %>% group_by(name4) %>% summarise(n=n()) %>% ungroup
 tomea <- toplot %>% group_by(name4) %>% summarise(mea=round(mean(speed))) %>% ungroup
 
-speedmea0 <- toplot %>% pull(speed) %>% mean
-# 2095
+speedmea0 <- tomea %>% pull(mea) %>% mean
+# 2128
 
 p1 <- ggplot(toplot,aes(x=name4,y=speed))+
+	geom_hline(aes(yintercept=speedmea0),lty=2)+
 	stat_slab(aes(fill=nanotype),col=NA,alpha=0.6,scale=0.8)+
 	stat_pointinterval(.width=c(.5,.95),col="grey40")+
 	geom_point(data=tomea,aes(x=name4,y=mea),col="red",shape=95,size=10)+
 	geom_text(data=totext,aes(x=name4,y=0,label=n),fontface="italic") +
 	geom_text(data=tomea,aes(x=name4,y=3800,label=mea),col="red") +
-	geom_hline(aes(yintercept=speedmea0),lty=2)+
 	scale_fill_discrete("30°C",type=mypal[c(3,4,7)])+
 	scale_colour_discrete("30°C",type=mypal[c(3,4,7)])+
 	coord_cartesian(ylim=c(0,4000))+

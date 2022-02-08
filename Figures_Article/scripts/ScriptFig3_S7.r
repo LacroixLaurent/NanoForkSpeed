@@ -137,7 +137,6 @@ fs7d <- ggplot(toplotS7D)+
 	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
 	labs(tag="d")+
 	theme(plot.tag=element_text(face="bold"))+
-	theme(axis.title.x=element_blank())+
 	ggtitle("Multiple tracks with noise")+
 	ylab("Speed error (bp/min)")+
 	xlab("True Speed (bp/min)")+

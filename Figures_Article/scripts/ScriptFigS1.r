@@ -38,7 +38,7 @@ fs1b <- ggplot(bin1k_meg3)+
 	scale_x_continuous(breaks=c(0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1))+
 	paletteer::scale_color_paletteer_d("ggthemes::Classic_20")+
 	xlab("Mean BrdU ratio per kb")+
-	ylab("Normalized Density")+
+	ylab("Normalized density")+
 	ggtitle("Megalodon_BrdU")+theme(plot.tag=element_text(face="bold"))
 
 bin1k_DS1 <- read_tsv(paste0(pathdata,"FigureS1C_data.tsv.gz"))
@@ -48,7 +48,7 @@ fs1c <- ggplot(bin1k_DS1)+
 	scale_x_continuous(breaks=c(0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1))+
 	paletteer::scale_color_paletteer_d("ggthemes::Classic_20")+
 	xlab("Mean BrdU ratio per kb")+
-	ylab("Normalized Density")+
+	ylab("Normalized density")+
 	ggtitle("DNAscent_v1")+theme(plot.tag=element_text(face="bold"))
 
 bin1k_DS2 <- read_tsv(paste0(pathdata,"FigureS1D_data.tsv.gz"))
@@ -58,7 +58,7 @@ fs1d <- ggplot(bin1k_DS2)+
 	scale_x_continuous(breaks=c(0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1))+
 	paletteer::scale_color_paletteer_d("ggthemes::Classic_20")+
 	xlab("Mean BrdU ratio per kb")+
-	ylab("Normalized Density")+
+	ylab("Normalized density")+
 	ggtitle("DNAscent_v2")+theme(plot.tag=element_text(face="bold"))
 
 bin1k_TM <- read_tsv(paste0(pathdata,"FigureS1E_data.tsv.gz"))
@@ -68,7 +68,7 @@ fs1e <- ggplot(bin1k_TM)+
 	scale_x_continuous(breaks=c(0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1))+
 	paletteer::scale_color_paletteer_d("ggthemes::Classic_20")+
 	xlab("Mean BrdU ratio per kb")+
-	ylab("Normalized Density")+
+	ylab("Normalized density")+
 	ggtitle("RepNano_TM")+theme(plot.tag=element_text(face="bold"))
 
 bin1k_CNN5 <- read_tsv(paste0(pathdata,"FigureS1F_data.tsv.gz"))
@@ -78,7 +78,7 @@ fs1f <- ggplot(bin1k_CNN5)+
 	scale_x_continuous(breaks=c(0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1))+
 	paletteer::scale_color_paletteer_d("ggthemes::Classic_20")+
 	xlab("Mean BrdU ratio per kb")+
-	ylab("Normalized Density")+
+	ylab("Normalized density")+
 	ggtitle("RepNano_CNN")+theme(plot.tag=element_text(face="bold"))
 
 

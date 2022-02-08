@@ -77,6 +77,8 @@ fs7a <- ggplot(toplotS7A)+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
 	geom_text(data=tomed,aes(x=gp,y=1000,label=med),col="red",size=3) +
 	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
+	labs(tag="a")+
+	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
 	ggtitle("Single tracks without noise")+
 	ylab("Speed Error (bp/min)")+
@@ -94,6 +96,8 @@ fs7b <- ggplot(toplotS7B)+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
 	geom_text(data=tomed,aes(x=gp,y=1000,label=med),col="red",size=3) +
 	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
+	labs(tag="b")+
+	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
 	ggtitle("Single tracks with noise")+
 	ylab("Speed Error (bp/min)")+
@@ -111,6 +115,8 @@ fs7c <- ggplot(toplotS7C)+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
 	geom_text(data=tomed,aes(x=gp,y=1000,label=med),col="red",size=3) +
 	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
+	labs(tag="c")+
+	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
 	ggtitle("Multiple tracks without noise")+
 	ylab("Speed Error (bp/min)")+
@@ -128,11 +134,13 @@ fs7d <- ggplot(toplotS7D)+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
 	geom_text(data=tomed,aes(x=gp,y=1000,label=med),col="red",size=3) +
 	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
-	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
+	labs(tag="d")+
+	theme(plot.tag=element_text(face="bold"))+
+	theme(axis.title.x=element_blank())+
 	ggtitle("Multiple tracks with noise")+
 	ylab("Speed Error (bp/min)")+
 	xlab("True Speed (bp/min)")+
-	scale_x_continuous(labels=c("O"="0-100","1000"="1000-1100","2000"="2000-2100","3000"="3000-3100"))
+	scale_x_continuous(labels=c("0"="0-100","1000"="1000-1100","2000"="2000-2100","3000"="3000-3100"))
 
 p0 <- fs7a+fs7b+fs7c+fs7d + plot_layout(ncol=1)
 

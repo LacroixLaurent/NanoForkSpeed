@@ -52,6 +52,8 @@ toplotC <- read_tsv(paste0(pathdata,"Figure3C_data.tsv.gz"))%>% mutate(type=fct_
 
 f3c <- ggplot(toplotC)+
 	stat_bin(aes(x=speed,y=..density..,col=type),geom="step",binwidth=200,position="identity")+
+	stat_bin(data=toplotC %>% filter(type %in% c("Multiple tracks with noise")),aes(x=speed,y=..density..,col=type),geom="step",binwidth=200,position="identity")+
+	stat_bin(data=toplotC %>% filter(type %in% c("Experimental data")),aes(x=speed,y=..density..,col=type),geom="step",binwidth=200,position="identity")+
 	coord_cartesian(xlim=c(0,4000))+
 	scale_colour_manual("",values=mypal[c(9,7,8,6)])+
 	labs(tag="c")+

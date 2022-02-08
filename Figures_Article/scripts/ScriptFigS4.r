@@ -20,7 +20,7 @@ p1 <- ggplot(toplot,aes(x=B_pulse,y=speed))+
 	coord_cartesian(ylim=c(0,5000))+
 	geom_text(data=totext,aes(x=B_pulse,y=0,label=n),fontface="italic") +
 	geom_text(data=tomea,aes(x=B_pulse,y=4800,label=mea),col="red") +
-	scale_fill_manual("[BrdU] pulse",values=mypal)+
+	scale_fill_manual("BrdU pulse (µM)",values=mypal)+
 	ylab("Speed (bp/min)")+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),plot.tag=element_text(face="bold"))+
 	labs(tag="b")
@@ -34,7 +34,7 @@ p2 <- ggplot(toplot,aes(x=B_pulse,y=dY))+
 	coord_cartesian(ylim=c(0,1))+
 	geom_text(data=totext,aes(x=B_pulse,y=0,label=n),fontface="italic") +
 	geom_text(data=tomea2,aes(x=B_pulse,y=1,label=mea),col="red") +
-	scale_fill_manual("[BrdU] pulse",values=mypal)+
+	scale_fill_manual("BrdU pulse (µM)",values=mypal)+
 	theme(axis.text.x = element_text(angle = 45,hjust=1),plot.tag=element_text(face="bold"))+
 	labs(tag="a")+
 	ylab("BrdU signal amplitude")

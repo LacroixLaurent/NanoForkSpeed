@@ -17,7 +17,7 @@ f3a <- ggplot(toplotA,aes(x=type,y=speed_error))+
 	stat_slab(aes(fill=type),col=NA,alpha=0.6,scale=0.8,normalize="groups")+
 	stat_pointinterval(.width=c(.5,.95),col="grey40")+
 	ylim(c(-1500,1500))+
-	ylab("Speed Error (estimated -true) (bp/min)")+
+	ylab("Speed error (bp/min)")+
 	geom_text(data=totextA,aes(x=type,y=-1500,label=n),fontface="italic") +
 	geom_text(data=tomedA,aes(x=type,y=1200,label=med),col="red")+
 	scale_fill_manual("",values=mypal[c(2,1,8,7)])+
@@ -36,12 +36,12 @@ toplotB <- read_tsv(paste0(pathdata,"Figure3B_data.tsv.gz"))
 set.seed(123)
 g4 <- tibble(g=rnorm(n=100000,mean=2486,sd=150))
 f3b <- ggplot(toplotB)+
-	geom_density(aes(x=speed0,col="Deconv_distribution"))+
+	geom_density(aes(x=speed0,col="Deconvolved distribution"))+
 	geom_density(data=g4,aes(x=g,y=..density..*0.63,col="Fitted mode\n(m=2486,sd=150,p=63%)"))+
 	coord_cartesian(xlim=c(0,4000))+
-	scale_colour_manual("",values=mypal[c(6,5)],breaks=c("Deconv_distribution","Fitted mode\n(m=2486,sd=150,p=63%)"))+
+	scale_colour_manual("",values=mypal[c(6,5)],breaks=c("Deconvolved distribution","Fitted mode\n(m=2486,sd=150,p=63%)"))+
 	xlab("Speed")+
-	ylab("density")+
+	ylab("Density")+
 	labs(tag="b")+
 	theme(plot.tag=element_text(face="bold"))+
 	xlab("Speed (bp/min)")
@@ -58,6 +58,7 @@ f3c <- ggplot(toplotC)+
 	scale_colour_manual("",values=mypal[c(9,7,8,6)])+
 	labs(tag="c")+
 	theme(plot.tag=element_text(face="bold"))+
+	ylab("Density")+
 	xlab("Speed (bp/min)")
 
 
@@ -81,7 +82,7 @@ fs7a <- ggplot(toplotS7A)+
 	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
 	ggtitle("Single tracks without noise")+
-	ylab("Speed Error (bp/min)")+
+	ylab("Speed error (bp/min)")+
 	xlab("True Speed (bp/min)")
 
 toplotS7B <- read_tsv(paste0(pathdata,"FigureS7B_data.tsv.gz"))
@@ -100,7 +101,7 @@ fs7b <- ggplot(toplotS7B)+
 	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
 	ggtitle("Single tracks with noise")+
-	ylab("Speed Error (bp/min)")+
+	ylab("Speed error (bp/min)")+
 	xlab("True Speed (bp/min)")
 
 toplotS7C <- read_tsv(paste0(pathdata,"FigureS7C_data.tsv.gz"))
@@ -119,7 +120,7 @@ fs7c <- ggplot(toplotS7C)+
 	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
 	ggtitle("Multiple tracks without noise")+
-	ylab("Speed Error (bp/min)")+
+	ylab("Speed error (bp/min)")+
 	xlab("True Speed (bp/min)")
 
 toplotS7D <- read_tsv(paste0(pathdata,"FigureS7D_data.tsv.gz"))
@@ -138,7 +139,7 @@ fs7d <- ggplot(toplotS7D)+
 	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank())+
 	ggtitle("Multiple tracks with noise")+
-	ylab("Speed Error (bp/min)")+
+	ylab("Speed error (bp/min)")+
 	xlab("True Speed (bp/min)")+
 	scale_x_continuous(labels=c("0"="0-100","1000"="1000-1100","2000"="2000-2100","3000"="3000-3100"))
 

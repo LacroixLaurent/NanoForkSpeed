@@ -53,7 +53,7 @@ toplotC <- read_tsv(paste0(pathdata,"Figure3C_data.tsv.gz"))%>% mutate(type=fct_
 f3c <- ggplot(toplotC)+
 	stat_bin(aes(x=speed,y=..density..,col=type),geom="step",binwidth=200,position="identity")+
 	coord_cartesian(xlim=c(0,4000))+
-	scale_colour_manual("",values=mypal[c(9,1,2,6)])+
+	scale_colour_manual("",values=mypal[c(9,7,8,6)])+
 	labs(tag="c")+
 	theme(plot.tag=element_text(face="bold"))+
 	xlab("Speed (bp/min)")

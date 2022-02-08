@@ -30,14 +30,14 @@ f6a <- ggplot(toplot,aes(x=feat,y=mea))+
 	scale_colour_manual("Features",values=mypal[c(3,5,7,9,1)])+
 	coord_cartesian(ylim=c(0,3500))+
 	theme(axis.text.x = element_text(angle=45,hjust=1),legend.position = "none",plot.tag=element_text(face="bold"))+
-	xlab("Genomic Features")+
+	xlab("Genomic features")+
 	ylab("Speed (bp/min)")+
 	labs(tag="a")
 
 
 ### Figure6b
 toplot <- read_tsv(paste0(pathdata,"Figure6B_data.tsv.gz")) %>%
-	mutate(type=fct_recode(type,"Co-Directional"="CD","Head-On"="HO"))
+	mutate(type=fct_recode(type,"Co-directional"="CD","Head-on"="HO"))
 toplot2 <- toplot %>% group_by(type) %>% summarise(m=round(mean(mea)),sd=sd(mea,na.rm=T),n=n()) %>% ungroup
 f6b <- ggplot(toplot,aes(x=type,y=mea))+
 	geom_point(data=toplot2,aes(x=type,y=m),col="red",shape=95,size=10,show.legend=F)+
@@ -55,7 +55,7 @@ f6b <- ggplot(toplot,aes(x=type,y=mea))+
 
 ### Figure6c lead/lag
 toplot <- read_tsv(paste0(pathdata,"Figure6C_data.tsv.gz"))
-toplot$type <- factor(toplot$type, levels=c("leading","lagging"))
+toplot$type <- factor(toplot$type, levels=c("leading","lagging")) %>% fct_recode(.,"Leading"="leading","Lagging"="lagging")
 toplot2 <- toplot %>% group_by(type) %>% summarise(m=round(mean(mea)),sd=sd(mea,na.rm=T),n=n()) %>% ungroup
 
 f6c <- ggplot(toplot,aes(x=type,y=mea))+
@@ -68,7 +68,7 @@ f6c <- ggplot(toplot,aes(x=type,y=mea))+
 	scale_colour_manual("",values=mypal[c(1,7)])+
 	coord_cartesian(ylim=c(0,3500))+
 	theme(axis.text.x = element_text(angle=45,hjust=1),legend.position = "none",plot.tag=element_text(face="bold"))+
-	xlab("Replication Type")+
+	xlab("Strand")+
 	ylab("Speed (bp/min)")+
 	labs(tag="c")
 
@@ -76,15 +76,17 @@ f6c <- ggplot(toplot,aes(x=type,y=mea))+
 ### Figure6d speed timing
 toplot2 <- read_tsv(paste0(pathdata,"Figure6D_data.tsv.gz"))
 library(ggpubr)
+# rescale from 0 to 1
+toplot2 %>% mutate(RT=(RTsc3-max(RTsc3,na.rm=T))/(min(RTsc3,na.rm=T)-max(RTsc3,na.rm=T))) -> toplot2
 
-f6d <- ggplot(toplot2,aes(x=RTsc3,y=speed))+
+f6d <- ggplot(toplot2,aes(x=RT,y=speed))+
 	geom_hex()+
-	stat_cor(data=toplot2,aes(x=RTsc3,y=speed),label.y = 5000,method="spearman",cor.coef.name="rho",col="grey20",fontface="italic",size=4)+
+	stat_cor(data=toplot2,aes(x=RT,y=speed),label.y = 5000,method="spearman",cor.coef.name="rho",col="grey20",fontface="italic",size=4)+
 	scale_fill_continuous(type = "viridis",direction=-1,option="magma")+
-	scale_x_reverse()+
+#	scale_x_reverse()+
 	ylim(c(0,5000))+
 	ylab("Speed (bp/min)")+
-	xlab("Replication Timing (Early to Late)")+
+	xlab("Replication timing (Early to Late)")+
 	labs(tag="d")
 
 layout <- "

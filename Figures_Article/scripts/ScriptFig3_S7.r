@@ -67,8 +67,7 @@ ggsave(paste0(path_figures,"Figure3.pdf"),h=9,w=6,p0)
 
 ### fig s7
 toplotS7A <- read_tsv(paste0(pathdata,"FigureS7A_data.tsv.gz"))
-totext <- toplotS7A %>% group_by(gp) %>% summarise(n=n())
-tomed <- toplotS7A %>% group_by(gp) %>% summarise(med=round(median(speed_error)))
+totext <- toplotS7A %>% group_by(gp) %>% summarise(n=n(),med=round(median(speed_error)),med2=round(median(speed_error2),2))
 
 fs7a <- ggplot(toplotS7A)+
 	geom_boxplot(aes(x=gp,y=speed_error,group=gp),outlier.shape=NA)+
@@ -76,7 +75,8 @@ fs7a <- ggplot(toplotS7A)+
 	geom_hline(aes(yintercept=250),linetype="dotted")+
 	geom_hline(aes(yintercept=0),linetype="dashed")+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
-	geom_text(data=tomed,aes(x=gp,y=1000,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=1000,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=800,label=paste0("(",med2,")")),col="red",fontface="italic",size=3) +
 	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
 	labs(tag="a")+
 	theme(plot.tag=element_text(face="bold"))+
@@ -86,8 +86,7 @@ fs7a <- ggplot(toplotS7A)+
 	xlab("True Speed (bp/min)")
 
 toplotS7B <- read_tsv(paste0(pathdata,"FigureS7B_data.tsv.gz"))
-totext <- toplotS7A %>% group_by(gp) %>% summarise(n=n())
-tomed <- toplotS7A %>% group_by(gp) %>% summarise(med=round(median(speed_error)))
+totext <- %>% group_by(gp) %>% summarise(n=n(),med=round(median(speed_error)),med2=round(median(speed_error2),2))
 
 fs7b <- ggplot(toplotS7B)+
 	geom_boxplot(aes(x=gp,y=speed_error,group=gp),outlier.shape=NA)+
@@ -95,7 +94,8 @@ fs7b <- ggplot(toplotS7B)+
 	geom_hline(aes(yintercept=250),linetype="dotted")+
 	geom_hline(aes(yintercept=0),linetype="dashed")+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
-	geom_text(data=tomed,aes(x=gp,y=1000,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=1000,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=800,label=paste0("(",med2,")")),col="red",fontface="italic",size=3) +
 	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
 	labs(tag="b")+
 	theme(plot.tag=element_text(face="bold"))+
@@ -105,8 +105,7 @@ fs7b <- ggplot(toplotS7B)+
 	xlab("True Speed (bp/min)")
 
 toplotS7C <- read_tsv(paste0(pathdata,"FigureS7C_data.tsv.gz"))
-totext <- toplotS7C %>% group_by(gp) %>% summarise(n=n())
-tomed <- toplotS7C %>% group_by(gp) %>% summarise(med=round(median(speed_error)))
+totext <- toplotS7C %>% group_by(gp) %>% summarise(n=n(),med=round(median(speed_error)),med2=round(median(speed_error2),2))
 
 fs7c <- ggplot(toplotS7C)+
 	geom_boxplot(aes(x=gp,y=speed_error,group=gp),outlier.shape=NA)+
@@ -114,7 +113,8 @@ fs7c <- ggplot(toplotS7C)+
 	geom_hline(aes(yintercept=250),linetype="dotted")+
 	geom_hline(aes(yintercept=0),linetype="dashed")+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
-	geom_text(data=tomed,aes(x=gp,y=1000,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=1000,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=800,label=paste0("(",med2,")")),col="red",fontface="italic",size=3) +
 	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
 	labs(tag="c")+
 	theme(plot.tag=element_text(face="bold"))+
@@ -124,8 +124,7 @@ fs7c <- ggplot(toplotS7C)+
 	xlab("True Speed (bp/min)")
 
 toplotS7D <- read_tsv(paste0(pathdata,"FigureS7D_data.tsv.gz"))
-totext <- toplotS7D %>% group_by(gp) %>% summarise(n=n())
-tomed <- toplotS7D %>% group_by(gp) %>% summarise(med=round(median(speed_error)))
+totext <- toplotS7D %>% group_by(gp) %>% summarise(n=n(),med=round(median(speed_error)),med2=round(median(speed_error2),2))
 
 fs7d <- ggplot(toplotS7D)+
 	geom_boxplot(aes(x=gp,y=speed_error,group=gp),outlier.shape=NA)+
@@ -133,7 +132,8 @@ fs7d <- ggplot(toplotS7D)+
 	geom_hline(aes(yintercept=250),linetype="dotted")+
 	geom_hline(aes(yintercept=0),linetype="dashed")+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
-	geom_text(data=tomed,aes(x=gp,y=1000,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=1000,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=800,label=paste0("(",med2,")")),col="red",fontface="italic",size=3) +
 	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
 	labs(tag="d")+
 	theme(plot.tag=element_text(face="bold"))+

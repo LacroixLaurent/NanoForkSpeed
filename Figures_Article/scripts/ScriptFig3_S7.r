@@ -75,9 +75,9 @@ fs7a <- ggplot(toplotS7A)+
 	geom_hline(aes(yintercept=250),linetype="dotted")+
 	geom_hline(aes(yintercept=0),linetype="dashed")+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
-	geom_text(data=totext,aes(x=gp,y=1000,label=med),col="red",size=3) +
-	geom_text(data=totext,aes(x=gp,y=800,label=paste0("(",med2,")")),col="red",fontface="italic",size=3) +
-	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
+	geom_text(data=totext,aes(x=gp,y=1200,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=1000,label=paste0("(",med2*100,"%)")),col="red",fontface="italic",size=3) +
+	coord_cartesian(ylim=c(-1500,1200),xlim=c(0,3000))+
 	labs(tag="a")+
 	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
@@ -86,7 +86,7 @@ fs7a <- ggplot(toplotS7A)+
 	xlab("True Speed (bp/min)")
 
 toplotS7B <- read_tsv(paste0(pathdata,"FigureS7B_data.tsv.gz"))
-totext <- %>% group_by(gp) %>% summarise(n=n(),med=round(median(speed_error)),med2=round(median(speed_error2),2))
+totext <- toplotS7B %>% group_by(gp) %>% summarise(n=n(),med=round(median(speed_error)),med2=round(median(speed_error2),2))
 
 fs7b <- ggplot(toplotS7B)+
 	geom_boxplot(aes(x=gp,y=speed_error,group=gp),outlier.shape=NA)+
@@ -94,9 +94,9 @@ fs7b <- ggplot(toplotS7B)+
 	geom_hline(aes(yintercept=250),linetype="dotted")+
 	geom_hline(aes(yintercept=0),linetype="dashed")+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
-	geom_text(data=totext,aes(x=gp,y=1000,label=med),col="red",size=3) +
-	geom_text(data=totext,aes(x=gp,y=800,label=paste0("(",med2,")")),col="red",fontface="italic",size=3) +
-	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
+	geom_text(data=totext,aes(x=gp,y=1200,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=1000,label=paste0("(",med2*100,"%)")),col="red",fontface="italic",size=3) +
+	coord_cartesian(ylim=c(-1500,1200),xlim=c(0,3000))+
 	labs(tag="b")+
 	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
@@ -113,9 +113,9 @@ fs7c <- ggplot(toplotS7C)+
 	geom_hline(aes(yintercept=250),linetype="dotted")+
 	geom_hline(aes(yintercept=0),linetype="dashed")+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
-	geom_text(data=totext,aes(x=gp,y=1000,label=med),col="red",size=3) +
-	geom_text(data=totext,aes(x=gp,y=800,label=paste0("(",med2,")")),col="red",fontface="italic",size=3) +
-	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
+	geom_text(data=totext,aes(x=gp,y=1200,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=1000,label=paste0("(",med2*100,"%)")),col="red",fontface="italic",size=3) +
+	coord_cartesian(ylim=c(-1500,1200),xlim=c(0,3000))+
 	labs(tag="c")+
 	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
@@ -132,9 +132,9 @@ fs7d <- ggplot(toplotS7D)+
 	geom_hline(aes(yintercept=250),linetype="dotted")+
 	geom_hline(aes(yintercept=0),linetype="dashed")+
 	geom_text(data=totext,aes(x=gp,y=-1300,label=n),fontface="italic",size=3) +
-	geom_text(data=totext,aes(x=gp,y=1000,label=med),col="red",size=3) +
-	geom_text(data=totext,aes(x=gp,y=800,label=paste0("(",med2,")")),col="red",fontface="italic",size=3) +
-	coord_cartesian(ylim=c(-1500,1000),xlim=c(0,3000))+
+	geom_text(data=totext,aes(x=gp,y=1200,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=1000,label=paste0("(",med2*100,"%)")),col="red",fontface="italic",size=3) +
+	coord_cartesian(ylim=c(-1500,1200),xlim=c(0,3000))+
 	labs(tag="d")+
 	theme(plot.tag=element_text(face="bold"))+
 	ggtitle("Multiple tracks with noise")+
@@ -146,3 +146,58 @@ p0 <- fs7a+fs7b+fs7c+fs7d + plot_layout(ncol=1)
 
 ggsave(paste0(path_figures,"FigureS7.pdf"),h=10,w=16,p0)
 
+toplotS7alt <- read_tsv(paste0(pathdata,"FigureS7alt_data.tsv.gz"))
+totext <- toplotS7alt %>% group_by(gp) %>% summarise(n=n(),med=round(median(speed_error)),med2=round(median(speed_error2),2))
+
+fs7alt <- ggplot(toplotS7alt)+
+	geom_boxplot(aes(x=gp,y=speed_error,group=gp),outlier.shape=NA)+
+	geom_hline(aes(yintercept=-250),linetype="dotted")+
+	geom_hline(aes(yintercept=250),linetype="dotted")+
+	geom_hline(aes(yintercept=0),linetype="dashed")+
+	geom_text(data=totext,aes(x=gp,y=-2300,label=n),fontface="italic",size=3) +
+	geom_text(data=totext,aes(x=gp,y=2000,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=1700,label=paste0("(",med2*100,"%)")),col="red",fontface="italic",size=3) +
+	coord_cartesian(ylim=c(-2500,2000),xlim=c(0,5000))+
+#	labs(tag="d")+
+	theme(plot.tag=element_text(face="bold"))+
+	ggtitle("Multiple tracks with noise")+
+	ylab("Speed error (bp/min)")+
+	xlab("True Speed (bp/min)")+
+	scale_x_continuous(labels=c("0"="0-100","1000"="1000-1100","2000"="2000-2100","3000"="3000-3100","4000"="4000-4100","5000"="5000-5100"))
+
+ggsave(paste0(path_figures,"FigureS7alt.pdf"),h=3,w=20,fs7alt)
+
+fs7alt1 <- ggplot(toplotS7alt)+
+	geom_boxplot(aes(x=gp,y=speed_error,group=gp),outlier.shape=NA)+
+	geom_hline(aes(yintercept=-250),linetype="dotted")+
+	geom_hline(aes(yintercept=250),linetype="dotted")+
+	geom_hline(aes(yintercept=0),linetype="dashed")+
+	geom_text(data=totext,aes(x=gp,y=-2300,label=n),fontface="italic",size=3) +
+	geom_text(data=totext,aes(x=gp,y=2000,label=med),col="red",size=3) +
+#	geom_text(data=totext,aes(x=gp,y=1700,label=paste0("(",med2*100,"%)")),col="red",fontface="italic",size=3) +
+	coord_cartesian(ylim=c(-2500,2000),xlim=c(0,5000))+
+	labs(tag="a")+
+	theme(plot.tag=element_text(face="bold"))+
+	ggtitle("Multiple tracks with noise")+
+	ylab("Speed error (bp/min)")+
+	xlab("True Speed (bp/min)")+
+	theme(axis.title.x=element_blank(),axis.text.x=element_blank())
+
+fs7alt2 <- ggplot(toplotS7alt)+
+	geom_boxplot(aes(x=gp,y=speed_error2*100,group=gp),outlier.shape=NA)+
+	geom_hline(aes(yintercept=-10),linetype="dotted")+
+	geom_hline(aes(yintercept=10),linetype="dotted")+
+	geom_hline(aes(yintercept=0),linetype="dashed")+
+	geom_text(data=totext,aes(x=gp,y=-100,label=n),fontface="italic",size=3) +
+#	geom_text(data=totext,aes(x=gp,y=1,label=med),col="red",size=3) +
+	geom_text(data=totext,aes(x=gp,y=100,label=med2*100),col="red",fontface="italic",size=3) +
+	coord_cartesian(ylim=c(-100,100),xlim=c(0,5000))+
+	labs(tag="b")+
+	theme(plot.tag=element_text(face="bold"))+
+	ggtitle("Multiple tracks with noise")+
+	ylab("Relative speed error (%)")+
+	xlab("True Speed (bp/min)")+
+	scale_x_continuous(labels=c("0"="0-100","1000"="1000-1100","2000"="2000-2100","3000"="3000-3100","4000"="4000-4100","5000"="5000-5100"))
+
+palt <- fs7alt1+fs7alt2 + plot_layout(ncol=1)
+ggsave(paste0(path_figures,"FigureS7alt2.pdf"),h=6,w=20,palt)

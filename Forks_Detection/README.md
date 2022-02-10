@@ -163,9 +163,9 @@ bin
 - chrom= mapped chromosome  
 - strand= strand of the mapped read  
 - read\_id= read identifier  
-- x0= start of the left (respectively right) fork for initiation
+- x0= X0 of the left (respectively X1 and right) fork for initiation
 (respectively termination)  
-- x1= start of the right (respectively left) fork for initiation
+- x1= X0 of the right (respectively X1 and left) fork for initiation
 (respectively termination)  
 - center= center of the x0-x1 segment (center=(x0+x1)/2)  
 - spL= speed of the left fork  
@@ -255,9 +255,9 @@ bin
 - chrom= mapped chromosome  
 - strand= strand of the mapped read  
 - read\_id= read identifier  
-- x0= start of the left (respectively right) fork for initiation
+- x0= X0 of the left (respectively X1 and right) fork for initiation
 (respectively termination)  
-- x1= start of the right (respectively left) fork for initiation
+- x1= X0 of the right (respectively X1 and left) fork for initiation
 (respectively termination)  
 - center= center of the x0-x1 segment (center=(x0+x1)/2)  
 - spL= speed of the left fork  

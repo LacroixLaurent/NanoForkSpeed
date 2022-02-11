@@ -24,8 +24,8 @@ xlab(paste0(test$chrom," (kb)"))+
 		)+
 ylab("BrdU signal")+
 guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
-theme(legend.position = "right")+
-scale_color_manual(breaks = c("data.raw","data.smoothed"),values = mypal[c(2,1)])+
+	theme(legend.position = "right",legend.title=element_blank())+
+	scale_color_manual(labels = c("raw","smoothed"),values = mypal[c(2,1)])+
 coord_cartesian(ylim=c(0,1))
 }
 
@@ -44,8 +44,8 @@ xlab(paste0(test$chrom," (kb)"))+
 		)+
 ylab("BrdU signal")+
 guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
-theme(legend.position = "right")+
-scale_color_manual(breaks = c("data.raw","data.smoothed"),values = mypal[c(2,1)])+
+theme(legend.position = "right",legend.title=element_blank())+
+scale_color_manual(labels = c("raw","smoothed"),values = mypal[c(2,1)])+
 coord_cartesian(ylim=c(0,1))
 }
 
@@ -64,8 +64,8 @@ xlab(paste0(test$chrom," (kb)"))+
 		)+
 ylab("BrdU signal")+
 guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
-theme(legend.position = "right")+
-scale_color_manual(breaks = c("data.raw","data.smoothed"),values = mypal[c(2,1)])+
+	theme(legend.position = "right",legend.title=element_blank())+
+	scale_color_manual(labels = c("raw","smoothed"),values = mypal[c(2,1)])+
 coord_cartesian(ylim=c(0,1))
 }
 
@@ -84,8 +84,8 @@ xlab(paste0(test$chrom," (kb)"))+
 		)+
 ylab("BrdU signal")+
 guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
-theme(legend.position = "right")+
-scale_color_manual(breaks = c("data.raw","data.smoothed"),values = mypal[c(2,1)])+
+	theme(legend.position = "right",legend.title=element_blank())+
+	scale_color_manual(labels = c("raw","smoothed"),values = mypal[c(2,1)])+
 coord_cartesian(ylim=c(0,1))
 }
 

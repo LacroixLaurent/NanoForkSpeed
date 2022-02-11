@@ -112,10 +112,10 @@ coord_cartesian(ylim=c(0,1))
 
 
 p0 <- pl_MonoGT[[1]]+pl_MonoGT[[2]]+pl_MonoGT[[3]]+pl_MonoGT[[4]]+pl_MonoGT[[5]]+pl_Mono[[1]]+pl_Mono[[2]]+pl_Mono[[3]]+pl_Mono[[5]]+pl_Mono[[4]]+pl_MultiGT[[1]]+pl_MultiGT[[2]]+pl_MultiGT[[3]]+pl_MultiGT[[4]]+pl_MultiGT[[5]]+pl_Multi[[1]]+pl_Multi[[2]]+pl_Multi[[3]]+pl_Multi[[4]]+pl_Multi[[5]]+pl_BT1[[1]]+pl_BT1[[2]]+pl_BT1[[3]]+pl_BT1[[4]]+pl_BT1[[5]] & theme(legend.position="none")
-p0[[1]] <- p0[[1]]+ggtitle("Single tracks without noise")+labs(tag="a")+theme(plot.tag=element_text(face="bold"))
-p0[[6]] <- p0[[6]]+ggtitle("Single tracks with noise")+labs(tag="b")+theme(plot.tag=element_text(face="bold"))
-p0[[11]] <- p0[[11]]+ggtitle("Multiple tracks without noise")+labs(tag="c")+theme(plot.tag=element_text(face="bold"))
-p0[[16]] <- p0[[16]]+ggtitle("Multiple tracks with noise")+labs(tag="d")+theme(plot.tag=element_text(face="bold"))
+p0[[1]] <- p0[[1]]+ggtitle("Single forks without noise")+labs(tag="a")+theme(plot.tag=element_text(face="bold"))
+p0[[6]] <- p0[[6]]+ggtitle("Single forks with noise")+labs(tag="b")+theme(plot.tag=element_text(face="bold"))
+p0[[11]] <- p0[[11]]+ggtitle("Multiple forks without noise")+labs(tag="c")+theme(plot.tag=element_text(face="bold"))
+p0[[16]] <- p0[[16]]+ggtitle("Multiple forks with noise")+labs(tag="d")+theme(plot.tag=element_text(face="bold"))
 p0[[21]] <- p0[[21]]+ggtitle("BT1")+labs(tag="e")+theme(plot.tag=element_text(face="bold"))
 
 p0 +plot_layout(byrow = FALSE,ncol=5,guides="collect")
@@ -126,7 +126,7 @@ toplot <- read_tsv(paste0(pathdata,"FigureS6F_data.tsv.gz"))
 
 fs6f <- ggplot(toplot,aes(x=x,y=value,col=name))+
 	geom_line()+
-	scale_colour_manual("",labels=c("Exp","Simu"),values=mypal[c(9,7)])+
+	scale_colour_manual("",labels=c("Experimental data","Simulated data"),values=mypal[c(9,7)])+
 	xlab("Position (nt)")+
 	ylab("BrdU signal")+
 	labs(tag="f")+
@@ -136,7 +136,7 @@ toplot <- read_tsv(paste0(pathdata,"FigureS6G_data.tsv.gz"))
 
 fs6g <- ggplot(toplot,aes(x=distance,y=value,col=name))+
 	geom_line()+
-	scale_colour_manual("",labels=c("Exp","Simu"),values=mypal[c(9,7)])+
+	scale_colour_manual("",labels=c("Experimental data","Simulated data"),values=mypal[c(9,7)])+
 	xlab("Distance (nt)")+
 	ylab("Autocorrelation")+
 	labs(tag="g")+

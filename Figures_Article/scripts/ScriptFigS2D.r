@@ -25,8 +25,8 @@ xlab(paste0(test$chrom," (kb)"))+
 ylab("BrdU signal")+
 guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
 	theme(legend.position = "right",legend.title=element_blank())+
-	scale_color_manual(labels = c("raw","smoothed"),values = mypal[c(2,1)])+
-coord_cartesian(ylim=c(0,1))
+	scale_color_manual(labels = c("Raw data","Smoothed signal"),values = mypal[c(2,1)])+
+	coord_cartesian(ylim=c(0,1))
 }
 
 toplot <- readRDS(paste0(pathdata,"FigureS2D_BT2_data.rds"))
@@ -45,8 +45,8 @@ xlab(paste0(test$chrom," (kb)"))+
 ylab("BrdU signal")+
 guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
 theme(legend.position = "right",legend.title=element_blank())+
-scale_color_manual(labels = c("raw","smoothed"),values = mypal[c(2,1)])+
-coord_cartesian(ylim=c(0,1))
+	scale_color_manual(labels = c("Raw data","Smoothed signal"),values = mypal[c(2,1)])+
+	coord_cartesian(ylim=c(0,1))
 }
 
 toplot <- readRDS(paste0(pathdata,"FigureS2D_BT1_data.rds"))
@@ -65,8 +65,8 @@ xlab(paste0(test$chrom," (kb)"))+
 ylab("BrdU signal")+
 guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
 	theme(legend.position = "right",legend.title=element_blank())+
-	scale_color_manual(labels = c("raw","smoothed"),values = mypal[c(2,1)])+
-coord_cartesian(ylim=c(0,1))
+	scale_color_manual(labels = c("Raw data","Smoothed signal"),values = mypal[c(2,1)])+
+	coord_cartesian(ylim=c(0,1))
 }
 
 toplot <- readRDS(paste0(pathdata,"FigureS2D_MCM_data.rds"))
@@ -85,7 +85,7 @@ xlab(paste0(test$chrom," (kb)"))+
 ylab("BrdU signal")+
 guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
 	theme(legend.position = "right",legend.title=element_blank())+
-	scale_color_manual(labels = c("raw","smoothed"),values = mypal[c(2,1)])+
+	scale_color_manual(labels = c("Raw data","Smoothed signal"),values = mypal[c(2,1)])+
 coord_cartesian(ylim=c(0,1))
 }
 

@@ -18,7 +18,7 @@ pl[[i]] <- ggplot(test$signalr[[1]]) +
 	geom_line(aes(x=positions,y=signal,col="data.smoothed"))+
 	geom_line(data=test$RDP[[1]],aes(x=x,y=y,col="RDP_segment"))+
 	geom_text(data=test$sl2[[1]],
-		aes(x=sl.x,y=-0.02,col="PLS_segment",label=sl.pat2,fontface="bold",vjust=1),
+		aes(x=sl.x,y=-0.02,col="RDP_segment",label=sl.pat2,fontface="bold",vjust=1),
 		show.legend = F,size=2)+
 	geom_hline(yintercept=b2a.thr,linetype="dashed",alpha=0.3) +
 	geom_vline(data=test$forks[[1]],aes(xintercept=X0),linetype="longdash",alpha=0.3)+
@@ -41,8 +41,8 @@ pl[[i]] <- ggplot(test$signalr[[1]]) +
 		expand=c(0,0))+
 	ylab("BrdU signal")+
 	guides(col = guide_legend(title = "Legend",override.aes = list(lwd = 1,labels="")))+
-	theme(legend.position = "right")+
-	scale_color_manual(breaks = c("data.raw","data.smoothed","RDP_segment","Fork_pulse"),values = mypal[c(2,1,3,5,6)])+
+	theme(legend.position = "right",legend.title=element_blank())+
+	scale_color_manual("",labels = c("raw","smoothed","RDP_segment","Fork_pulse"),breaks = c("data.raw","data.smoothed","RDP_segment","Fork_pulse"),values = mypal[c(2,1,3,5,6)])+
 #	annotate(geom="text",x=(test$end-4e3),y=0.95,label=i,fontface="bold.italic",size=4)+
 	coord_cartesian(ylim=c(-0.07,1))
 }

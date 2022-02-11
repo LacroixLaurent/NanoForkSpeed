@@ -9,7 +9,7 @@ path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/fi
 pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 
 ## fig3A
-toplotA <- read_tsv(paste0(pathdata,"Figure3A_data.tsv.gz"))%>% mutate(type=fct_relevel(type,c("Single tracks without noise","Single tracks with noise","Multiple tracks without noise","Multiple tracks with noise")))
+toplotA <- read_tsv(paste0(pathdata,"Figure3A_data.tsv.gz"))%>% mutate(type=fct_recode(type,"Single forks without noise"="Single tracks without noise","Single forks with noise"="Single tracks with noise","Multiple forks without noise"="Multiple tracks without noise","Multiple forks with noise"="Multiple tracks with noise") %>% fct_relevel(c("Single forks without noise","Single forks with noise","Multiple forks without noise","Multiple forks with noise")))
 totextA <- toplotA %>% group_by(type) %>% summarise(n=n())
 tomedA <- toplotA %>% group_by(type) %>% summarise(med=round(median(speed_error)))
 
@@ -26,10 +26,10 @@ f3a <- ggplot(toplotA,aes(x=type,y=speed_error))+
 	theme(plot.tag=element_text(face="bold"))
 toplotA %>% group_by(type) %>% summarise(iqr=IQR(speed_error))
 #  type                            iqr
-#1 Single tracks without noise    123.
-#2 Single tracks with noise       371.
-#3 Multiple tracks without noise  186
-#4 Multiple tracks with noise     438.
+#1 Single forks without noise    123.
+#2 Single forks with noise       371.
+#3 Multiple forks without noise  186
+#4 Multiple forks with noise     438.
 
 ### Figure3B
 toplotB <- read_tsv(paste0(pathdata,"Figure3B_data.tsv.gz"))
@@ -48,11 +48,11 @@ f3b <- ggplot(toplotB)+
 
 
 ## fig3C
-toplotC <- read_tsv(paste0(pathdata,"Figure3C_data.tsv.gz"))%>% mutate(type=fct_relevel(type,c("Experimental data","Multiple tracks with noise","Multiple tracks without noise","True Speed")))
+toplotC <- read_tsv(paste0(pathdata,"Figure3C_data.tsv.gz"))%>% mutate(type=fct_recode(type,"Experimental data"="Experimental data","Multiple forks with noise"="Multiple tracks with noise","Multiple forks without noise"="Multiple tracks without noise","True speed"="True Speed"))
 
 f3c <- ggplot(toplotC)+
 	stat_bin(aes(x=speed,y=..density..,col=type),geom="step",binwidth=200,position="identity")+
-	stat_bin(data=toplotC %>% filter(type %in% c("Multiple tracks with noise")),aes(x=speed,y=..density..,col=type),geom="step",binwidth=200,position="identity")+
+	stat_bin(data=toplotC %>% filter(type %in% c("Multiple forks with noise")),aes(x=speed,y=..density..,col=type),geom="step",binwidth=200,position="identity")+
 	stat_bin(data=toplotC %>% filter(type %in% c("Experimental data")),aes(x=speed,y=..density..,col=type),geom="step",binwidth=200,position="identity")+
 	coord_cartesian(xlim=c(0,4000))+
 	scale_colour_manual("",values=mypal[c(9,7,8,6)])+
@@ -81,9 +81,9 @@ fs7a <- ggplot(toplotS7A)+
 	labs(tag="a")+
 	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
-	ggtitle("Single tracks without noise")+
+	ggtitle("Single forks without noise")+
 	ylab("Speed error (bp/min)")+
-	xlab("True Speed (bp/min)")
+	xlab("True speed (bp/min)")
 
 toplotS7B <- read_tsv(paste0(pathdata,"FigureS7B_data.tsv.gz"))
 totext <- toplotS7B %>% group_by(gp) %>% summarise(n=n(),med=round(median(speed_error)),med2=round(median(speed_error2),2))
@@ -100,9 +100,9 @@ fs7b <- ggplot(toplotS7B)+
 	labs(tag="b")+
 	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
-	ggtitle("Single tracks with noise")+
+	ggtitle("Single forks with noise")+
 	ylab("Speed error (bp/min)")+
-	xlab("True Speed (bp/min)")
+	xlab("True speed (bp/min)")
 
 toplotS7C <- read_tsv(paste0(pathdata,"FigureS7C_data.tsv.gz"))
 totext <- toplotS7C %>% group_by(gp) %>% summarise(n=n(),med=round(median(speed_error)),med2=round(median(speed_error2),2))
@@ -119,9 +119,9 @@ fs7c <- ggplot(toplotS7C)+
 	labs(tag="c")+
 	theme(plot.tag=element_text(face="bold"))+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())+
-	ggtitle("Multiple tracks without noise")+
+	ggtitle("Multiple forks without noise")+
 	ylab("Speed error (bp/min)")+
-	xlab("True Speed (bp/min)")
+	xlab("True speed (bp/min)")
 
 toplotS7D <- read_tsv(paste0(pathdata,"FigureS7D_data.tsv.gz"))
 totext <- toplotS7D %>% group_by(gp) %>% summarise(n=n(),med=round(median(speed_error)),med2=round(median(speed_error2),2))
@@ -137,9 +137,9 @@ fs7d <- ggplot(toplotS7D)+
 	coord_cartesian(ylim=c(-1500,1200),xlim=c(0,3000))+
 	labs(tag="d")+
 	theme(plot.tag=element_text(face="bold"))+
-	ggtitle("Multiple tracks with noise")+
+	ggtitle("Multiple forks with noise")+
 	ylab("Speed error (bp/min)")+
-	xlab("True Speed (bp/min)")+
+	xlab("True speed (bp/min)")+
 	scale_x_continuous(labels=c("0"="0-100","1000"="1000-1100","2000"="2000-2100","3000"="3000-3100"))
 
 p0 <- fs7a+fs7b+fs7c+fs7d + plot_layout(ncol=1)
@@ -156,11 +156,11 @@ fs7alt <- ggplot(toplotS7alt)+
 	geom_hline(aes(yintercept=0),linetype="dashed")+
 	geom_text(data=totext,aes(x=gp,y=-2300,label=n),fontface="italic",size=3) +
 	geom_text(data=totext,aes(x=gp,y=2000,label=med),col="red",size=3) +
-	geom_text(data=totext,aes(x=gp,y=1700,label=paste0("(",med2*100,"%)")),col="red",fontface="italic",size=3) +
+	geom_text(data=totext,aes(x=gp,y=1700,label=paste0("(",med2*100,"%)")),col="red",fontface="italic",size=2) +
 	coord_cartesian(ylim=c(-2500,2000),xlim=c(0,5000))+
 #	labs(tag="d")+
 	theme(plot.tag=element_text(face="bold"))+
-	ggtitle("Multiple tracks with noise")+
+	ggtitle("Multiple forks with noise")+
 	ylab("Speed error (bp/min)")+
 	xlab("True Speed (bp/min)")+
 	scale_x_continuous(labels=c("0"="0-100","1000"="1000-1100","2000"="2000-2100","3000"="3000-3100","4000"="4000-4100","5000"="5000-5100"))
@@ -178,7 +178,7 @@ fs7alt1 <- ggplot(toplotS7alt)+
 	coord_cartesian(ylim=c(-2500,2000),xlim=c(0,5000))+
 	labs(tag="a")+
 	theme(plot.tag=element_text(face="bold"))+
-	ggtitle("Multiple tracks with noise")+
+	ggtitle("Multiple forks with noise")+
 	ylab("Speed error (bp/min)")+
 	xlab("True Speed (bp/min)")+
 	theme(axis.title.x=element_blank(),axis.text.x=element_blank())
@@ -194,7 +194,7 @@ fs7alt2 <- ggplot(toplotS7alt)+
 	coord_cartesian(ylim=c(-100,100),xlim=c(0,5000))+
 	labs(tag="b")+
 	theme(plot.tag=element_text(face="bold"))+
-	ggtitle("Multiple tracks with noise")+
+	ggtitle("Multiple forks with noise")+
 	ylab("Relative speed error (%)")+
 	xlab("True Speed (bp/min)")+
 	scale_x_continuous(labels=c("0"="0-100","1000"="1000-1100","2000"="2000-2100","3000"="3000-3100","4000"="4000-4100","5000"="5000-5100"))

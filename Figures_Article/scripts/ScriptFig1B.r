@@ -62,7 +62,7 @@ pl[[10]]+theme(axis.title.y=element_blank(),axis.text.y=element_blank())) &
  theme(legend.position = "bottom")
 p0 + plot_layout(guides = "collect")
 #ggsave(paste0(path_figures,"Figure1B.pdf"),h=8,w=7)
-#ggsave(paste0(path_figures,"Figure1B.png"),h=8,w=7)
+ggsave(paste0(path_figures,"Figure1B.png"),h=8,w=7)
 
 p01 <- p0 + plot_layout(guides = "collect")
 (plot_spacer()+p01) + plot_layout(heights=c(1,5))

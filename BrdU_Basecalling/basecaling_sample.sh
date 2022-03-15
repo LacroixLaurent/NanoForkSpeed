@@ -18,6 +18,7 @@ REF=./data/S288CwExtrarDNA_ROMAN.fa
 # to which we add an extra chromosome (rDNA-10R) containing 10 rDNA tandem repats.
 # the fasta file for this reference is provided (S288CwExtrarDNA_ROMAN.fa.zip)
 CFG=BrdU_Configuration4megalodon.cfg
+# the config file is placed in the ont-guppy/data folder
 INPUT=./data/BT1_run4_fast5
 OUTPUT=./data/BT1_run4_mega
 

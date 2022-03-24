@@ -212,7 +212,7 @@ feat <- do.call(c,feat.list)
 #names(geno_pal) <- geno_leg
 
 geno_leg <- c("tRNA","rDNA","CEN","TEL","ORI")
-geno_pal <- mypal[c(3,9,5,19,13)]
+geno_pal <- mypal[c(3,9,11,19,13)]
 names(geno_pal) <- geno_leg
 
 i=12
@@ -240,7 +240,7 @@ pl_geno_12 <- ggplot(featROI)+
 #names(geno_pal) <- geno_leg
 
 geno_leg <- c("tRNA","CEN","TEL","HML/HMR","ORI")
-geno_pal <- mypal[c(3,5,19,17,13)]
+geno_pal <- mypal[c(3,11,19,17,13)]
 names(geno_pal) <- geno_leg
 
 i=3
@@ -267,7 +267,7 @@ pl_geno_3 <-ggplot(featROI)+
 #geno_pal <- mypal[c(5,3,13,19)]
 #names(geno_pal) <- geno_leg
 geno_leg <- c("tRNA","CEN","TEL","ORI")
-geno_pal <- mypal[c(3,5,19,13)]
+geno_pal <- mypal[c(3,11,19,13)]
 names(geno_pal) <- geno_leg
 pl_geno_other <- lapply(seq_along(chrom), function(i) {
 	ROI <- chrom[i]

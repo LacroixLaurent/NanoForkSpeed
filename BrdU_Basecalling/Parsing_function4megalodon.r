@@ -27,6 +27,7 @@ mega_parsing <- function(bam.in,out.file,ncores=1L)
 		start <- as.numeric(x[4])
 		end <- start+as.numeric(x[5])
 		if (strand=="+") {seq <- x[6]} else {seq <- as.character(Biostrings::reverseComplement(Biostrings::DNAString(x[6])))}
+		# the Biostrings library is not loaded but should be installed.
 		pos <- x[7] %>% str_remove(";") %>% str_remove(fixed("Mm:Z:T+B,"))
 		pos1 <- as.numeric(c(str_split(pos,",")[[1]]))
 		prob <- x[8] %>% str_remove("Ml:B:C,")

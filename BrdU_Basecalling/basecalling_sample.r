@@ -1,5 +1,5 @@
 ## Rscript to parse megalodon data
-
+## the Biostrings package is also required in the Parsing_function4megalodon.r function
 nc=4L
 
 Exp <- "BT1_run4"

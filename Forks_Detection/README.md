@@ -62,13 +62,10 @@ detected.
 4- a table summary of different metrics of the experiment.
 
 ``` r
-library(GenomicRanges)
 suppressMessages(library(kmlShape))
 suppressMessages(library(tidyverse))
 `%+%`<- paste0
 source("./NFS_function.r")
-
-seqinf <- Seqinfo(seqnames=c("chrI","chrII","chrIII","chrIV","chrV","chrVI","chrVII","chrVIII","chrIX","chrX","chrXI","chrXII","chrXIII","chrXIV","chrXV","chrXVI","chrM","rDNA-10R"),seqlengths=c(230218,813184,316620,1531933,576874,270161,1090940,562643,439888,745751,666816,1078177,924431,784333,1091291,948066,85779,113097), isCircular=c(rep(F,16),T,F),genome="S288CrDNA")
 
 pathdata <- "~/work/Ori/NFS_paper/Zenodo_upload/"
 ex.name <- "BT1_run4"

@@ -30,3 +30,8 @@ export(CEN,con=paste0(pathdata,"sc3_CEN.bed"))
 export(HMLR,con=paste0(pathdata,"sc3_HMLR.bed"))
 export(TRNA,con=paste0(pathdata,"sc3_TRNA.bed"))
 
+# keep only RDN37-1,2 and RDN5-1,2 and add RFB
+RRNA2 <- RRNA[RRNA$name %in% c("RDN37-1","RDN37-2","RDN5-1","RDN5-2")]
+RRNA3 <- c(GRanges("chrXII",IRanges(460504,460684),strand="*",seqinfo=seqinf,name="RFB"),RRNA2)
+export(RRNA3,con=paste0(pathdata,"sc3_RRNA.bed"))
+

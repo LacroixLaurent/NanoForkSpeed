@@ -1,8 +1,9 @@
 ### Script FigS2
 suppressMessages(library(tidyverse))
 library(patchwork)
-
+library(ggrastr)
 theme_set(theme_bw())
+
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
 path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
@@ -15,7 +16,7 @@ for (i in 1:nrow(toplot))
 {
 test <- toplot %>% dplyr::slice(i)
 pl_BT3[[i]] <- ggplot(test$signalr[[1]]) +
-geom_point(aes(x=positions,y=Bprob,col="data.raw"),size=0.2,alpha=0.3)+
+	rasterise(geom_point(data=test$signalr[[1]] ,aes(x=positions,y=Bprob,col="data.raw"),size=0.2,alpha=0.5,shape=16),dev="cairo",dpi=300)+
 geom_line(aes(x=positions,y=signal,col="data.smoothed"))+
 xlab(paste0(test$chrom," (kb)"))+
 	scale_x_continuous(
@@ -35,7 +36,7 @@ for (i in 1:nrow(toplot))
 {
 test <- toplot %>% dplyr::slice(i)
 pl_BT2[[i]] <- ggplot(test$signalr[[1]]) +
-geom_point(aes(x=positions,y=Bprob,col="data.raw"),size=0.2,alpha=0.3)+
+	rasterise(geom_point(data=test$signalr[[1]] ,aes(x=positions,y=Bprob,col="data.raw"),size=0.2,alpha=0.5,shape=16),dev="cairo",dpi=300)+
 geom_line(aes(x=positions,y=signal,col="data.smoothed"))+
 xlab(paste0(test$chrom," (kb)"))+
 	scale_x_continuous(
@@ -55,7 +56,7 @@ for (i in 1:nrow(toplot))
 {
 test <- toplot %>% dplyr::slice(i)
 pl_BT1[[i]] <- ggplot(test$signalr[[1]]) +
-geom_point(aes(x=positions,y=Bprob,col="data.raw"),size=0.2,alpha=0.3)+
+	rasterise(geom_point(data=test$signalr[[1]] ,aes(x=positions,y=Bprob,col="data.raw"),size=0.2,alpha=0.5,shape=16),dev="cairo",dpi=300)+
 geom_line(aes(x=positions,y=signal,col="data.smoothed"))+
 xlab(paste0(test$chrom," (kb)"))+
 	scale_x_continuous(
@@ -75,7 +76,7 @@ for (i in 1:nrow(toplot))
 {
 test <- toplot %>% dplyr::slice(i)
 pl_MCM[[i]] <- ggplot(test$signalr[[1]]) +
-geom_point(aes(x=positions,y=Bprob,col="data.raw"),size=0.2,alpha=0.3)+
+	rasterise(geom_point(data=test$signalr[[1]] ,aes(x=positions,y=Bprob,col="data.raw"),size=0.2,alpha=0.5,shape=16),dev="cairo",dpi=300)+
 geom_line(aes(x=positions,y=signal,col="data.smoothed"))+
 xlab(paste0(test$chrom," (kb)"))+
 	scale_x_continuous(
@@ -98,5 +99,6 @@ p0[[11]] <- p0[[11]]+ggtitle("BT2")
 p0[[16]] <- p0[[16]]+ggtitle("BT3")
 
 p0 +plot_layout(byrow = FALSE,ncol=4,guides="collect")
-ggsave(paste0(path_figures,"FigureS2D.png"),h=9,w=14)
+#ggsave(paste0(path_figures,"FigureS2D.png"),h=9,w=14)
+ggsave(paste0(path_figures,"FigureS2D.pdf"),h=9,w=14,device=cairo_pdf)
 

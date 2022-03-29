@@ -2,6 +2,8 @@
 suppressMessages(library(tidyverse))
 theme_set(theme_bw())
 library(patchwork)
+library(ggrastr)
+
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
 #setwd("/Users/ll/work/Ori/NFS_paper/")
@@ -14,7 +16,7 @@ for (i in 1:nrow(toplot))
 {
 test <- toplot %>% dplyr::slice(i)
 pl[[i]] <- ggplot(test$signalr[[1]]) +
-	geom_point(aes(x=positions,y=Bprob,col="data.raw"),size=0.2,alpha=0.3,shape=16)+
+	rasterise(geom_point(data=test$signalr[[1]] ,aes(x=positions,y=Bprob,col="data.raw"),size=0.2,alpha=0.5,shape=16),dev="cairo",dpi=300)+
 	geom_line(aes(x=positions,y=signal,col="data.smoothed"))+
 	geom_line(data=test$RDP[[1]],aes(x=x,y=y,col="RDP_segment"))+
 	geom_text(data=test$sl2[[1]],
@@ -61,11 +63,11 @@ pl[[8]]+theme(axis.title.y=element_blank(),axis.text.y=element_blank()))/
 pl[[10]]+theme(axis.title.y=element_blank(),axis.text.y=element_blank())) &
  theme(legend.position = "bottom")
 p0 + plot_layout(guides = "collect")
-#ggsave(paste0(path_figures,"Figure1B.pdf"),h=8,w=7)
+ggsave(paste0(path_figures,"Figure1B.pdf"),h=8,w=7,device=cairo_pdf)
 ggsave(paste0(path_figures,"Figure1B.png"),h=8,w=7)
 
 p01 <- p0 + plot_layout(guides = "collect")
 (plot_spacer()+p01) + plot_layout(heights=c(1,5))
-#ggsave(paste0(path_figures,"Figure1Bscale.pdf"),h=9,w=7)
+ggsave(paste0(path_figures,"Figure1Bscale.pdf"),h=9,w=7,device=cairo_pdf)
 ggsave(paste0(path_figures,"Figure1Bscale.png"),h=9,w=7)
 

@@ -1,4 +1,4 @@
-# script figure S12
+# script figure S11
 
 library(GenomicRanges)
 library(rtracklayer)
@@ -10,16 +10,12 @@ library(ggprism)
 mypal <- paletteer::paletteer_d("ggthemes::Classic_20")
 `%+%` <- paste0
 
-#source("/Users/ll/work/Ori/Newhelper_function.r")
 path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
 pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
 
 seqinf <- readRDS(paste0(pathdata,"seqinfS288CrDNA.rds"))
 
-
-
-ini2plot <- read_tsv(paste0(pathdata,"FigureS12_data.tsv.gz"))
-
+ini2plot <- read_tsv(paste0(pathdata,"FigureS11_data.tsv.gz"))
 
 ARS <- import(paste0(pathdata,"ARS_newman.bed"))
 rDNA <- import(paste0(pathdata,"sc3_RRNA.bed"))
@@ -48,4 +44,4 @@ p1 <- ggplot(ini2plot)+
 	scale_fill_manual("",values = geno_pal)+
 	theme(panel.grid.minor.y=element_blank(),panel.grid.minor.x=element_blank(),panel.grid.major.y=element_blank(),panel.grid.major.x=element_blank(),legend.key.size = unit(0.3, 'cm'))
 
-ggsave(paste0(path_figures,"FigureS12.pdf"),w=8,h=2,p1)
+ggsave(paste0(path_figures,"FigureS11.pdf"),w=8,h=2,p1)

@@ -450,7 +450,7 @@ ggsave(paste0(path_figures,"FigureS9_.pdf"),h=7,w=7)
 ROI_z <- GRanges(seqnames="chrXII",range=IRanges(445000,475000),strand="*",seqinfo=seqinf)
 
 ### genomic track chrXII_RFB
-feat.list <- GRangesList(
+feat.list2 <- GRangesList(
 	import(paste0(pathdata,"sc3_CEN.bed")),
 	import(paste0(pathdata,"sc3_TRNA.bed")),
 	import(paste0(pathdata,"sc3_RRNA.bed"))[1],
@@ -459,10 +459,10 @@ feat.list <- GRangesList(
 	import(paste0(pathdata,"sc3_HMLR.bed")),
 	import(paste0(pathdata,"ARS_newman.bed"))
 )
-names(feat.list) <- c("CEN","tRNA","RFB","rDNA","TEL","HML/HMR","ORI")
+names(feat.list2) <- c("CEN","tRNA","RFB","rDNA","TEL","HML/HMR","ORI")
 #feat.list <- endoapply(feat.list,NewSeqinfo,seqin=seqinf)
-feat.list <- lapply(seq_along(feat.list), function(x) {feat.list[[x]]$type=names(feat.list)[x];return(feat.list[[x]])})
-feat <- do.call(c,feat.list)
+feat.list3 <- lapply(seq_along(feat.list2), function(x) {feat.list2[[x]]$type=names(feat.list2)[x];return(feat.list2[[x]])})
+feat2 <- do.call(c,feat.list3)
 
 
 geno_leg <- c("RFB","tRNA","rDNA","ORI")
@@ -471,7 +471,7 @@ names(geno_pal) <- geno_leg
 
 i=12
 ROI <- chrom[i]
-featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% dplyr::rename(featname=name)
+featROI <- as_tibble(feat2[overlapsAny(feat2,ROI)]) %>% dplyr::rename(featname=name)
 pl_geno_RFB <- ggplot(featROI)+
 	geom_rect(data=featROI %>% filter(type %in% c("rDNA","tRNA")),aes(xmin=start,xmax=end,ymin=1,ymax=2,col=type,fill=type))+
 	geom_rect(data=featROI%>% filter(type %in% c("RFB")),aes(xmin=start,xmax=end,ymin=2,ymax=3,col=type,fill=type))+

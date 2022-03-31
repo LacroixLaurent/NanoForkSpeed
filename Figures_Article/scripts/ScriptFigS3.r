@@ -10,8 +10,8 @@ library(ggcorrplot)
 theme_set(theme_bw())
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
+path_figures <- "./Figures_Article/figures/"
+pathdata <- "./Figures_Article/data/"
 
 ## Figure S3B
 toplot <- read_tsv(paste0(pathdata,"FigureS3B_data.tsv.gz"))
@@ -128,7 +128,7 @@ library(Hmisc)
 
 toplot <- read_tsv(paste0(pathdata,"FigureS3C_data.tsv.gz"))
 
-pdf(paste0(path_figures,"FigureS3C.pdf"),h=5,w=6)
+pdf(paste0(path_figures,"FigureS3C.pdf"),height=5,width=6)
 Ecdf(toplot %>% filter(type=="ini.all") %>% pull(dtac),col=mypal[7],q=0.5,xlim=c(0,30000),xlab="Distance to nearest ORI centre",ylab="ECDF",lwd=1,subtitles=F)
 Ecdf(toplot %>% filter(type=="rd.ini.all") %>% pull(dtac),col=mypal[8],q=0.5,add=T,lwd=1,lty=2,subtitles=F)
 Ecdf(toplot %>% filter(type=="ter.all") %>% pull(dtac),col=mypal[1],q=0.5,add=T,lwd=1,subtitles=F)

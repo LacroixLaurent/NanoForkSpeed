@@ -9,8 +9,8 @@ library(ggprism)
 theme_set(theme_bw())
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40","black")
 `%+%` <- paste0
-path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
+path_figures <- "./Figures_Article/figures/"
+pathdata <- "./Figures_Article/data/"
 
 seqinf <- readRDS(paste0(pathdata,"seqinfS288CrDNA.rds"))
 root_title <- "BT1_wt"
@@ -207,10 +207,6 @@ feat.list <- lapply(seq_along(feat.list), function(x) {feat.list[[x]]$type=names
 feat <- do.call(c,feat.list)
 
 ### genomic track chrXII
-#geno_leg <- factor(c("CEN","tRNA","rDNA","ORI","TEL"),levels=c("tRNA","rDNA","CEN","TEL","ORI"))
-#geno_pal <- mypal[c(5,3,9,13,19)]
-#names(geno_pal) <- geno_leg
-
 geno_leg <- c("tRNA","rDNA","CEN","TEL","ORI")
 geno_pal <- mypal[c(3,9,19,11,13)]
 names(geno_pal) <- geno_leg
@@ -235,10 +231,6 @@ pl_geno_12 <- ggplot(featROI)+
 	theme(axis.ticks.y = element_blank(),axis.text.y = element_blank(),panel.grid.major.y=element_blank(),panel.grid.minor.y=element_blank(),legend.key = element_rect(colour = "black"))
 
 ### genomic track chrIII
-#geno_leg <- factor(c("CEN","tRNA","HML/HMR","ORI","TEL"),levels=c("tRNA","CEN","TEL","HML/HMR","ORI"))
-#geno_pal <- mypal[c(5,3,17,13,19)]
-#names(geno_pal) <- geno_leg
-
 geno_leg <- c("tRNA","CEN","TEL","HML/HMR","ORI")
 geno_pal <- mypal[c(3,19,11,17,13)]
 names(geno_pal) <- geno_leg
@@ -263,9 +255,6 @@ pl_geno_3 <-ggplot(featROI)+
 	theme(axis.ticks.y = element_blank(),axis.text.y = element_blank(),panel.grid.major.y=element_blank(),panel.grid.minor.y=element_blank(),legend.key = element_rect(colour = "black"))
 
 ### genomic track chrOTHER
-#geno_leg <- factor(c("CEN","tRNA","ORI","TEL"),levels=c("tRNA","CEN","TEL","ORI"))
-#geno_pal <- mypal[c(5,3,13,19)]
-#names(geno_pal) <- geno_leg
 geno_leg <- c("tRNA","CEN","TEL","ORI")
 geno_pal <- mypal[c(3,19,11,13)]
 names(geno_pal) <- geno_leg
@@ -394,7 +383,6 @@ p1cov <- ggplot(toplot_cov2)+
 
 return(list(p1,p1cov))
 })
-
 
 
 library(ggrepel)

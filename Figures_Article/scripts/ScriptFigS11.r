@@ -22,8 +22,8 @@ rDNA <- import(paste0(pathdata,"sc3_RRNA.bed"))
 ars <- as_tibble(ARS) %>% mutate(chrom=seqnames)
 rdna <- as_tibble(rDNA) %>% mutate(chrom=seqnames)
 
-geno_leg <- c("Ini. segment","ORI","RFB","rDNA")
-geno_pal <- mypal[c(2,13,5,9)]
+geno_leg <- c("Ini. segment","RFB","rDNA","ORI")
+geno_pal <- mypal[c(2,5,9,13)]
 names(geno_pal) <- geno_leg
 
 p1 <- ggplot(ini2plot)+
@@ -44,4 +44,4 @@ p1 <- ggplot(ini2plot)+
 	scale_fill_manual("",values = geno_pal)+
 	theme(panel.grid.minor.y=element_blank(),panel.grid.minor.x=element_blank(),panel.grid.major.y=element_blank(),panel.grid.major.x=element_blank(),legend.key.size = unit(0.3, 'cm'))
 
-ggsave(paste0(path_figures,"FigureS11.pdf"),w=8,h=2,p1)
+ggsave(paste0(path_figures,"FigureS11B.pdf"),w=8,h=2,p1)

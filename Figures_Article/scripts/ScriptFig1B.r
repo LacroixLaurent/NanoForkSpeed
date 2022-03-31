@@ -7,8 +7,8 @@ library(ggrastr)
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
 #setwd("/Users/ll/work/Ori/NFS_paper/")
-path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
+path_figures <- "./Figures_Article/figures/"
+pathdata <- "./Figures_Article/data/"
 toplot <- readRDS(paste0(pathdata,"Figure1B_data.rds"))
 b2a.thr=0.02
 pl <- list()
@@ -62,12 +62,8 @@ pl[[8]]+theme(axis.title.y=element_blank(),axis.text.y=element_blank()))/
 (pl[[9]]+
 pl[[10]]+theme(axis.title.y=element_blank(),axis.text.y=element_blank())) &
  theme(legend.position = "bottom")
-p0 + plot_layout(guides = "collect")
-ggsave(paste0(path_figures,"Figure1B.pdf"),h=8,w=7,device=cairo_pdf)
-#ggsave(paste0(path_figures,"Figure1B.png"),h=8,w=7)
 
 p01 <- p0 + plot_layout(guides = "collect")
 (plot_spacer()+p01) + plot_layout(heights=c(1,5))
-ggsave(paste0(path_figures,"Figure1Bscale.pdf"),h=9,w=7,device=cairo_pdf)
-#ggsave(paste0(path_figures,"Figure1Bscale.png"),h=9,w=7)
+ggsave(paste0(path_figures,"Figure1B.pdf"),h=9,w=7,device=cairo_pdf)
 

@@ -1,7 +1,7 @@
 ### Yeast Feature annotation from UCSC track
 ### Scfeat downloaded from https://genome.ucsc.edu/cgi-bin/hgTables from the sgdOther tracks
 library(tidyverse)
-pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
+pathdata <- "./Figures_Article/data/"
 allfeat <- read_tsv(paste0(pathdata,"ScFeat.bed"),col_names=c("seqnames","start","end","name","score","strand"))
 
 tel <- allfeat %>% filter(str_detect(name,"TEL.{2}[R|L]$"))

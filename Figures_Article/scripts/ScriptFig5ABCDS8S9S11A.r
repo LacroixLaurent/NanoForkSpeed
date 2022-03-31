@@ -326,6 +326,8 @@ bin_shCIinf <- import(paste0(pathdata,root_title,"_shuffled_q01speedmed_bin",bs/
 bin_shCIsup <- import(paste0(pathdata,root_title,"_shuffled_q99speedmed_bin",bs/1000,"k_center.bw"))
 bin_cov <- import(paste0(pathdata,root_title,"_forcov_bin",bs/1000,"k_center.bw"))
 medcov <- median(bin_cov$score,na.rm=T)
+speedmedgen <- median(bin_med$score,na.rm=T)
+
 pl1k <- lapply(seq_along(chrom), function(i) {
 	ROI <- chrom[i]
 toplot_bin <- tibble(pos=start(ROI):end(ROI),
@@ -443,3 +445,66 @@ pl_cov <- pl1k[[roi$seqnames]][[2]]+
 
 pl_speed/pl_test/pl_gen/pl_cov+plot_layout(ncol = 1, heights = c(2,1,0.5,0.5))
 ggsave(paste0(path_figures,"FigureS9_.pdf"),h=7,w=7)
+
+## figure S11A
+ROI_z <- GRanges(seqnames="chrXII",range=IRanges(445000,475000),strand="*",seqinfo=seqinf)
+
+### genomic track chrXII_RFB
+feat.list <- GRangesList(
+	import(paste0(pathdata,"sc3_CEN.bed")),
+	import(paste0(pathdata,"sc3_TRNA.bed")),
+	import(paste0(pathdata,"sc3_RRNA.bed"))[1],
+	import(paste0(pathdata,"sc3_RRNA.bed"))[2:5],
+	import(paste0(pathdata,"sc3_TEL.bed")),
+	import(paste0(pathdata,"sc3_HMLR.bed")),
+	import(paste0(pathdata,"ARS_newman.bed"))
+)
+names(feat.list) <- c("CEN","tRNA","RFB","rDNA","TEL","HML/HMR","ORI")
+#feat.list <- endoapply(feat.list,NewSeqinfo,seqin=seqinf)
+feat.list <- lapply(seq_along(feat.list), function(x) {feat.list[[x]]$type=names(feat.list)[x];return(feat.list[[x]])})
+feat <- do.call(c,feat.list)
+
+
+geno_leg <- c("RFB","tRNA","rDNA","ORI")
+geno_pal <- mypal[c(5,3,9,13)]
+names(geno_pal) <- geno_leg
+
+i=12
+ROI <- chrom[i]
+featROI <- as_tibble(feat[overlapsAny(feat,ROI)]) %>% dplyr::rename(featname=name)
+pl_geno_RFB <- ggplot(featROI)+
+	geom_rect(data=featROI %>% filter(type %in% c("rDNA","tRNA")),aes(xmin=start,xmax=end,ymin=1,ymax=2,col=type,fill=type))+
+	geom_rect(data=featROI%>% filter(type %in% c("RFB")),aes(xmin=start,xmax=end,ymin=2,ymax=3,col=type,fill=type))+
+	geom_rect(data=featROI%>% filter(type %in% c("ORI")),aes(xmin=start,xmax=end,ymin=0,ymax=1,col=type,fill=type))+
+	scale_color_manual("",values = geno_pal)+
+	scale_fill_manual("",values = geno_pal)+
+	xlab(paste0(as.character(seqnames(ROI))," (kb)"))+
+	scale_x_continuous(
+		guide = "prism_minor",
+		labels=scales::unit_format(big.mark ="",suffix="",scale=1e-3,sep=""),
+		limits=c(1,seqlengths(seqinf)[i]),
+		breaks=seq(0,seqlengths(seqinf)[i],100000),
+		minor_breaks=seq(0,seqlengths(seqinf)[i],50000),
+		expand=c(0,0))+
+	theme(axis.ticks.y = element_blank(),axis.text.y = element_blank(),panel.grid.major.y=element_blank(),panel.grid.minor.y=element_blank(),legend.key = element_rect(colour = "black"))
+
+# zoom
+roi <- as_tibble(ROI_z)
+ch <- roi$seqnames
+pl_speed <- pl1k[[roi$seqnames]][[1]]+
+	scale_x_continuous(labels=scales::unit_format(big.mark ="",suffix="",scale=1e-3,sep="",accuracy=1),limits=c(roi$start,min(seqlengths(seqinf)[roi$seqnames],roi$end)))+
+	theme(axis.title.x=element_blank(),legend.key.size = unit(0.3, 'cm'))
+pl_gen <- pl_geno_RFB+
+	scale_x_continuous(labels=scales::unit_format(big.mark ="",suffix="",scale=1e-3,sep="",accuracy=1),limits=c(roi$start,min(seqlengths(seqinf)[roi$seqnames],roi$end)),expand=c(0,0))+
+	theme(legend.title=element_blank(),axis.title.x=element_blank(),axis.ticks.x = element_blank(),axis.text.x = element_blank(),legend.key.size = unit(0.3, 'cm'))+
+	ylab("Features")
+pl_test <- pl_MWW3[[roi$seqnames]]+
+	scale_x_continuous(labels=scales::unit_format(big.mark ="",suffix="",scale=1e-3,sep="",accuracy=1),limits=c(roi$start,min(seqlengths(seqinf)[roi$seqnames],roi$end)))+
+	theme(legend.title=element_blank(),axis.title.x=element_blank(),legend.key.size = unit(0.3, 'cm'))+ylab("Scale")
+pl_cov <- pl1k[[roi$seqnames]][[2]]+
+	scale_x_continuous(labels=scales::unit_format(big.mark ="",suffix="",scale=1e-3,sep="",accuracy=1),limits=c(roi$start,min(seqlengths(seqinf)[roi$seqnames],roi$end)))+
+	coord_cartesian(ylim=c(0,50),expand=F)+
+	ylab("Coverage")
+
+pl_speed/pl_test/pl_gen/pl_cov+plot_layout(ncol = 1, heights = c(2,1,0.5,0.5))
+ggsave(paste0(path_figures,"FigureS11A_.pdf"),h=7,w=7)

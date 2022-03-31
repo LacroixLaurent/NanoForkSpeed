@@ -507,4 +507,4 @@ pl_cov <- pl1k[[roi$seqnames]][[2]]+
 	ylab("Coverage")
 
 pl_speed/pl_test/pl_gen/pl_cov+plot_layout(ncol = 1, heights = c(2,1,0.5,0.5))
-ggsave(paste0(path_figures,"FigureS11A.pdf"),h=7,w=7)
+ggsave(paste0(path_figures,"FigureS11.pdf"),h=7,w=7)

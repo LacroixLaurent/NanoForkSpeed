@@ -5,8 +5,8 @@ library(patchwork)
 library(ggdist)
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
+path_figures <- "./Figures_Article/figures/"
+pathdata <- "./Figures_Article/data/"
 
 ## fig3A
 toplotA <- read_tsv(paste0(pathdata,"Figure3A_data.tsv.gz"))%>% mutate(type=fct_recode(type,"Single forks without noise"="Single tracks without noise","Single forks with noise"="Single tracks with noise","Multiple forks without noise"="Multiple tracks without noise","Multiple forks with noise"="Multiple tracks with noise") %>% fct_relevel(c("Single forks without noise","Single forks with noise","Multiple forks without noise","Multiple forks with noise")))
@@ -145,59 +145,3 @@ fs7d <- ggplot(toplotS7D)+
 p0 <- fs7a+fs7b+fs7c+fs7d + plot_layout(ncol=1)
 
 ggsave(paste0(path_figures,"FigureS7.pdf"),h=10,w=16,p0)
-
-toplotS7alt <- read_tsv(paste0(pathdata,"FigureS7alt_data.tsv.gz"))
-totext <- toplotS7alt %>% group_by(gp) %>% summarise(n=n(),med=round(median(speed_error)),med2=round(median(speed_error2),2))
-
-fs7alt <- ggplot(toplotS7alt)+
-	geom_boxplot(aes(x=gp,y=speed_error,group=gp),outlier.shape=NA)+
-	geom_hline(aes(yintercept=-250),linetype="dotted")+
-	geom_hline(aes(yintercept=250),linetype="dotted")+
-	geom_hline(aes(yintercept=0),linetype="dashed")+
-	geom_text(data=totext,aes(x=gp,y=-2300,label=n),fontface="italic",size=3) +
-	geom_text(data=totext,aes(x=gp,y=2000,label=med),col="red",size=3) +
-	geom_text(data=totext,aes(x=gp,y=1700,label=paste0("(",med2*100,"%)")),col="red",fontface="italic",size=2) +
-	coord_cartesian(ylim=c(-2500,2000),xlim=c(0,5000))+
-#	labs(tag="d")+
-	theme(plot.tag=element_text(face="bold"))+
-	ggtitle("Multiple forks with noise")+
-	ylab("Speed error (bp/min)")+
-	xlab("True Speed (bp/min)")+
-	scale_x_continuous(labels=c("0"="0-100","1000"="1000-1100","2000"="2000-2100","3000"="3000-3100","4000"="4000-4100","5000"="5000-5100"))
-
-ggsave(paste0(path_figures,"FigureS7alt.pdf"),h=3,w=20,fs7alt)
-
-fs7alt1 <- ggplot(toplotS7alt)+
-	geom_boxplot(aes(x=gp,y=speed_error,group=gp),outlier.shape=NA)+
-	geom_hline(aes(yintercept=-250),linetype="dotted")+
-	geom_hline(aes(yintercept=250),linetype="dotted")+
-	geom_hline(aes(yintercept=0),linetype="dashed")+
-	geom_text(data=totext,aes(x=gp,y=-2300,label=n),fontface="italic",size=3) +
-	geom_text(data=totext,aes(x=gp,y=2000,label=med),col="red",size=3) +
-#	geom_text(data=totext,aes(x=gp,y=1700,label=paste0("(",med2*100,"%)")),col="red",fontface="italic",size=3) +
-	coord_cartesian(ylim=c(-2500,2000),xlim=c(0,5000))+
-	labs(tag="a")+
-	theme(plot.tag=element_text(face="bold"))+
-	ggtitle("Multiple forks with noise")+
-	ylab("Speed error (bp/min)")+
-	xlab("True Speed (bp/min)")+
-	theme(axis.title.x=element_blank(),axis.text.x=element_blank())
-
-fs7alt2 <- ggplot(toplotS7alt)+
-	geom_boxplot(aes(x=gp,y=speed_error2*100,group=gp),outlier.shape=NA)+
-	geom_hline(aes(yintercept=-10),linetype="dotted")+
-	geom_hline(aes(yintercept=10),linetype="dotted")+
-	geom_hline(aes(yintercept=0),linetype="dashed")+
-	geom_text(data=totext,aes(x=gp,y=-100,label=n),fontface="italic",size=3) +
-#	geom_text(data=totext,aes(x=gp,y=1,label=med),col="red",size=3) +
-	geom_text(data=totext,aes(x=gp,y=100,label=med2*100),col="red",fontface="italic",size=3) +
-	coord_cartesian(ylim=c(-100,100),xlim=c(0,5000))+
-	labs(tag="b")+
-	theme(plot.tag=element_text(face="bold"))+
-	ggtitle("Multiple forks with noise")+
-	ylab("Relative speed error (%)")+
-	xlab("True Speed (bp/min)")+
-	scale_x_continuous(labels=c("0"="0-100","1000"="1000-1100","2000"="2000-2100","3000"="3000-3100","4000"="4000-4100","5000"="5000-5100"))
-
-palt <- fs7alt1+fs7alt2 + plot_layout(ncol=1)
-ggsave(paste0(path_figures,"FigureS7alt2.pdf"),h=6,w=20,palt)

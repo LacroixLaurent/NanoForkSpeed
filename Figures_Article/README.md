@@ -10,6 +10,6 @@ Statistical analysis used to indicate significant changes is explained in the ma
 
 ***
 ## Packages used
-see *figures_session_info.txt*  
+see *figures_article_session_info.txt*  
 
 ***

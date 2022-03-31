@@ -2,8 +2,8 @@
 #load required library
 suppressMessages(library(tidyverse))
 
-path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
+path_figures <- "./Figures_Article/figures/"
+pathdata <- "./Figures_Article/data/"
 
 
 # Import data for growth curve

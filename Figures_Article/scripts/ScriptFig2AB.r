@@ -5,8 +5,8 @@ library(patchwork)
 library(ggdist)
 mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
-path_figures <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/figures/"
-pathdata <- "/Users/ll/work/RStudioProjects/NanoForkSpeed/Figures_Article/data/"
+path_figures <- "./Figures_Article/figures/"
+pathdata <- "./Figures_Article/data/"
 
 
 ## Figure2A

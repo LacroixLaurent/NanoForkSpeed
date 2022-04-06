@@ -1,4 +1,4 @@
-### Script Fig5, S8 and S9
+### Script Fig5, S8, S9 and S11
 ## Figure 5ABCD
 suppressMessages(library(GenomicRanges))
 suppressMessages(library(rtracklayer))

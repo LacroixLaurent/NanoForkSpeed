@@ -8,6 +8,6 @@ Raw data are available from ENA repository under accession number PRJEB50302.
 Large files are available from the Zenodo repository under the DOI [10.5281/zenodo.5958270](https://doi.org/10.5281/zenodo.5958270)  
 * Instructions, scripts and model used to base call BrdU in nanopore reads are in the folder [*BrdU_Basecalling*](./BrdU_Basecalling).  
 * Instructions and scripts used to detect the replication forks in the processed reads are in the folder [*Forks_Detection*](./Forks_Detection).  
-* Scripts and data used to produce most of the figures of the precited manuscript are in the folder [*Figures_Article*](./Figures_Article).  
+* Scripts and data used to produce most of the figures of the cited manuscript are in the folder [*Figures_Article*](./Figures_Article).  
 
 ***

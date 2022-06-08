@@ -53,7 +53,7 @@ EXP_NFS <- NFSmaster(EXP,pulse0=ex.pulse,NFS.save=T,EXPname=ex.save,b2a=ex.b2a)
 ```
 
 As parsed data files are big, fork detection is performed on the split data and then these results are merged using the NFS_merging function from the *NFS_function.r* file.  
-The merged data file keep the same organization with a slightly simplified summary table. Those merged file are then used to produce the figures and data discussed in the manuscript [Theulot et al., 2022](https://doi.org/XX.XXXXX/JOURNAL/REF).  
+The merged data file keep the same organization with a slightly simplified summary table. Those merged file are then used to produce the figures and data discussed in the manuscript [Theulot et al., 2022](https://doi.org/10.1038/s41467-022-31012-0).  
 ```{r eval = FALSE}
 source("./NFS_function.r")
 NFS_merging ("./","./","BT1_run4",suff="_merged",file_list0="BT1_run4_Megalodon_00_NFS_data.rds")

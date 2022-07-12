@@ -278,7 +278,7 @@ NewSeqinfo <- function(GR,seqin) {
 plot_readlength <- function(EXP,EXP_NFS,fileout=NA,ymax=150000) {
 	if (is.na(fileout))
 	{
-		fileout <- EXP.NFS[[2]]$exp[1]
+		fileout <- EXP_NFS[[2]]$exp[1]
 	}
 	toplot <- bind_rows(
 		tibble(len=EXP %>% mutate(length=end-start) %>% filter(length>5000) %>% pull(length),leg="All reads >5kb"),

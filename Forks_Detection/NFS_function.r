@@ -394,7 +394,7 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 	forkdens <- EXP_NFSstat[4]/EXPlen*1e6
 	names(forkdens) <- "forks_per_Mb"
 	initdens <- initer_stat[1]/EXPlen*1e6
-	terdens <- initer_stat[4]/EXPlen*1e6
+	terdens <- initer_stat[2]/EXPlen*1e6
 	names(initdens) <- "init_per_Mb"
 	names(terdens) <- "ter_per_Mb"
 	dens <- cbind(forkdens,initdens,terdens)

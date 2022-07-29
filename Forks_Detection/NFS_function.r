@@ -439,7 +439,7 @@ NFS_merging <- function(dir_in,dir_out,ExpName,suff="",file_list0=NA)
 	# redo stats
 	Stats_in <- do.call(bind_rows,lapply(file_list, function(x) {
 		readRDS(paste0(dir_in,x))[[4]]}))
-	NFS_stats <- tibble(Expname=ExpName,n_reads=sum(as.numeric(Stats_in[,2])),n_reads2=sum(as.numeric(Stats_in[,3])),sumlength=sum(as.numeric(Stats_in[,4])),b2a.thr=as.numeric(Stats_in[1,8]),n_reads_RDP3=sum(as.numeric(Stats_in[,11])),n_reads_forks=sum(as.numeric(Stats_in[,12])),n_forks=sum(as.numeric(Stats_in[,14])),speed_med=median(NFS_forks$speed,na.rm=T),dY_med=median(abs(NFS_forks$d.Y),na.rm=T),nb_init=sum(as.numeric(Stats_in[,17])),nb_ter=sum(as.numeric(Stats_in[,20])),fork_dens=sum(as.numeric(Stats_in[,14]))/sum(as.numeric(Stats_in[,4]))*1e6,init_dens=sum(as.numeric(Stats_in[,17]))/sum(as.numeric(Stats_in[,4]))*1e6,ter_dens=sum(as.numeric(Stats_in[,18]))/sum(as.numeric(Stats_in[,4]))*1e6)
+	NFS_stats <- tibble(Expname=ExpName,n_reads=sum(as.numeric(Stats_in[,2])),n_reads2=sum(as.numeric(Stats_in[,3])),sumlength=sum(as.numeric(Stats_in[,4])),b2a.thr=as.numeric(Stats_in[1,8]),n_reads_RDP3=sum(as.numeric(Stats_in[,11])),n_reads_forks=sum(as.numeric(Stats_in[,12])),n_forks=sum(as.numeric(Stats_in[,14])),speed_med=median(NFS_forks$speed,na.rm=T),dY_med=median(abs(NFS_forks$d.Y),na.rm=T),nb_init=sum(as.numeric(Stats_in[,17])),nb_ter=sum(as.numeric(Stats_in[,18])),fork_dens=sum(as.numeric(Stats_in[,14]))/sum(as.numeric(Stats_in[,4]))*1e6,init_dens=sum(as.numeric(Stats_in[,17]))/sum(as.numeric(Stats_in[,4]))*1e6,ter_dens=sum(as.numeric(Stats_in[,18]))/sum(as.numeric(Stats_in[,4]))*1e6)
 
 	res <- list(NFS_reads,NFS_forks,NFS_initer,NFS_stats)
 	names(res) <- c("reads","forks","initer","stats")

@@ -252,8 +252,8 @@ NFSmaster <- function(EXP,RDP.eps0=0.1, slope.thr0=0.25,pulse0=2,NFS.save=T,EXPn
 	# threshold analysis
 	### obsolete for megalodon 3+ version but still useful to detect Exp with high background
 	### done with the Raw signal
-	EXP_Bmed <- median(EXP_NFSall$Bmedy)
-	EXP_Bmad <- mad(EXP_NFSall$Bmedy)
+	EXP_Bmed <- median(EXP_NFSall$Bmedy,na.rm=T)
+	EXP_Bmad <- mad(EXP_NFSall$Bmedy,na.rm=T)
 	if (b2a=="auto") {EXP_b2a.thr0 <- EXP_Bmed+3*EXP_Bmad} else {EXP_b2a.thr0 <- b2a}
 	EXP_b2a <- c(EXP_b2a.thr0,EXP_Bmed,EXP_Bmad)
 	names(EXP_b2a) <- c("b2a.thr","B_median","B_mad")

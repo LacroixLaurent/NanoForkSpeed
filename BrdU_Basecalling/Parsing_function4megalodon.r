@@ -25,7 +25,7 @@ mega_parsing <- function(bam.in,out.file,ncores=1L)
 		if (x[2]=="0") {strand="+"} else {strand="-"}
 		chrom <- x[3]
 		start <- as.numeric(x[4])
-		end <- start+as.numeric(x[5])
+		end <- start+as.numeric(x[5])-1
 		if (strand=="+") {seq <- x[6]} else {seq <- as.character(Biostrings::reverseComplement(Biostrings::DNAString(x[6])))}
 		# the Biostrings library is not loaded but should be installed.
 		pos <- x[7] %>% str_remove(";") %>% str_remove(fixed("Mm:Z:T+B,"))

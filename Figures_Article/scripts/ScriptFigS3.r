@@ -1,6 +1,5 @@
 ## script figure S3
 suppressMessages(library(GenomicRanges))
-seqinf <- readRDS("/Users/ll/work/Ori/seqinfS288CrDNA.rds")
 suppressMessages(library(rtracklayer))
 suppressMessages(library(tidyverse))
 library(patchwork)
@@ -12,6 +11,7 @@ mypal <- c(paletteer::paletteer_d("ggthemes::Classic_20"),"grey40")
 `%+%` <- paste0
 path_figures <- "./Figures_Article/figures/"
 pathdata <- "./Figures_Article/data/"
+seqinf <- readRDS(paste0(pathdata,"seqinfS288CrDNA.rds"))
 
 ## Figure S3B
 toplot <- read_tsv(paste0(pathdata,"FigureS3B_data.tsv.gz"))
